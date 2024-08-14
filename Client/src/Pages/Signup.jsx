@@ -72,7 +72,7 @@ const Signup = () => {
 
         //Email is Valid?
         if (!email.value.match(emailRegex)) {
-            toast.error("Invalid Email")
+            toast.error("Enter Valid Email Address")
             return
         }
 
@@ -177,7 +177,7 @@ const Signup = () => {
                                         name="password"
                                         value={userDetails.password}
                                         id="userPassword"
-                                        placeholder='Enter Your password'
+                                        placeholder='Enter Your Password'
                                         className='w-10/12 border-none bg-transparent  text-xl outline-none' />
                                 </div>
                                 <hr className="my-1" />

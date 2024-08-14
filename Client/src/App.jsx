@@ -1,5 +1,9 @@
 
-import Footer from './Components/Footer'
+import AccessDeniedPage from './Pages/AccessDeniedPage'
+import ContactPage from './Pages/ContactPage'
+import Login from './Pages/Login'
+import NotFoundPage from './Pages/NotFoundPage'
+import Signup from './Pages/Signup'
 
 
 // import { Routes } from 'react-router-dom'
@@ -7,12 +11,17 @@ import Footer from './Components/Footer'
 function App() {
   return (
     <>
-       {/* <Routes> */}
+      {/* <Routes> */}
       {/* <Route path='/' element={<Home />} /> */}
       {/* </Routes> */}
 
       {/*  */}
-      <Footer />
+      {/* <Footer />*/}
+      <Login />
+      <Signup />
+      <NotFoundPage/>
+      <AccessDeniedPage/>
+      <ContactPage/>
 
     </>
   )
