@@ -4,9 +4,10 @@ import { toast } from "react-hot-toast";
 import { AiOutlineMail } from "react-icons/ai";
 import { CiLock, CiUser } from "react-icons/ci";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Default_Profile from '../assets/Images/Default_Profile.webp';
+import HomeLayout from "../Layouts/HomeLayout";
 import { createAccount } from "../Redux/AuthSlice";
 
 
@@ -95,108 +96,110 @@ const Signup = () => {
 
 
     return (
+        <HomeLayout>
 
-        <div className="flex items-center justify-center bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl">
-            <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
+            <div className="flex items-center justify-center bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl">
+                <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
 
-                <div className=' flex h-[80vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white  md:h-[85vh] md:w-8/12'>
+                    <div className=' flex h-[80vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white  md:h-[85vh] md:w-8/12'>
 
-                    <div className='flex items-center justify-center py-3 text-3xl font-bold'><h1>Sign Up</h1>
-                    </div>
-
-                    <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
-                        <div>
-                            <label htmlFor="avatar" >
-                                <div className=" h-36 w-36 cursor-pointer rounded-full">
-                                    {
-                                        previewImage ? <img src={previewImage} alt="profile picture" className="h-36 w-36 cursor-pointer rounded-full" /> :
-                                            <img src={Default_Profile} alt="profile picture" />
-                                    }
-                                </div>
-                            </label>
-                            <input
-                                onChange={handleFileUpload}
-                                type="file"
-                                name="avatar"
-                                id="avatar"
-                                accept=".jpg, .jpeg, .svg, .png"
-                                className="hidden" />
+                        <div className='flex items-center justify-center py-3 text-3xl font-bold'><h1>Sign Up</h1>
                         </div>
 
-                        <div className="my-2 w-full">
-                            <p className="py-1 text-lg">Full Name</p>
+                        <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
+                            <div>
+                                <label htmlFor="avatar" >
+                                    <div className=" h-36 w-36 cursor-pointer rounded-full">
+                                        {
+                                            previewImage ? <img src={previewImage} alt="profile picture" className="h-36 w-36 cursor-pointer rounded-full" /> :
+                                                <img src={Default_Profile} alt="profile picture" />
+                                        }
+                                    </div>
+                                </label>
+                                <input
+                                    onChange={handleFileUpload}
+                                    type="file"
+                                    name="avatar"
+                                    id="avatar"
+                                    accept=".jpg, .jpeg, .svg, .png"
+                                    className="hidden" />
+                            </div>
 
-                            <label htmlFor="fullName" className='flex flex-col'>
-                                <div className="flex  items-center gap-4">
-                                    <CiUser />
+                            <div className="my-2 w-full">
+                                <p className="py-1 text-lg">Full Name</p>
 
-                                    <input
-                                        onChange={handleChange}
-                                        type="fullName"
-                                        name="fullName"
-                                        value={userDetails.fullName}
-                                        id="fullName"
-                                        placeholder='Enter Your Name'
-                                        className='w-10/12 border-none bg-transparent  text-xl outline-none' />
-                                </div>
-                                <hr className="my-1" />
-                            </label>
+                                <label htmlFor="fullName" className='flex flex-col'>
+                                    <div className="flex  items-center gap-4">
+                                        <CiUser />
 
+                                        <input
+                                            onChange={handleChange}
+                                            type="fullName"
+                                            name="fullName"
+                                            value={userDetails.fullName}
+                                            id="fullName"
+                                            placeholder='Enter Your Name'
+                                            className='w-10/12 border-none bg-transparent  text-xl outline-none' />
+                                    </div>
+                                    <hr className="my-1" />
+                                </label>
+
+                            </div>
+
+                            <div className="my-2 w-full">
+
+                                <p className="py-1 text-lg">Email</p>
+
+                                <label htmlFor="userEmail" className='flex flex-col'>
+                                    <div className="flex  items-center gap-4">
+                                        <AiOutlineMail className="text-slate-500" />
+
+                                        <input
+                                            onChange={handleChange}
+                                            type="email"
+                                            name="email"
+                                            value={userDetails.email}
+                                            id="userEmail"
+                                            placeholder='Enter Your Email'
+                                            className='w-10/12 border-none bg-transparent  text-xl outline-none' />
+                                    </div>
+                                    <hr className="my-1" />
+                                </label>
+                            </div>
+
+                            <div className="my-2 w-full">
+                                <p className="py-1 text-lg">Password</p>
+                                <label htmlFor="userPassword" className='flex flex-col'>
+                                    <div className="flex  items-center gap-4 ">
+                                        <CiLock />
+
+                                        <input
+                                            onChange={handleChange}
+                                            type="password"
+                                            name="password"
+                                            value={userDetails.password}
+                                            id="userPassword"
+                                            placeholder='Enter Your Password'
+                                            className='w-10/12 border-none bg-transparent  text-xl outline-none' />
+                                    </div>
+                                    <hr className="my-1" />
+                                </label>
+                            </div>
+                            <div>
+                            </div>
+                            <div className="mt-8 w-full">
+                                <button type="submit" className="flex h-9 w-full cursor-pointer items-center justify-center rounded-3xl bg-red-800 bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl text-white"><p>Sign Up</p></button>
+                            </div>
+                        </form>
+
+                        <div className="mt-1 flex items-center justify-center gap-2">
+                            <p className="text-lg">Already have an account?</p>
+                            <p className="text-lg text-blue-600"><Link to={'/login'}>Login</Link></p>
                         </div>
-
-                        <div className="my-2 w-full">
-
-                            <p className="py-1 text-lg">Email</p>
-
-                            <label htmlFor="userEmail" className='flex flex-col'>
-                                <div className="flex  items-center gap-4">
-                                    <AiOutlineMail className="text-slate-500" />
-
-                                    <input
-                                        onChange={handleChange}
-                                        type="email"
-                                        name="email"
-                                        value={userDetails.email}
-                                        id="userEmail"
-                                        placeholder='Enter Your Email'
-                                        className='w-10/12 border-none bg-transparent  text-xl outline-none' />
-                                </div>
-                                <hr className="my-1" />
-                            </label>
-                        </div>
-
-                        <div className="my-2 w-full">
-                            <p className="py-1 text-lg">Password</p>
-                            <label htmlFor="userPassword" className='flex flex-col'>
-                                <div className="flex  items-center gap-4 ">
-                                    <CiLock />
-
-                                    <input
-                                        onChange={handleChange}
-                                        type="password"
-                                        name="password"
-                                        value={userDetails.password}
-                                        id="userPassword"
-                                        placeholder='Enter Your Password'
-                                        className='w-10/12 border-none bg-transparent  text-xl outline-none' />
-                                </div>
-                                <hr className="my-1" />
-                            </label>
-                        </div>
-                        <div>
-                        </div>
-                        <div className="mt-8 w-full">
-                            <button type="submit" className="flex h-9 w-full cursor-pointer items-center justify-center rounded-3xl bg-red-800 bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl text-white"><p>Sign Up</p></button>
-                        </div>
-                    </form>
-
-                    <div className="mt-1 flex items-center justify-center gap-2">
-                        <p className="text-lg">Already have an account?</p>
-                        <p className="text-lg text-blue-600">Login</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </HomeLayout>
     )
 }
 

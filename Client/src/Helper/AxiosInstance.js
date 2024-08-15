@@ -1,14 +1,14 @@
 import axios from "axios";
 
 
-const instance = axios.create({
-    baseURL:"http://192.168.1.100:4050/api/auth",     //server default url
+const AxiosInstance= axios.create({
+    baseURL:"https://192.168.1.102:4050/api/auth",     //server default url
+    withCredentials:true,
     headers:{
         //Authorization : auth tokens 
         // "Content-Type":'application/json',
     },
-    timeout:10000,
-    withCredentials:true
+    timeout:5000,
 })
 
-export default instance
+export default AxiosInstance
