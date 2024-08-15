@@ -8,6 +8,7 @@ import paymentRoutes from './routes/payment.routes.js'
 import successMiddleware from './middlewares/success.middleware.js'
 import errorMiddleware from './middlewares/error.middleware.js'
 import courseRouter from './routes/course.routes.js'
+import https from 'https'
 
 
 const app = express()
@@ -18,12 +19,31 @@ dotenv.config()
 //database connetion
 connectMongo()
 
+origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+    } else {
+        callback(new Error('Not allowed by CORS'));
+    }
+}
+
 //Middlewares
-app.use(cors({
-    origin:process.env.CLIENT_URL,
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+
     methods:['POST','GET','PUT','DELETE'],
     credentials:true
-}))
+}
+app.use(cors(corsOptions))
 
 
 

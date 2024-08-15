@@ -7,7 +7,9 @@ import fs from 'fs'
 
 const cookieOptions = {
     maxAge: 24 * 60 * 60 * 1000,
-    httpOnly: true
+    httpOnly: true,
+    secure:true,
+    sameSite:'None',
 }
 
 const register = async (req, res, next) => {
@@ -24,6 +26,10 @@ const register = async (req, res, next) => {
 
     if (!isValidEmail) {
         return res.sendError(400, "Please Enter Valid Email Address")
+    }
+
+    if(password.length <6){
+        return res.sendError(400, "Password Must Be Atleast 6 Character Long")
     }
 
 
@@ -76,16 +82,24 @@ const register = async (req, res, next) => {
                 console.log("Removed Profile Picture From Local Storage")
             }
 
+            const userInfo = newUser.toObject()
+            const {password, ...userWithoutPassword} = userInfo
+
             //user createed Successfully
-            res.success(200, "Successfully Registered", newUser)
+            res.success(200, "Account Created Successfully", {User:userWithoutPassword})
 
         } else {
             console.log("Registed Without Profile Picture")
-            return res.success(200, "Successfully Registered", newUser)
+            
+            //Remove the Password before sending User information to client
+            const userInfo = newUser.toObject()
+            const {password, ...userWithoutPassword} = userInfo
+ 
+            return res.success(200, "Account Created Successfully", {User : userWithoutPassword})
         }
 
     } catch (error) {
-        res.sendError(400, "Error in Register", error.message)
+        res.sendError(400, "Error In Register", error.message)
     }
 }
 
@@ -101,7 +115,7 @@ const login = async (req, res, next) => {
         //  doesn't exist with this email
         const User = await userModel.findOne({ email }).select('+password')
         if (!User) {
-            return res.sendError("Email is Not Registered")
+            return res.sendError(400,"Email is Not Registered")
         }
 
         // if Password Doesn't Match
@@ -154,7 +168,7 @@ const updateProfile = (req, res, next) => {
 const logout = (req, res, next) => {
     // We can just delete the cookie to logout the user or assign an empty token which have expired in privious date
     try {
-        res.cookie("token", "", { maxAge: 0, httpOnly: true })
+        res.cookie("token", "", cookieOptions)
         return res.success(200, "Logout Successfully")
     } catch (error) {
         res.sendError(400, "Error in Logout", error.message)
