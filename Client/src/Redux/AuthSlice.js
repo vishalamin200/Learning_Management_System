@@ -55,10 +55,45 @@ export const logout = createAsyncThunk('/auth/logout/', async (thunkApi)=>{
         })
         return (await res).data
     } catch (error) {
-        const errorMessage = error?.res?.data?.Message
+        const errorMessage = error?.response?.data?.Message
         return thunkApi.rejectWithValue(errorMessage) 
     }
 
+})
+
+export const forgotPassword = createAsyncThunk('/auth/forgotPassword/', async (formData,thunkApi)=>{
+    try {
+         const res = axiosInstance.post('/forgetPassword',formData)
+
+        toast.promise(res,{
+            loading:"Sending Mail...",
+            success:(response)=> response?.data?.Message || "Email Is Sent To Reset Your Password",
+            error:(error)=> error?.response?.data?.Message || "Error Occurred Please Try Again"
+        })
+
+        return (await res).data
+    } catch (error) {
+        const errorMessage = error?.response?.data?.Message || "Error Occurred Please Try Again"
+        return thunkApi.rejectWithValue(errorMessage)    
+    }
+})
+
+export const resetPassword = createAsyncThunk('/auth/resetPassword/', async (formData,thunkApi)=>{
+    try {
+        const {userId,token} = formData
+        const res = axiosInstance.post(`/resetPassword/${userId}/${token}`,formData)
+
+        toast.promise(res,{
+            loading:"Reseting Your Password...",
+            success:(response)=> response?.data?.Message || "Password Reset Successfully",
+            error:(error)=> error?.response?.data?.Message || "Error Occurred Please Try Again"
+        })
+
+        return (await res).data
+    } catch (error) {
+        const errorMessage = error?.response?.data?.Message || "Error Occurred Please Try Again"
+        return thunkApi.rejectWithValue(errorMessage)    
+    }
 })
 
 

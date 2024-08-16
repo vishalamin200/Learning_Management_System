@@ -108,7 +108,7 @@ const Login = () => {
                                 </label>
                             </div>
                             <div>
-                                <p className="absolute right-0 my-3 text-lg">Forgot Password?</p>
+                                <p className="absolute right-0 my-3 text-lg"><Link to='/forgotPassword'> Forgot Password?</Link> </p>
                             </div>
                             <div className="mt-16 w-full">
                                 <button type="submit" className="flex h-9 w-full cursor-pointer items-center justify-center rounded-3xl bg-red-800 bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl text-white"><p>Login</p></button>

@@ -48,7 +48,6 @@ const HomeLayout = ({ children }) => {
     }
 
 
-
     return (
         <div className="relative w-screen">
 
