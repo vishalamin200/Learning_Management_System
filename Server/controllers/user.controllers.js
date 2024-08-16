@@ -1,15 +1,15 @@
+import cloudinary from 'cloudinary'
 import emailValidator from 'email-validator'
+import fs from 'fs'
 import userModel from '../models/user.model.js'
 import sendResetEmail from '../utils/sendEmail.util.js'
-import cloudinary from 'cloudinary'
-import fs from 'fs'
 
 
 const cookieOptions = {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    secure:true,
-    sameSite:'None',
+    secure: true,
+    sameSite: 'None',
 }
 
 const register = async (req, res, next) => {
@@ -28,7 +28,7 @@ const register = async (req, res, next) => {
         return res.sendError(400, "Please Enter Valid Email Address")
     }
 
-    if(password.length <6){
+    if (password.length < 6) {
         return res.sendError(400, "Password Must Be Atleast 6 Character Long")
     }
 
@@ -83,19 +83,19 @@ const register = async (req, res, next) => {
             }
 
             const userInfo = newUser.toObject()
-            const {password, ...userWithoutPassword} = userInfo
+            const { password, ...userWithoutPassword } = userInfo
 
             //user createed Successfully
-            res.success(200, "Account Created Successfully", {User:userWithoutPassword})
+            res.success(200, "Account Created Successfully", { User: userWithoutPassword })
 
         } else {
             console.log("Registed Without Profile Picture")
-            
+
             //Remove the Password before sending User information to client
             const userInfo = newUser.toObject()
-            const {password, ...userWithoutPassword} = userInfo
- 
-            return res.success(200, "Account Created Successfully", {User : userWithoutPassword})
+            const { password, ...userWithoutPassword } = userInfo
+
+            return res.success(200, "Account Created Successfully", { User: userWithoutPassword })
         }
 
     } catch (error) {
@@ -115,7 +115,7 @@ const login = async (req, res, next) => {
         //  doesn't exist with this email
         const User = await userModel.findOne({ email }).select('+password')
         if (!User) {
-            return res.sendError(400,"Email is Not Registered")
+            return res.sendError(400, "Email is Not Registered")
         }
 
         // if Password Doesn't Match
@@ -161,8 +161,103 @@ const getProfile = (req, res, next) => {
     }
 }
 
-const updateProfile = (req, res, next) => {
-    // I can update the Profile Picture and profile Information as well
+const editProfile = async (req, res, next) => {
+
+    // if user is logged in we will get his userId,
+    try {
+
+        const userId = req.user.id
+        const { fullName } = req.body
+
+        if (fullName.length < 3) {
+            return res.sendError(400, "Name Is Too Short")
+        }
+
+        const User = await userModel.findByIdAndUpdate(userId, { fullName }, { new: true })
+        if (!User) {
+            return res.sendError(400, "Please Logged In Again, And Try", User)
+        }
+
+
+        if (req.file) {
+            // User want to change the avatar as well,
+            // so first we will remove the avatar from Cloudinary, and then we will upload the new avatar to cloudinary
+
+            try {
+
+                if (User?.avatar?.public_id) {
+                    const response = await cloudinary.v2.uploader.destroy(User?.avatar?.public_id)
+                    if (response.result == 'ok') {
+                        console.log("Removed Old Profile Picture From Cloudinary")
+                    } else {
+                        console.log("Old Profile Does Not exists in Cloudinary")
+                    }
+                }
+
+                // Upload new Profile Picture
+                try {
+                    const response = await cloudinary.v2.uploader.upload(req.file.path, {
+                        folder: "Profile Picture",
+                        transformation: [
+                            {
+                                width: 200,
+                                height: 200,
+                                gravity: 'face',
+                                crop: 'fill'
+                            }
+                        ],
+                        context: { alt: "Profile Picture" }
+                    })
+
+                    if (response.public_id) {
+                        console.log("New Profile Uploaded to Cloudinary")
+
+                        // set new Public_Id and Secure_url
+
+                        User.avatar.public_id = response.public_id
+                        User.avatar.secure_url = response.secure_url
+
+
+                    } else {
+                        return res.sendError(501, "Error In Updating New Profile Picture, Please Try Again")
+                    }
+
+                } catch (error) {
+                    return res.sendError(501, "Error In Uploading New Profile Picture", error.message)
+                }
+
+                await User.save()
+
+                return res.success(200, "Profile Updated Successfully", {
+                    User: {
+                        id: User._id,
+                        fullName: User.fullName,
+                        email: User.email,
+                        avatar: User.avatar,
+                    }
+                })
+
+            } catch (error) {
+                return res.sendError(400, "Error in Uploading Profile Picture", error.message)
+            }
+        } else {
+            try {
+                await User.save()
+                return res.success(200, "Profile Updated Successfully", {
+                    Remark: 'Profile Picture is Not Changed', User: {
+                        id: User._id,
+                        fullName: User.fullName,
+                        email: User.email,
+                        avatar: User.avatar,
+                    }
+                })
+            } catch (error) {
+                return res.sendError(400, "Error In Updating Profile", error.message)
+            }
+        }
+    } catch (error) {
+        return res.sendError(400, "Error In Edit Profile", error.message)
+    }
 }
 
 const logout = (req, res, next) => {
@@ -288,13 +383,7 @@ const resetPassword = async (req, res, next) => {
 }
 
 
-
 export {
-    register,
-    login,
-    getProfile,
-    logout,
-    updatePassword,
-    forgetPassword,
-    resetPassword
+    editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword
 }
+

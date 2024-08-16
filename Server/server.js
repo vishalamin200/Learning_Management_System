@@ -1,10 +1,9 @@
-import app from './app.js'
-import cloudinary from 'cloudinary'
+import cloudinary from 'cloudinary';
+import fs from 'fs';
+import https from 'https';
 import Razorpay from 'razorpay';
+import app from './app.js';
 const PORT = process.env.PORT
-import https from 'https'
-import fs from 'fs'
-import path from 'path';
 
 
 //configure the cloudinary 
@@ -23,14 +22,14 @@ export const razorpay = new Razorpay({
 
 // create a https server using https
 
-const privateKey = fs.readFileSync('C:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.key','utf-8')
-const certificate = fs.readFileSync('C:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.cert','utf-8')
+const privateKey = fs.readFileSync('C:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.key', 'utf-8')
+const certificate = fs.readFileSync('C:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.cert', 'utf-8')
 
 
-const credentials = { key: privateKey , cert:certificate}
-const httpsServer = https.createServer(credentials,app)
+const credentials = { key: privateKey, cert: certificate }
+const httpsServer = https.createServer(credentials, app)
 
 
 httpsServer.listen(PORT, () => {
-    console.log(`Server is running at https://localhost:${PORT}`)
+    console.log(`Server is running at https://${process.env.LOCALHOST}:${PORT}`)
 })
