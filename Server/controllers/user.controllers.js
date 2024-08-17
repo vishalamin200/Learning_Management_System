@@ -134,7 +134,10 @@ const login = async (req, res, next) => {
 
             res.cookie("token", userToken, cookieOptions)
 
-            return res.success(200, "LoggedIn Successfully", User)
+            const UserObj = User.toObject()
+            const { password, ...userWithoutPassword } = UserObj
+
+            return res.success(200, "LoggedIn Successfully", userWithoutPassword)
         }
 
     } catch (error) {
@@ -228,13 +231,11 @@ const editProfile = async (req, res, next) => {
 
                 await User.save()
 
+                const UserObj = User.toObject()
+                const { password, ...UserWithoutPassword } = UserObj
+
                 return res.success(200, "Profile Updated Successfully", {
-                    User: {
-                        id: User._id,
-                        fullName: User.fullName,
-                        email: User.email,
-                        avatar: User.avatar,
-                    }
+                    User: UserWithoutPassword
                 })
 
             } catch (error) {
@@ -243,13 +244,12 @@ const editProfile = async (req, res, next) => {
         } else {
             try {
                 await User.save()
+
+                const UserObj = User.toObject()
+                const { password, ...UserWithoutPassword } = UserObj
+
                 return res.success(200, "Profile Updated Successfully", {
-                    Remark: 'Profile Picture is Not Changed', User: {
-                        id: User._id,
-                        fullName: User.fullName,
-                        email: User.email,
-                        avatar: User.avatar,
-                    }
+                    Remark: 'Profile Picture is Not Changed', User: UserWithoutPassword
                 })
             } catch (error) {
                 return res.sendError(400, "Error In Updating Profile", error.message)
@@ -382,8 +382,51 @@ const resetPassword = async (req, res, next) => {
     }
 }
 
+const deleteAccount = async (req, res) => {
+    // delete the profile picture from cloudinary, delete it's account from mongo
+
+    try {
+
+        if (!req.user) {
+            return res.sendError(401, "Please Logged In Again And Try")
+        }
+        const userId  = req.user.id
+
+        const User = await userModel.findById(userId)
+        if (!User) {
+            return res.sendError(401, "User Doesn't Exist!")
+        }
+
+        const public_id = User?.avatar?.public_id
+
+        if (public_id) {
+            // Now Delete the User Profile from Cloudinary
+
+            const response = await cloudinary.v2.uploader.destroy(public_id)
+            if (response.result == 'ok') {
+                console.log("Profile Picture Deleted From Cloudinary")
+            } else {
+                console.log("Profile Picture Doesn't Exits in Cloudinary")
+            }
+        }
+
+        try {
+            const deletedUser = await userModel.findByIdAndDelete(userId)
+            if (!deletedUser) {
+                return res.sendError(401, "User Doesn't Exists!")
+            }
+
+            return res.success(200, "Account Deleted Successfully")
+        } catch (error) {
+            return res.sendError(501, "Error In Deleting Account", error.message)
+        }
+    } catch (error) {
+        return res.sendError(400, "Error In Delete Account", error.message)
+    }
+}
+
 
 export {
-    editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword
+    editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword,deleteAccount
 }
 

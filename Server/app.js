@@ -8,8 +8,7 @@ import paymentRoutes from './routes/payment.routes.js'
 import successMiddleware from './middlewares/success.middleware.js'
 import errorMiddleware from './middlewares/error.middleware.js'
 import courseRouter from './routes/course.routes.js'
-import https from 'https'
-
+ 
 
 const app = express()
 
@@ -40,7 +39,7 @@ const corsOptions = {
         }
     },
 
-    methods:['POST','GET','PUT','DELETE'],
+    methods:['POST','GET','PUT','DELETE','PATCH'],
     credentials:true
 }
 app.use(cors(corsOptions))
