@@ -33,11 +33,11 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send reset email
-function sendResetEmail(userId, userEmail, token) {
+function sendResetEmail(userId, userEmail,userName, token) {
 
     try {
         const resetPasswordLink = `https://${process.env.LOCALHOST}:3000/resetPassword/${userId}/${token}`;
-        const htmlContent = getHtmlContent(userEmail, resetPasswordLink);
+        const htmlContent = getHtmlContent(userName, resetPasswordLink);
     
         transporter.sendMail({
             from: process.env.SENDER_EMAIL, // Sender Email

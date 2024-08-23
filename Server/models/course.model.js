@@ -13,12 +13,26 @@ const courseSchema = new Schema({
         trim:true,
         required:[true,"Descrition is Required"],
         minlength:[10,"Description Should have atleast 10 characters"],
-        maxlength:[200,"Description Must have less than 200 Characters"],
     },
 
     category:{
         type:String,
         required:[true,"Category is Required"]
+    },
+
+    rating:{
+        type:Number,
+        default:0
+    },
+
+    price:{
+        type:Number,
+        default:0
+    },
+
+    discount:{
+        type:Number,
+        default:0
     },
 
     thumbnail:{
@@ -81,6 +95,7 @@ const courseSchema = new Schema({
 
 courseSchema.pre("save", function(next){
     this.noOfLectures = this.lectures.length;
+    this.category = this.category.trim().replace(/\s+/g, '-').toLowerCase();
     next()
 })
 

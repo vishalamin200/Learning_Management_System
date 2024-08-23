@@ -160,7 +160,7 @@ const getProfile = (req, res, next) => {
         }
 
     } catch (error) {
-        res.sendError(401, "Error Getting User Profile", error.message)
+        res.sendError(401, "Error Getting User Profile", error.name)
     }
 }
 
@@ -168,21 +168,39 @@ const editProfile = async (req, res, next) => {
 
     // if user is logged in we will get his userId,
     try {
-
         const userId = req.user.id
-        const { fullName } = req.body
+        const { fullName,contact,linkedin,address, removeProfile } = req.body
 
         if (fullName.length < 3) {
             return res.sendError(400, "Name Is Too Short")
         }
 
-        const User = await userModel.findByIdAndUpdate(userId, { fullName }, { new: true })
+        const User = await userModel.findByIdAndUpdate(userId, { fullName,contact,linkedin,address }, { new: true })
         if (!User) {
             return res.sendError(400, "Please Logged In Again, And Try", User)
         }
 
+        if(removeProfile === 'true') {
 
-        if (req.file) {
+            // remove profile picture from cloudinary
+            const avatar_public_id = User?.avatar?.public_id
+            if (avatar_public_id) {
+                const response = await cloudinary.v2.uploader.destroy(avatar_public_id)
+                if (response.result == 'ok') {
+                    console.log('Profile picture removed from cloudinary')
+                } else {
+                    console.log('Profile picture does not exists in cloudinary')
+                }
+            }
+
+            // remove public id and set secure_url as url of default profile picture
+            User.avatar.public_id = ""
+            User.avatar.secure_url = "https://res.cloudinary.com/dqtkulbwd/image/upload/v1723902171/Profile%20Picture/accfigp4wynlmdz9zajd.webp"
+
+            await User.save()
+        }
+
+        if (req.file && req.file != 'undefined') {
             // User want to change the avatar as well,
             // so first we will remove the avatar from Cloudinary, and then we will upload the new avatar to cloudinary
 
@@ -262,9 +280,10 @@ const editProfile = async (req, res, next) => {
 
 const logout = (req, res, next) => {
     // We can just delete the cookie to logout the user or assign an empty token which have expired in privious date
+
     try {
         res.cookie("token", "", cookieOptions)
-        return res.success(200, "Logout Successfully")
+         return res.success(200, "Logout Successfully")
     } catch (error) {
         res.sendError(400, "Error in Logout", error.message)
     }
@@ -332,7 +351,7 @@ const forgetPassword = async (req, res, next) => {
 
         const token = await User.resetPasswordToken()
 
-        await sendResetEmail(User._id, User.email, token)
+        await sendResetEmail(User._id, User.email,User.fullName, token)
 
         res.success(200, "Email Successfully Send", { fullName: User.fullName, email: User.email })
 
@@ -386,11 +405,11 @@ const deleteAccount = async (req, res) => {
     // delete the profile picture from cloudinary, delete it's account from mongo
 
     try {
-
+        
         if (!req.user) {
             return res.sendError(401, "Please Logged In Again And Try")
         }
-        const userId  = req.user.id
+        const userId = req.user.id
 
         const User = await userModel.findById(userId)
         if (!User) {
@@ -416,6 +435,7 @@ const deleteAccount = async (req, res) => {
                 return res.sendError(401, "User Doesn't Exists!")
             }
 
+            res.cookie("token", "", cookieOptions)
             return res.success(200, "Account Deleted Successfully")
         } catch (error) {
             return res.sendError(501, "Error In Deleting Account", error.message)
@@ -426,7 +446,5 @@ const deleteAccount = async (req, res) => {
 }
 
 
-export {
-    editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword,deleteAccount
-}
+export { deleteAccount, editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword }
 

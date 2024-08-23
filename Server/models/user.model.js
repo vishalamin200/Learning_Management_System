@@ -20,6 +20,25 @@ const userSchema = new Schema({
         lowercase: true,
         match: [/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/, "Enter valid Email"]
     },
+
+    contact: {
+        type: String,
+        trim: true,
+        default:""
+    },
+
+    linkedin: {
+        type: String,
+        trim: true,
+        default:""
+    },
+
+    address: {
+        type: String,
+        trim: true,
+        default:""
+    },
+
     password: {
         type: String,
         minlength: [6, "Password should have atleast 6 characters"],
@@ -36,6 +55,7 @@ const userSchema = new Schema({
     avatar: {
         public_id: {
             type: String,
+            default: ""
         },
         secure_url: {
             type: String,
@@ -94,7 +114,7 @@ userSchema.methods = {
             process.env.JWT_SECRET_KEY,
             {
                 // algorithm:'RS256',
-                expiresIn: '2 days'
+                expiresIn: '3 days'
             }
         )
     },

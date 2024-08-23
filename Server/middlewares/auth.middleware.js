@@ -3,7 +3,11 @@
 function authorizedRoles(...roles) {
 
     return (req, res, next) => {
-        const currentUserRole = req.user.role
+        const currentUserRole = req?.user?.role
+       
+         if(!currentUserRole){
+            return res.sendError(401,"User Is Not Logged In")
+        }
 
         if (roles.includes(currentUserRole)) {
             next()

@@ -11,8 +11,8 @@ const createCourse = async (req, res, next) => {
     const { topic, description, category, createdBy } = req.body
 
     //if any empty field
-    if (!topic || !description || !category || !createdBy) {
-        return res.sendError(400, "All Fields are Mandatory", req.body)
+    if (!topic || !description || !category || !createdBy || !req.file) {
+        return res.sendError(400, "All Fields are Mandatory")
     }
 
     try {
@@ -60,7 +60,7 @@ const viewCourses = async (req, res, next) => {
     try {
         const allCourses = await courseModel.find({}).select('-lectures')
         if (allCourses.length >= 0) {
-            return res.success(200, "Fetch Courses Successfully", allCourses)
+            return res.success(200, "Fetch Courses Successfully", {Courses:allCourses})
         } else {
             return res.sendError(400, "Error in Get Courses")
         }
@@ -68,6 +68,36 @@ const viewCourses = async (req, res, next) => {
     } catch (error) {
         return res.sendError(400, "Error In Fetch Courses from Database", error.message)
     }
+}
+
+const getCoursesByCategoryOrName = async (req, res) => {
+
+    try {
+        const { category, courseName } = req.body
+        if (category) {
+            const coursesList = await courseModel.find({ category })
+            const formattedName = category.replace(/-/, " ").replace(/\b\w/g, char => char.toUpperCase());
+            if (coursesList.length > 0) {
+                return res.success(200, `Explore Our ${formattedName} Courses`, { Course: coursesList })
+            } else {
+                return res.success(200, "Currently We Don't Have Any Course For This Category")
+            }
+        }
+        else if (courseName) {
+            const course = await courseModel.find({ topic: courseName })
+            if (course.length > 0) {
+                return res.success(200, `Here Is Your ${courseName} Course`, { Course: course })
+            } else {
+                return res.success(200, "Currently We Don't Have Any Course For This Course Name")
+            }
+        } else {
+            res.sendError(400, "No Category Or Course Name Provided")
+        }
+
+    } catch (error) {
+        return res.sendError(400, "Error In Get Courses By Category Or Name", error.message)
+    }
+
 }
 
 const updateCourse = async (req, res, next) => {
@@ -162,7 +192,7 @@ const deleteCourse = async (req, res, next) => {
         // We will delete all the lectures thumbnails and course thumbnail we had uploaded to cloudinary
 
 
-        const thumbnailPublicId = await Course.thumbnail.public_id
+        const thumbnailPublicId = await Course?.thumbnail?.public_id
 
         const remarks = []
         // delete course thumbnail
@@ -175,7 +205,7 @@ const deleteCourse = async (req, res, next) => {
         }
 
         //delete All lecture thumbnail if exists
-        const Lectures = Course.lectures
+        const Lectures = Course?.lectures
 
         if (Lectures.length > 0) {
 
@@ -205,7 +235,7 @@ const deleteCourse = async (req, res, next) => {
             console.log("No Thumbnail Of Any Lecture Exists on Cloudinary")
             remarks.push("No Thumbnail Of Any Lecture Exists on Cloudinary")
         }
-
+   
         // Delete course from Mongo
         const deletedCourse = await courseModel.findByIdAndDelete(courseId)
 
@@ -215,7 +245,6 @@ const deleteCourse = async (req, res, next) => {
         return res.sendError(400, "Error In Deleting Course", error.message)
     }
 }
-
 
 const addLecture = async (req, res, next) => {
 
@@ -279,7 +308,7 @@ const addLecture = async (req, res, next) => {
                 Course.noOfLectures = await Course.lectures.length
                 await Course.save()
 
-                return res.success(200, "Lecture Added Successfully", {Course:Course.topic ,Lecture:Course.lectures.slice(-1)[0]})
+                return res.success(200, "Lecture Added Successfully", { Course: Course.topic, Lecture: Course.lectures.slice(-1)[0] })
             }
         } else {
             //Thumbnail Is not Provide, Save Only Lecture Details and Link
@@ -288,7 +317,7 @@ const addLecture = async (req, res, next) => {
                 await Course.lectures.push(req.body)
                 await Course.save()
 
-                return res.success(200, "Lecture Added Successfully", { Remarks: "No Thumbnail Provided",Course:Course.topic ,Lecture: Course.lectures.slice(-1)[0] })
+                return res.success(200, "Lecture Added Successfully", { Remarks: "No Thumbnail Provided", Course: Course.topic, Lecture: Course.lectures.slice(-1)[0] })
             } catch (error) {
                 return res.sendError(400, "Error In Saving Lectures Details")
             }
@@ -419,7 +448,7 @@ const updateLecture = async (req, res, next) => {
         //we will delete the old thumbnail from Cloudnary
         const oldPublicId = Lecture.thumbnail.public_id
 
-        if(oldPublicId){
+        if (oldPublicId) {
             try {
                 const result = await cloudinary.v2.uploader.destroy(oldPublicId);
                 if (result.result === 'ok') {
@@ -429,7 +458,7 @@ const updateLecture = async (req, res, next) => {
                 }
             } catch (err) {
                 console.log("Error in Deleting Old thumbnail from Cloudinary", err);
-            }   
+            }
         }
 
         // Update the Thumbnail public id to New Public Id, and Update the Secure Url also 
@@ -447,7 +476,7 @@ const updateLecture = async (req, res, next) => {
 }
 
 export {
-    addLecture, createCourse, deleleLecture, deleteCourse, getLectures,
+    addLecture, createCourse, deleleLecture, deleteCourse, getCoursesByCategoryOrName, getLectures,
     updateCourse, updateLecture, viewCourses
 }
 
