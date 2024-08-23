@@ -6,12 +6,12 @@ import { FcGoogle } from "react-icons/fc";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
-import FacebookIcon from '../assets/Images/Facebook-icon.svg';
-import TwitterIcon from '../assets/Images/Twitter-icon.svg';
-import HomeLayout from "../Layouts/HomeLayout";
-import { login } from "../Redux/AuthSlice";
+import FacebookIcon from '../../assets/Images/Facebook-icon.svg';
+import TwitterIcon from '../../assets/Images/Twitter-icon.svg';
+import HomeLayout from "../../Layouts/HomeLayout";
+import { login } from "../../Redux/AuthSlice";
 
-const Login = () => {
+const LoginPage = ({ isActive }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -60,11 +60,12 @@ const Login = () => {
     }
 
     return (
-        <HomeLayout>
-            <div className="flex items-center justify-center bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl">
-                <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
 
-                    <div className=' flex h-[80vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white  md:h-[85vh] md:w-8/12'>
+        <HomeLayout>
+            <div className={` inset-0 flex  items-center justify-center bg-[#bcc7d6] pb-20 text-xl`} >
+                <div className="flex h-screen w-screen items-end justify-around md:w-3/4 lg:w-1/2">
+
+                    <div className=' mb-5 flex h-[80vh] w-10/12 flex-col items-center justify-around rounded-2xl  border-2  bg-white shadow-2xl transition-all duration-500 ease-in-out md:h-[85vh] md:w-8/12 md:scale-95'>
 
                         <div className='flex items-center justify-center py-3 text-3xl font-bold'><h1>Login</h1>
                         </div>
@@ -131,7 +132,8 @@ const Login = () => {
                 </div>
             </div>
         </HomeLayout>
+
     )
 }
 
-export default Login
+export default LoginPage

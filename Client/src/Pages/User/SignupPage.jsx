@@ -6,12 +6,12 @@ import { CiLock, CiUser } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
-import Default_Profile from '../assets/Images/Default_Profile.webp';
-import HomeLayout from "../Layouts/HomeLayout";
-import { createAccount } from "../Redux/AuthSlice";
+import Default_Profile from '../../assets/Images/Default_Profile.webp';
+import HomeLayout from "../../Layouts/HomeLayout";
+import { createAccount } from "../../Redux/AuthSlice";
 
 
-const Signup = () => {
+const SignupPage = ({ isActive }) => {
 
     const dispatch = useDispatch()
     const Navigate = useNavigate()
@@ -87,7 +87,7 @@ const Signup = () => {
         const response = await dispatch(createAccount(formData))
 
         if (response?.payload?.Data?.User) {
-            Navigate('/')
+            Navigate('/login')
         }
 
         setUserDetails({ fullName: "", email: "", password: "", avatar: Default_Profile })
@@ -96,12 +96,12 @@ const Signup = () => {
 
 
     return (
+
         <HomeLayout>
+            <div className={` inset-0 top-[10vh] flex items-center justify-center bg-[#bcc7d6] pb-24 text-xl `}>
+                <div className="flex h-screen w-screen items-center  justify-around md:w-3/4 md:items-end lg:w-1/2">
 
-            <div className="flex items-center justify-center bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl">
-                <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
-
-                    <div className=' flex h-[80vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white  md:h-[85vh] md:w-8/12'>
+                    <div className=' flex h-[80vh] w-10/12 scale-95 flex-col items-center justify-around rounded-2xl border-2 bg-white  shadow-2xl  md:mb-5 md:h-[85vh] md:w-8/12 md:pb-5'>
 
                         <div className='flex items-center justify-center py-3 text-3xl font-bold'><h1>Sign Up</h1>
                         </div>
@@ -203,4 +203,4 @@ const Signup = () => {
     )
 }
 
-export default Signup
+export default SignupPage

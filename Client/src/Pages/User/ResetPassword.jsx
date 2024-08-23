@@ -4,8 +4,8 @@ import { CiLock } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import HomeLayout from "../Layouts/HomeLayout";
-import { resetPassword } from "../Redux/AuthSlice";
+import HomeLayout from "../../Layouts/HomeLayout";
+import { resetPassword } from "../../Redux/AuthSlice";
 
 const ResetPassword = () => {
 
@@ -34,16 +34,16 @@ const ResetPassword = () => {
 
         if (promise?.payload?.Message) {
             setUserInfo({ newPassword: "" })
-            navigate('/')
+            navigate('/login')
         }
     }
 
 
     return (<HomeLayout>
-        <div className="flex items-center justify-center bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl">
+        <div className="flex items-center justify-center bg-[#bcc7d6]  text-xl">
             <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
 
-                <div className=' flex h-[40vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white  md:h-[50vh] md:w-8/12'>
+                <div className=' flex h-[40vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2 bg-white  shadow-2xl  md:h-[50vh] md:w-8/12'>
 
                     <div className='flex items-center justify-center pt-3 text-3xl font-bold'><h1>Reset Password</h1>
                     </div>

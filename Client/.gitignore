@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 *.env
+
+
+src/assets/ImprovedTemplates
+src/assets/CourseImages
+src/assets/Templates
+src/assets/WebSite-Map
+src/assets/ProfilePictureSamples

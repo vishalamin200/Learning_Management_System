@@ -3,14 +3,13 @@ import toast from "react-hot-toast";
 import { AiOutlineMail } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 
-import HomeLayout from "../Layouts/HomeLayout";
-import { forgotPassword } from "../Redux/AuthSlice";
+import HomeLayout from "../../Layouts/HomeLayout";
+import { forgotPassword } from "../../Redux/AuthSlice";
 
 const ForgotPassword = () => {
 
     const [userInfo, setUserInfo] = useState({ email: "" })
     const dispatch = useDispatch()
-
 
     const handleInputChange = (e) => {
         e.preventDefault()
@@ -40,10 +39,10 @@ const ForgotPassword = () => {
 
 
     return (<HomeLayout>
-        <div className="flex items-center justify-center bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl">
+        <div className="flex items-center justify-center bg-[#bcc7d6]  text-xl">
             <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
 
-                <div className=' flex h-[40vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white  md:h-[50vh] md:w-8/12'>
+                <div className=' flex h-[40vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white shadow-2xl md:h-[50vh] md:w-8/12'>
 
                     <div className='flex items-center justify-center pt-3 text-3xl font-bold'><h1>Forgot Password</h1>
                     </div>
