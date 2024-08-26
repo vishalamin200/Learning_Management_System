@@ -15,7 +15,9 @@ const Home = () => {
   return (
     <div>
       <HomeLayout>
+
         <HeroSection />
+
         <div id="homePage" className="flex h-full w-full flex-col bg-[#FFFFFF] pt-16">
 
           <div id="buttom-section" className="flex h-fit flex-col items-center justify-center bg-[#FFFFFF] text-4xl font-bold text-violet-950">
@@ -78,13 +80,8 @@ const Home = () => {
                       <p id="type" className="pb-4 text-sm text-slate-700">Specilisation</p>
                     </div>
                   </div>
-
-
                 </div>
-
               </div>
-
-
             </div>
           </div>
         </div>
