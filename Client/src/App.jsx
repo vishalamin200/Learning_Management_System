@@ -2,11 +2,9 @@
 
 import { Route, Routes } from 'react-router-dom'
 
-import Rating from './Components/Course-components/CourseRating'
 import AccessDeniedPage from './Pages/AccessDeniedPage'
-import Courses from './Pages/Course/CourseCategory'
-import CoursePage from './Pages/Course/CoursePage'
-import CreateCourse from './Pages/Course/CreateCourse'
+import AllCoursesPage from './Pages/Course/AllCoursesPage'
+import CourseCategory from './Pages/Course/CourseCategory'
 import Home from './Pages/Home'
 import ChangePassword from './Pages/User/ChangePassword'
 import ContactPage from './Pages/User/ContactPage'
@@ -19,7 +17,6 @@ import SignupPage from './Pages/User/SignupPage'
 
 
 function App() {
-
 
   return (
     <>
@@ -38,11 +35,8 @@ function App() {
 
 
 
-        <Route path='/course' element={<CoursePage />} />
-        <Route path='/rating' element={<Rating />} />
-        <Route path='/' element={<NewEditProfilePage />} />
-        <Route path={`/course/:category`} element={<Courses />} />
-        <Route path='/createCourse' element={<CreateCourse />} />
+        <Route path='/course/all-courses' element={<AllCoursesPage />} />
+        <Route path={`/course/:category`} element={<CourseCategory />} />
 
       </Routes>
     </>
