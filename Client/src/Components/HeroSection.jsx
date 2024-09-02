@@ -15,9 +15,9 @@ const HeroSection = () => {
                 <p className='flex w-[70%] flex-wrap text-xl '>Choose from huge collection of online video courses with new additions published every month</p>
 
                 <div className='buttons mt-6 flex gap-x-5'>
-                    <button onClick={()=>navigate('/course')} className="duration-400 flex h-12 w-40 items-center justify-center rounded-md rounded-l-full rounded-r-full bg-[#7B68EE] p-3 font-bold text-white transition-all ease-in-out hover:border-none hover:bg-inherit hover:bg-white hover:text-[#7B68EE]">Explore Courses</button>
+                    <button onClick={()=>navigate('/course/all-courses')} className="duration-400 flex h-12 w-40 items-center justify-center rounded-md rounded-l-full rounded-r-full bg-[#7B68EE] p-3 font-bold text-white transition-all ease-in-out hover:border-none hover:bg-inherit hover:bg-white hover:text-[#7B68EE]">Explore Courses</button>
                    
-                    <button onClick={()=>navigate('/')} className="hover:text-bold flex h-12 w-40 items-center justify-center gap-x-1 rounded-md rounded-l-full rounded-r-full border-2 border-[#FEA93F] bg-inherit p-3 font-bold text-[#FEA93F] transition-all duration-500 ease-in-out hover:border-none hover:bg-inherit hover:text-black">Start Learning <FaArrowRight /></button>
+                    <button onClick={()=>navigate('/myCourses')} className="hover:text-bold flex h-12 w-40 items-center justify-center gap-x-1 rounded-md rounded-l-full rounded-r-full border-2 border-[#FEA93F] bg-inherit p-3 font-bold text-[#FEA93F] transition-all duration-500 ease-in-out hover:border-none hover:bg-inherit hover:text-black">Start Learning <FaArrowRight /></button>
                 </div>
             </div>
             <img src={HeroImage} alt="Hero Page Image " className='absolute bottom-0 right-[22%] h-[100%]  object-cover' />

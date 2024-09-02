@@ -2,7 +2,7 @@
 import { BsFacebook, BsInstagram, BsLinkedin, BsTwitter } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 
-import codeAcademyLogo from '../assets/Logos/CodeAcademy_logo_final.jpg';
+import codeAcademyLogo from '../assets/Logos/footer-website-logo.svg';
 
 const Footer = () => {
   const Year = new Date().getFullYear()
@@ -12,7 +12,9 @@ const Footer = () => {
       <div className='flex h-72 w-full justify-around bg-[#1E1E2C] px-16 py-12 text-white'>
 
         <div id='first colulm' className='flex w-44 flex-col gap-y-3'>
-          <div id='logo'><img src={codeAcademyLogo} className='h-12 w-32' alt="websiteLogo" /></div>
+        <div>
+          <img src={codeAcademyLogo} alt="CodeAcedemy-logo" className='h-10 w-36' />
+        </div>
           <p className='w-full'>Learning often happens in classroom but it doesn&apos;t have to </p>
 
           <p>+913214586785</p>

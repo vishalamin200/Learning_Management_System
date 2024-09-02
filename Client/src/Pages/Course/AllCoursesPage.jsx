@@ -12,7 +12,11 @@ import { fetchAllCourses } from '../../Redux/CourseSlice'
 const AllCoursesPage = () => {
 
     const dispatch = useDispatch()
+    const [allCourses, setAllCourses] = useState([])
+
+    const [coursePage, setCoursePage] = useState(1)
     const [courses, setCourses] = useState([])
+
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -20,13 +24,29 @@ const AllCoursesPage = () => {
             const courses = thunkResponse?.payload?.Data?.Courses
 
             if (courses != undefined && courses.length > 0) {
-                setCourses(courses)
+                setAllCourses(courses)
             } else {
                 setCourses(() => [])
             }
         }
         fetchCourses()
     }, [])
+
+    useEffect(() => {
+        allCourses ? setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8)) : null
+    }, [coursePage, allCourses])
+
+    const handleNextButton = () => {
+        if (Math.ceil(allCourses?.length /8) > coursePage) {
+            setCoursePage(coursePage + 1)
+        }
+    }
+    const handleBackButton = () => {
+        if (coursePage > 1) {
+            setCoursePage(coursePage - 1)
+        }
+    }
+
 
     return (
         <HomeLayout>
@@ -63,9 +83,9 @@ const AllCoursesPage = () => {
 
                 </div>
                 <div className='mb-8 mr-8 mt-5 flex items-center justify-end gap-x-5'>
-                    <BackButton />
-                    <p className='text-xl'>1</p>
-                    <NextButton />
+                    <BackButton handleBack={handleBackButton}  />
+                    <p className='text-xl'>{coursePage}</p>
+                    <NextButton handleNext={handleNextButton}/>
                 </div>
 
             </div>

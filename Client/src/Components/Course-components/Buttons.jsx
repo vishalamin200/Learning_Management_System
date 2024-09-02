@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types'
 import { GrNext, GrPrevious } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
-
-export const BackButton = () => {
+ 
+export const BackButton = ({ handleBack}) => {
     return (
-        <div className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-inherit'>
+        <button  onClick={handleBack} className='btn-sm  flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-inherit'>
             <GrPrevious />
-        </div>
+        </button>
     )
 }
-export const NextButton = () => {
+
+export const NextButton = ({ handleNext }) => {
     return (
-        <div className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-inherit'>
+        <button onClick={handleNext} className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-inherit'>
             <GrNext />
-        </div>
+        </button>
     )
 }
 
@@ -34,6 +35,13 @@ export const CourseButton = ({ courseName, route }) => {
 CourseButton.propTypes = {
     courseName: PropTypes.string.isRequired,
     route: PropTypes.string.isRequired
+}
+
+BackButton.propTypes = {
+    handleBack : PropTypes.func
+}
+NextButton.propTypes = {
+    handleNext : PropTypes.func
 }
 
 

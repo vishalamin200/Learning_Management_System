@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Default_Profile from '../../assets/Images/Default_Profile.webp';
-import codeAcademyLogo from '../../assets/Logos/CodeAcademy_logo_final.jpg';
+import codeAcademyLogo from '../../assets/Logos/Website-logo.png';
 import AvatarContent from "./AvatarContent";
 import CatalogContent from "./CatalogContent";
 import CommunityContent from "./CommunityContent";
@@ -37,7 +37,7 @@ const Navbar = () => {
     <div>
       <div id="navbar" className="absolute top-0 z-50 flex h-[10vh] w-[100%] flex-shrink  items-center justify-around bg-[#FFFFFF] shadow-lg" >
         <div>
-          <img src={codeAcademyLogo} alt="CodeAcedemy-logo" className='h-16 w-36' />
+          <img src={codeAcademyLogo} alt="CodeAcedemy-logo" className='h-6 w-36' />
         </div>
         <div>
           <nav className='flex items-center justify-center gap-5'>

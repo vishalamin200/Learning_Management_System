@@ -2,7 +2,7 @@ import { CourseButton } from "./Buttons"
 
 
 const CoursesCarousel = () => {
-    const courseList = ['All Courses','Web Development', 'Data Science', 'Machine Learning', 'Generative Ai', 'Cloud Computing', 'Data Structures','MySql', 'Operating System', 'Computer Networks', 'Java', 'System Design', 'UI/UX', 'C++']
+    const courseList = ['All Courses','Web Development', 'Data Science', 'Machine Learning', 'Generative Ai',"BlockChain", 'Cloud Computing', 'Data Structures','MySql', 'Operating System', 'Computer Networks', 'Java', 'System Design', 'UI/UX', 'C++']
     
     
     return (

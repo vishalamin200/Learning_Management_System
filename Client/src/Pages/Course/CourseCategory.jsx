@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import EmptyState from '../../assets/Logos/emptystate.svg'
-import { BackButton, NextButton } from '../../Components/Course-components/Buttons'
 import CoursesCarousel from '../../Components/Course-components/CoursesCarousel'
 import CourseTemplate from "../../Components/Course-components/CourseTemplate"
 import HomeLayout from '../../Layouts/HomeLayout'
@@ -40,7 +39,7 @@ const CourseCategory = () => {
 
     return (
         <HomeLayout>
-            <div id="coursePage" className="mx-24 mt-16 flex flex-col">
+            <div id="coursePage" className="mx-24 my-16 flex flex-col">
 
                 <CoursesCarousel />
 
@@ -55,9 +54,9 @@ const CourseCategory = () => {
                     </div>
                     <hr className="w-full font-bold" />
                 </div>
-                <div id="courses" className="flex flex-wrap">
+                <div id="courses" className="carousel carousel-start flex w-full flex-nowrap">
                     {
-                        courses.map((course) => <CourseTemplate key={course?._id} course={course}  />)
+                        courses.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate  course={course} /></div>)
                     }
                     {
                         (courses.length == 0) && <div className='relative mb-28 flex h-[100%] w-full flex-col items-center justify-center'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
@@ -65,12 +64,6 @@ const CourseCategory = () => {
                         </div>
                     }
                 </div>
-
-                {!(courses.length == 0) && <div className='mb-8 mr-8 mt-5 flex items-center justify-end gap-x-5'>
-                    <BackButton />
-                    <p className='text-xl'>1</p>
-                    <NextButton />
-                </div>}
 
             </div>
         </HomeLayout>

@@ -53,10 +53,10 @@ export const login = createAsyncThunk('/auth/login/', async (formData, thunkApi)
     }
 })
 
-export const getProfile = createAsyncThunk('/auth/getProfile',async (thunkApi)=>{
+export const getProfile = createAsyncThunk('/auth/getProfile',async (_,thunkApi)=>{
     try {
         const axiosPromise = await axiosInstance.get('/getProfile')
-        axiosPromise.data
+        return axiosPromise.data
     } catch (error) {
         // we get error meaans token is expired or server error
         return thunkApi.rejectWithValue(error.name)
@@ -64,7 +64,7 @@ export const getProfile = createAsyncThunk('/auth/getProfile',async (thunkApi)=>
 })
 
 
-export const logout = createAsyncThunk('/auth/logout/', async (thunkApi) => {
+export const logout = createAsyncThunk('/auth/logout/', async (_,thunkApi) => {
 
     try {
         const res = axiosInstance.get('/logout')
@@ -215,6 +215,24 @@ const AuthSlice = createSlice({
 
             })
 
+            .addCase(getProfile.fulfilled,(state,action)=>{
+                if (action?.payload?.Data) {
+                    localStorage.setItem('data', JSON.stringify(action?.payload?.Data))
+                    localStorage.setItem('isLoggedIn', true),
+                        localStorage.setItem('role', action?.payload?.Data?.role)
+
+                    state.isLoggedIn = true,
+                        state.data = action?.payload?.Data
+                    state.role = action?.payload?.Data?.role
+                }
+            })
+
+            .addCase(getProfile.rejected,(state,action)=>{
+                if(action?.payload?.Error === "TokenExpiredError")
+                localStorage.clear()
+                state.isLoggedIn = false
+            })
+
             .addCase(editProfile.fulfilled, (state, action) => {
 
                 if (action?.payload?.Data?.User) {
@@ -231,20 +249,6 @@ const AuthSlice = createSlice({
             .addCase(deleteAccount.fulfilled, (state) => {
                 localStorage.clear()
                 state.isLoggedIn = false
-            })
-
-            .addCase(getProfile.rejected,(state,action)=>{
-                if(action?.payload?.Error === "TokenExpiredError")
-                localStorage.clear()
-                state.isLoggedIn = false
-            })
-            .addCase(getProfile.fulfilled,(state,action)=>{
-                const User = action?.payload?.Data
-                if(User && User?.role){
-                    state.data = User
-                    state.role = User.role
-                    state.isLoggedIn = true
-                }
             })
     }
 })

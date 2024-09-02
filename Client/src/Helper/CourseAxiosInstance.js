@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const CourseAxiosInstance = axios.create({
 
-     baseURL: "https://localhost:4050/user/vi/course/",     //server default url
+     baseURL: "https://localhost:4050/user/course/",     //server default url
 
     withCredentials: true,
     timeout: 12000,

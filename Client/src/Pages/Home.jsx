@@ -29,7 +29,7 @@ const Home = () => {
               <div className="flex min-w-[30%] flex-col gap-y-5 pl-10 pt-12" id="getStarted">
                 <p className="text-3xl font-bold">Get started with GenAI</p>
                 <p className="text-base">Identify, develop and execute impactful GenAI business stretegies</p>
-                <button onClick={() => navigate('/course')} className="btn btn-wide bg-[#0056D2] text-base text-white hover:bg-[#134d9f]">View All Courses</button>
+                <button onClick={() => navigate('/course/generative-ai')} className="btn btn-wide bg-[#0056D2] text-base text-white hover:bg-[#134d9f]">View All Gen Ai</button>
               </div>
 
 

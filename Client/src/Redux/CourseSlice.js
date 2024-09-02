@@ -28,6 +28,18 @@ export const fetchAllCourses = createAsyncThunk('courses/getchAllCourses/', asyn
     }
 })
 
+export const fetchSubscribedCourses = createAsyncThunk('courses/fetchSubscribedCourses/', async (_, thunkApi) => {
+
+    try {
+        const res = await CourseAxiosInstance.get('/subscribedCourses')
+        return res.data
+
+    } catch (error) {
+        toast.error(error?.response.data?.Message || "Error In Fetching Subscribed Courses")
+        return thunkApi.rejectWithValue(error.message)
+    }
+})
+
 export const createCourse = createAsyncThunk('createCourse/', async (formData, thunkApi) => {
 
     try {
