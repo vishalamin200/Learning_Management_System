@@ -6,8 +6,6 @@ import { FcGoogle } from "react-icons/fc";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
-import FacebookIcon from '../../assets/Images/Facebook-icon.svg';
-import TwitterIcon from '../../assets/Images/Twitter-icon.svg';
 import HomeLayout from "../../Layouts/HomeLayout";
 import { login } from "../../Redux/AuthSlice";
 
@@ -26,6 +24,12 @@ const LoginPage = ({ isActive }) => {
             [name]: value
         })
     }
+
+    const handleGoogleLogin = (e) => {
+        e.preventDefault()
+        window.open('https://localhost:4050/auth/google/callback', '_self')
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -62,12 +66,12 @@ const LoginPage = ({ isActive }) => {
     return (
 
         <HomeLayout>
-            <div className={` inset-0 flex  items-center justify-center bg-[#bcc7d6] pb-20 text-xl`} >
-                <div className="flex h-screen w-screen items-end justify-around md:w-3/4 lg:w-1/2">
+            <div className={` inset-0 flex items-center justify-center  bg-[#bcc7d6] pt-16 text-xl md:pb-20 md:pt-0`} >
+                <div className="flex h-fit w-screen justify-around md:h-screen md:w-3/4 md:items-end lg:w-1/2">
 
-                    <div className=' mb-5 flex h-[80vh] w-10/12 flex-col items-center justify-around rounded-2xl  border-2  bg-white shadow-2xl transition-all duration-500 ease-in-out md:h-[85vh] md:w-8/12 md:scale-95'>
+                    <div className=' flex h-[85vh] w-full flex-col items-center justify-evenly border-2 bg-white shadow-2xl  transition-all  duration-500 ease-in-out md:mb-5 md:h-[85vh] md:w-8/12 md:scale-95 md:justify-around md:rounded-2xl'>
 
-                        <div className='flex items-center justify-center py-3 text-3xl font-bold'><h1>Login</h1>
+                        <div className=' text-3xl font-bold md:py-3 md:pt-3'><h1>Login</h1>
                         </div>
 
                         <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
@@ -112,17 +116,13 @@ const LoginPage = ({ isActive }) => {
                                 <p className="absolute right-0 my-3 text-lg"><Link to='/forgotPassword'> Forgot Password?</Link> </p>
                             </div>
                             <div className="mt-16 w-full">
-                                <button type="submit" className="flex h-9 w-full cursor-pointer items-center justify-center rounded-3xl bg-red-800 bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl text-white"><p>Login</p></button>
+                                <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Login</p></button>
                             </div>
                         </form>
-                        <div className="mt-4 flex flex-col items-center justify-around">
-                            <p className="mb-4 text-lg ">Or Sign Up Using</p>
+                        <div className="mb-6 flex w-3/4 flex-col items-center  justify-around">
+                            <p className="mb-2 text-lg ">Or</p>
 
-                            <div className="flex items-center justify-center gap-3">
-                                <FcGoogle size={40} />
-                                <img src={TwitterIcon} alt='twitter-icon' className="w-12" />
-                                <img src={FacebookIcon} alt='twitter-icon' className="w-11" />
-                            </div>
+                            <button onClick={handleGoogleLogin} className="border-1 btn  flex  w-full items-center border bg-white shadow-lg hover:bg-inherit"><FcGoogle size={32} /> <p>Login with <span className="font-bold">google</span></p></button>
                         </div>
                         <div className="flex items-center justify-center gap-2">
                             <p className="text-lg">Don&apos;t have an account?</p>

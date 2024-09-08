@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineMail } from "react-icons/ai";
 import { CiLock, CiUser } from "react-icons/ci";
+import { FcGoogle } from "react-icons/fc";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -46,6 +47,11 @@ const SignupPage = ({ isActive }) => {
             ...userDetails,
             [name]: value
         })
+    }
+
+    const handleGoogleSignup = (e) => {
+        e.preventDefault()
+        window.open('https://localhost:4050/auth/google/callback', '_self')
     }
 
     const handleSubmit = async (event) => {
@@ -98,16 +104,16 @@ const SignupPage = ({ isActive }) => {
     return (
 
         <HomeLayout>
-            <div className={` inset-0 top-[10vh] flex items-center justify-center bg-[#bcc7d6] pb-24 text-xl `}>
-                <div className="flex h-screen w-screen items-center  justify-around md:w-3/4 md:items-end lg:w-1/2">
+            <div className={` inset-0 flex items-center justify-center bg-[#bcc7d6]  pt-16 text-xl md:top-[10vh] md:pb-24 md:pt-0 `}>
+                <div className="flex w-screen items-center justify-around  md:h-screen md:w-3/4 md:items-end lg:w-1/2">
 
-                    <div className=' flex h-[80vh] w-10/12 scale-95 flex-col items-center justify-around rounded-2xl border-2 bg-white  shadow-2xl  md:mb-5 md:h-[85vh] md:w-8/12 md:pb-5'>
+                    <div className=' flex h-[85vh] w-full flex-col items-center justify-evenly border-2 bg-white md:mb-5 md:w-8/12  md:scale-95   md:rounded-2xl md:pb-5 md:shadow-2xl'>
 
                         <div className='flex items-center justify-center py-3 text-3xl font-bold'><h1>Sign Up</h1>
                         </div>
 
                         <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
-                            <div>
+                            {/* <div>
                                 <label htmlFor="avatar" >
                                     <div className=" h-36 w-36 cursor-pointer rounded-full">
                                         {
@@ -123,7 +129,7 @@ const SignupPage = ({ isActive }) => {
                                     id="avatar"
                                     accept=".jpg, .jpeg, .svg, .png"
                                     className="hidden" />
-                            </div>
+                            </div> */}
 
                             <div className="my-2 w-full">
                                 <p className="py-1 text-lg">Full Name</p>
@@ -185,12 +191,17 @@ const SignupPage = ({ isActive }) => {
                                     <hr className="my-1" />
                                 </label>
                             </div>
-                            <div>
-                            </div>
+
                             <div className="mt-8 w-full">
-                                <button type="submit" className="flex h-9 w-full cursor-pointer items-center justify-center rounded-3xl bg-red-800 bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl text-white"><p>Sign Up</p></button>
+                                <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Sign Up</p></button>
                             </div>
                         </form>
+
+                        <div className="my-3 flex w-3/4 flex-col items-center justify-around">
+                            <p className="mb-2 text-lg ">Or</p>
+
+                            <button onClick={handleGoogleSignup} className="border-1 btn  flex  w-full items-center border bg-white shadow-lg hover:bg-inherit"><FcGoogle size={32} /> <p>Signup with <span className="font-bold">google</span></p></button>
+                        </div>
 
                         <div className="mt-1 flex items-center justify-center gap-2">
                             <p className="text-lg">Already have an account?</p>
