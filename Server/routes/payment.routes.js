@@ -1,15 +1,22 @@
 import { Router } from "express";
-import { cancelSubscription, createSubcription, getAllSubscriptions, verifySubscription } from "../controllers/payment.controllers.js";
+import { cancelSubscription, createOrder, createSubscription, fetchPurchaseHistory, getAllSubscriptions, getKeyId, verifyOrder, verifySubscription } from "../controllers/payment.controllers.js";
+import isLoggedIn from "../middlewares/authentication.middleware.js";
+
 const router = Router()
 
-router.route('/getKeyId')
+router.route('/getKeyId').get(getKeyId)
 
-router.route("/subscribe").post(createSubcription)
+router.route('/createOrder').post(isLoggedIn,createOrder)
 
-router.route("/verify").post(verifySubscription)
+router.route('/verifyOrder').post(isLoggedIn,verifyOrder)
 
-router.route('/unsubscribe').post(cancelSubscription)
+router.route("/subscribe").post(isLoggedIn, createSubscription)
 
+router.route("/verify").post(isLoggedIn, verifySubscription)
+
+router.route('/unsubscribe').post(isLoggedIn, cancelSubscription)
+
+router.route('/purchaseHistory').get(isLoggedIn,fetchPurchaseHistory)
 
 router.route("/").get(getAllSubscriptions)
 

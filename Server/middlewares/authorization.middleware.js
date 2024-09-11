@@ -23,7 +23,7 @@ const isSubscribed = (req,res,next)=>{
         const role = req.user.role
         const subStatus = req.user.subscription.status
     
-        if(role === 'ADMIN' || subStatus ==='active'){
+        if(role === 'ADMIN' || role === 'INSTRUCTOR' || subStatus ==='active'){
             next()
         }else{
             return res.sendError(401,"Access Denied", "You Do Not have Required Permissino to Access this Resources",req.user)

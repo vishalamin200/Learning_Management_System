@@ -1,5 +1,5 @@
 
-const errorMiddleware = (req,res,next)=>{
+const errorUtilityFunc = (req,res,next)=>{
     res.sendError = (statusCode=400, message="Something Went Wrong", error="")=>{
         return res.status(statusCode).json({
             Success:false,
@@ -11,4 +11,4 @@ const errorMiddleware = (req,res,next)=>{
     next()
 }
 
-export default errorMiddleware
+export default errorUtilityFunc

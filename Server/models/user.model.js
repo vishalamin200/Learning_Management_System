@@ -5,6 +5,11 @@ import mongoose, { Schema } from "mongoose";
 
 
 const userSchema = new Schema({
+
+    googleId:{
+        type:String,
+    },
+
     fullName: {
         type: String,
         trim: true,
@@ -24,19 +29,19 @@ const userSchema = new Schema({
     contact: {
         type: String,
         trim: true,
-        default:""
+        default: ""
     },
 
     linkedin: {
         type: String,
         trim: true,
-        default:""
+        default: ""
     },
 
     address: {
         type: String,
         trim: true,
-        default:""
+        default: ""
     },
 
     password: {
@@ -48,7 +53,7 @@ const userSchema = new Schema({
 
     role: {
         type: String,
-        enum: ['USER', 'ADMIN'],
+        enum: ['USER','INSTRUCTOR','ADMIN'],
         default: "USER"
     },
 
@@ -63,16 +68,42 @@ const userSchema = new Schema({
         }
     },
 
-    subscription: {
-        id: {
-            type: String,
-            default: ""
-        },
-        status: {
-            type: String,
-            default: "Inactive"
+    subscriptions: [
+        {
+            courseId: {
+                type: String,
+                default: null,
+                unique:true
+            },
+            courseTitle: {
+                type: String,
+                default: null,
+             },
+            subscription_id: {
+                type: String,
+                default: ""
+            },
+            order_id:{
+                type:String,
+                default:""
+            },
+
+            subscription_status: {
+                type: String,
+                default: "Inactive"
+            },
+
+            purchaseAt:{
+                type:Date,
+            },
+            expiresAt:{
+                type:Date,
+            },
+            paymentDetails:{
+                type:Object
+            }
         }
-    },
+    ],
 
     forgetPasswordToken: String,
 

@@ -12,7 +12,6 @@ const getKeyId = (req, res, next) => {
 }
 
 const createOrder = async (req,res)=>{
-
     try {
         
        const {courseId} = req.body
@@ -38,6 +37,10 @@ const createOrder = async (req,res)=>{
         //store the order_id in the database
         if (user.role === 'ADMIN') {
             return res.sendError(400, "Admin Can't Purchase Course")
+        }
+
+        if (user.role === 'INSTRUCTOR') {
+            return res.sendError(400, "Instructor Can't Purchase Course")
         }
 
         //Check Whether any order is created Already Or not
@@ -135,6 +138,10 @@ const createSubscription = async (req, res, next) => {
 
         if (User.role === 'ADMIN') {
             return res.sendError(400, "Admin Can't Purchase Subscription!", { Name: User.fullName, email: User.email, role: User.role })
+        }
+
+        if (User.role === 'INSTRUCTOR') {
+            return res.sendError(400, "Instructor Can't Purchase Subscription!", { Name: User.fullName, email: User.email, role: User.role })
         }
 
         //Check Whether any subscription is created for the given course or not
@@ -293,7 +300,11 @@ const cancelSubscription = async (req, res, next) => {
         }
 
         if (User.role === 'ADMIN') {
-            return res.sendError(400, "ADMIN Can't Unsubscribe", User)
+            return res.sendError(400, "Admin Can't Unsubscribe", User)
+        }
+
+        if (User.role === 'INSTRUCTOR') {
+            return res.sendError(400, "Instructor Can't Unsubscribe", User)
         }
 
         const subscriptionId = User.subscription.id

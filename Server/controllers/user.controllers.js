@@ -2,6 +2,7 @@ import cloudinary from 'cloudinary'
 import emailValidator from 'email-validator'
 import fs from 'fs'
 import userModel from '../models/user.model.js'
+import sendResetEmailByBrevo from '../utils/sendEmailByBrevo.util.js'
 import sendResetEmail from '../utils/sendEmail.util.js'
 
 
@@ -145,11 +146,13 @@ const login = async (req, res, next) => {
     }
 }
 
-const getProfile = (req, res, next) => {
+const getProfile = async (req, res, next) => {
     // we can get the profile if use is logged in , if use is logged in req.user will have all his details
 
     try {
-        const userDetails = req.user
+        const userId = req?.user?.id
+
+        const userDetails = await userModel.findById(userId)
 
         if (!userDetails) {
             res.sendError(401, "Unautherised User")
@@ -169,18 +172,18 @@ const editProfile = async (req, res, next) => {
     // if user is logged in we will get his userId,
     try {
         const userId = req.user.id
-        const { fullName,contact,linkedin,address, removeProfile } = req.body
+        const { fullName, contact, linkedin, address, removeProfile } = req.body
 
         if (fullName.length < 3) {
             return res.sendError(400, "Name Is Too Short")
         }
 
-        const User = await userModel.findByIdAndUpdate(userId, { fullName,contact,linkedin,address }, { new: true })
+        const User = await userModel.findByIdAndUpdate(userId, { fullName, contact, linkedin, address }, { new: true })
         if (!User) {
             return res.sendError(400, "Please Logged In Again, And Try", User)
         }
 
-        if(removeProfile === 'true') {
+        if (removeProfile === 'true') {
 
             // remove profile picture from cloudinary
             const avatar_public_id = User?.avatar?.public_id
@@ -283,7 +286,7 @@ const logout = (req, res, next) => {
 
     try {
         res.cookie("token", "", cookieOptions)
-         return res.success(200, "Logout Successfully")
+        return res.success(200, "Logout Successfully")
     } catch (error) {
         res.sendError(400, "Error in Logout", error.message)
     }
@@ -337,25 +340,25 @@ const forgetPassword = async (req, res, next) => {
         return res.sendError(400, "Email Field is Required")
     }
 
+    //user doesn't exist with this email
+    const User = await userModel.findOne({ email })
+
+    //Note: find function will return empty array, if 
+    if (!User) {
+        return res.sendError(400, "No Account Exists with This Email")
+    }
+
     try {
-        //user doesn't exist with this email
-        const User = await userModel.findOne({ email })
-
-        //Note: find function will return empty array, if 
-        if (!User) {
-            return res.sendError(400, "No Account Exists with This Email")
-        }
-
-
         // now generate token which can only be use in 5mins and Send a mail with Link Containting Token
 
         const token = await User.resetPasswordToken()
 
-        await sendResetEmail(User._id, User.email,User.fullName, token)
+        await sendResetEmail(User._id, User.email, User.fullName, token)
 
-        res.success(200, "Email Successfully Send", { fullName: User.fullName, email: User.email })
+        res.success(200, "Email Send Successfully", { fullName: User.fullName, email: User.email })
 
     } catch (error) {
+        console.log("Error :" ,error)
         User.forgetPasswordToken = undefined
         User.forgetPasswordExpiry = undefined
         User.save()
@@ -405,7 +408,7 @@ const deleteAccount = async (req, res) => {
     // delete the profile picture from cloudinary, delete it's account from mongo
 
     try {
-        
+
         if (!req.user) {
             return res.sendError(401, "Please Logged In Again And Try")
         }

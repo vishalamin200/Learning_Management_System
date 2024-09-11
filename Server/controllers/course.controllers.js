@@ -2,20 +2,25 @@ import cloudinary from 'cloudinary'
 import fs from 'fs'
 import mongoose from "mongoose"
 import courseModel from "../models/course.model.js"
+import userModel from '../models/user.model.js'
 
 
 const createCourse = async (req, res, next) => {
     //get all the details about course from body
     // thumbnail from files
 
-    const { topic, description, category, createdBy } = req.body
+    const { topic, description, category, createdBy, creatorEmail } = req.body
 
     //if any empty field
-    if (!topic || !description || !category || !createdBy || !req.file) {
+    if (!topic || !description || !category || !createdBy || !creatorEmail || !req.file) {
         return res.sendError(400, "All Fields are Mandatory")
     }
 
     try {
+
+        // convert category string in fix formate before saving into mongodb
+        req.body.category = category.trim().replace(/\s+/g, '-').toLowerCase();
+
         const newCourse = await courseModel.create(req.body)
 
         if (!newCourse) {
@@ -44,9 +49,9 @@ const createCourse = async (req, res, next) => {
 
             //Delete file from local storage
             fs.rmSync(req.file.path)
-            console.log("Removed Thumbnail From Local Storage")
+            console.log("Removed Thumbnail From Temporary Storage In Server")
 
-            return res.success(200, "Course Successfully Created", newCourse)
+            return res.success(200, "Course Created Successfully", newCourse)
         }
 
     } catch (error) {
@@ -58,9 +63,9 @@ const viewCourses = async (req, res, next) => {
     //Show all the courses in the dabasase
 
     try {
-        const allCourses = await courseModel.find({}).select('-lectures')
+        const allCourses = await courseModel.find({})
         if (allCourses.length >= 0) {
-            return res.success(200, "Fetch Courses Successfully", {Courses:allCourses})
+            return res.success(200, "Fetch Courses Successfully", allCourses )
         } else {
             return res.sendError(400, "Error in Get Courses")
         }
@@ -100,6 +105,55 @@ const getCoursesByCategoryOrName = async (req, res) => {
 
 }
 
+const fetchSubscribedCourses = async (req, res) => {
+
+    try {
+
+        // get the list of all course of the user
+        const userId = req.user.id
+
+        if (!userId) {
+            return res.sendError(401, "Please Login And Try Again")
+        }
+
+        const user = await userModel.findById(userId)
+
+        if (!user) {
+            return res.sendError(401, "Unauthorized User")
+        }
+
+        const courseIdList = user?.subscriptions?.filter((sub) => sub.subscription_status == 'active').map((sub) => sub.courseId)
+
+        const subscribedCourses = await courseModel.find({ _id: { $in: courseIdList } })
+
+        return res.success(200, "Fetch Subscribed Courses Successfully", subscribedCourses)
+
+    } catch (error) {
+        return res.sendError(400, "Error In fetching Subscribed Courses", error.message)
+    }
+}
+
+const fetchCreatedCourses = async (req, res) => {
+    try {
+        const userId = req.user.id
+
+        if (!userId) {
+            return res.sendError(401, "Please Login And Try Again")
+        }
+
+        const user = await userModel.findById(userId)
+        const creatorEmail = user?.email
+
+        const courses = await courseModel.find({ creatorEmail })
+
+        return res.success(200, "Fetched Created Courses Successfully", courses)
+
+    } catch (error) {
+        return res.sendError(400, "Error In fetching Created Courses", error.message)
+    }
+}
+
+
 const updateCourse = async (req, res, next) => {
 
     try {
@@ -111,24 +165,38 @@ const updateCourse = async (req, res, next) => {
             return res.sendError(400, "Invalid Course Id")
         }
 
+        const Course = await courseModel.findById(courseId)
+        if (!Course) {
+            return res.sendError(404, "Course Doesn't Exist")
+        }
+
+
+
         // fetch Details for updates
         if (Object.keys(req.body).length != 0) {
-            try {
-                const Course = await courseModel.findByIdAndUpdate(courseId, { $set: req.body }, { new: true, runValidators: true })
 
-                await Course.save()
+            // convert category string in fix formate before saving into mongodb
+            const { category } = req.body
+
+            if (category) {
+                req.body.category = category.trim().replace(/\s+/g, '-').toLowerCase();
+            }
+
+            const { thumbnail, ...objectWithoutThumbnail } = req.body
+
+            try {
+                const UpdatedCourse = await courseModel.findByIdAndUpdate(courseId, { $set: objectWithoutThumbnail }, { new: true, runValidators: true })
+
             } catch (error) {
                 return res.sendError(400, "Error In Updating Course Details")
             }
 
         } else {
-            res.success(200, "No Updation in Course", "No Value Provided For Updation")
+            return res.success(200, "No Updation in Course", "No Value Provided For Updation")
         }
 
         console.log("req.file: ", req.file)
 
-
-        const Course = await courseModel.findById(courseId)
 
         //Now if Thumbnail is Provided for update 
         if (req.file) {
@@ -149,26 +217,36 @@ const updateCourse = async (req, res, next) => {
             }
 
             const newPublicId = result.public_id
+            const newSecureUrl = result.secure_url
 
             //we will delete the old thumbnail from Cloudnary
-            const oldPublicId = Course.thumbnail.public_id
+            const oldPublicId = Course?.thumbnail?.public_id
 
-            const deleteOldThumbnail = await cloudinary.v2.uploader.destroy(oldPublicId, (err, success) => {
-                if (err) {
-                    console.log("Error in Deleting Old thumbnail from Cloudinary ")
-                } else if (success && success.result == 'ok') {
-                    console.log("Deleted Old Thumbnail From Cloudinary")
-                }
-            })
+            if (oldPublicId) {
 
-            // Update the Thumbnail public id to New Public Id 
+                const deleteOldThumbnail = await cloudinary.v2.uploader.destroy(oldPublicId, (err, success) => {
+                    if (err) {
+                        console.log("Error in Deleting Old thumbnail from Cloudinary ")
+                    } else if (success && success.result == 'ok') {
+                        console.log("Deleted Old Thumbnail From Cloudinary")
+                    }
+                })
+
+            } else {
+                console.log("Old thumbnail Doesn't exist")
+            }
+
+            // Update the Thumbnail public id, and secure url to New Public Id and  
             Course.thumbnail.public_id = newPublicId
+            Course.thumbnail.secure_url = newSecureUrl
 
             const updatedCourse = await Course.save({ runValidators: true, new: true })
 
-            return res.success(200, "Course Updated Successfully", updatedCourse)
+            return res.success(200, "Course Updated Successfully", { remark: "Thumbnail is Updated", updatedCourse: updatedCourse })
         } else {
-            return res.success(200, "Course Updated Successfully", { remark: "No Updation in Thumbnail", UpdatedCourse: Course })
+            const updatedCourse = await courseModel.findById(courseId)
+
+            return res.success(200, "Course Updated Successfully", { remark: "No Updation in Thumbnail", updatedCourse: updatedCourse })
         }
 
     } catch (error) {
@@ -235,7 +313,7 @@ const deleteCourse = async (req, res, next) => {
             console.log("No Thumbnail Of Any Lecture Exists on Cloudinary")
             remarks.push("No Thumbnail Of Any Lecture Exists on Cloudinary")
         }
-   
+
         // Delete course from Mongo
         const deletedCourse = await courseModel.findByIdAndDelete(courseId)
 
@@ -268,9 +346,11 @@ const addLecture = async (req, res, next) => {
             return res.sendError(400, "Title Is Required")
         }
 
+
+
         //Title Not Provided
-        if (!youtubeLink) {
-            return res.sendError(400, "YoutubeLink Is Required")
+        if (!youtubeLink && !req.file) {
+            return res.sendError(400, "Provide youtube link or upload a file")
         }
 
         const Course = await courseModel.findById(courseId)
@@ -279,52 +359,58 @@ const addLecture = async (req, res, next) => {
             return res.sendError(400, "Course Doesn't Exist, Please Create a New Course To Add Lecture")
         }
 
+        try {
+            await Course.lectures.push(req.body)
+            await Course.save()
 
-        //If thumbnail Is Provided
+        } catch (error) {
+            return res.sendError(400, "Error In Saving Lecture Information", error.message)
+        }
+
+
+        //If video Is uploaded
         if (req.file) {
-            const result = await cloudinary.v2.uploader.upload(req.file.path, {
-                folder: "lecturesThumbnail",
-                // transformation: [{ width: 1280, height: 720, }],
-                context: { alt: "lectureThumbnail" }
-            }, (err, result) => {
-                if (err) {
-                    return res.sendError(400, "Error In Lecture Upload")
-                } if (result) {
-                    console.log("Lecture Thumbnail Successfully Uploaded to Cloudinary")
+
+            try {
+                const result = await cloudinary.v2.uploader.upload(req.file.path, {
+                    folder: "lecturesVideos",
+                    context: { alt: "lectureVideo" },
+                    resource_type: "video" // Specified resource type as video
+                });
+
+                if (result) {
+                    console.log("Lecture Video Successfully Uploaded to Cloudinary");
                 }
-            })
 
-            if (result) {
-                const public_id = result.public_id
-                const secure_url = result.secure_url
-                await Course.lectures.push(
-                    {
-                        ...req.body,
-                        thumbnail: { public_id, secure_url },
-                    }
-                )
+                if (result) {
+                    const public_id = result.public_id
+                    const secure_url = result.secure_url
+                    await Course.lectures.push(
+                        {
+                            ...req.body,
+                            video: { public_id, secure_url },
+                        }
+                    )
 
-                //UPdate the Number of Lectures After inserting a lectures
-                Course.noOfLectures = await Course.lectures.length
-                await Course.save()
+                    //UPdate the Number of Lectures After inserting a lectures
+                    Course.noOfLectures = await Course.lectures.length
+                    await Course.save()
 
-                return res.success(200, "Lecture Added Successfully", { Course: Course.topic, Lecture: Course.lectures.slice(-1)[0] })
+                    return res.success(200, "Lecture Added Successfully", { Course: Course })
+                }
+            } catch (err) {
+                return res.sendError(400, "Error in uploading video", err.message)
             }
         } else {
             //Thumbnail Is not Provide, Save Only Lecture Details and Link
-
             try {
-                await Course.lectures.push(req.body)
-                await Course.save()
-
-                return res.success(200, "Lecture Added Successfully", { Remarks: "No Thumbnail Provided", Course: Course.topic, Lecture: Course.lectures.slice(-1)[0] })
+                return res.success(200, "Lecture Video Added Successfully", { Remarks: "No Video Uploaded, Video Link is Provided.", Course: Course })
             } catch (error) {
-                return res.sendError(400, "Error In Saving Lectures Details")
+                return res.sendError(400, "Error In Sending Lectures Details")
             }
         }
-
     } catch (error) {
-        return res.sendError(400, "Error In Adding Lecture", error.message)
+        return res.sendError(400, "Error In Adding Lecture Video", error.message)
     }
 }
 
@@ -353,42 +439,55 @@ const getLectures = async (req, res, next) => {
 
 const deleleLecture = async (req, res, next) => {
 
-    const { courseId, lectureId } = req.params
-    const Course = await courseModel.findById(courseId)
+    try {
 
-    const lecture = await Course.lectures.id(lectureId)
+        const { courseId, lectureId } = req.params
+        const Course = await courseModel.findById(courseId)
 
-    if (!lecture) {
-        return res.sendError(400, "Lecture Doesn't Exsit")
-    }
+        if (!Course) {
+            return res.sendError(404, "Course Doesn't Exist With Provided CourseId")
+        }
 
-    // Now First we will delete the Data Stored Cloudinary of this document
-    const thumbnailPublicId = lecture.thumbnail.public_id
-    if (thumbnailPublicId) {
+        const lecture = await Course.lectures.id(lectureId)
 
-        await cloudinary.v2.uploader.destroy(thumbnailPublicId, (err, success) => {
-            if (err) {
-                console.log("Error In Deleting The thumbnail from Cloudinary: ", err.message)
-            } else if (!success) {
-                console.log("Lecture Thumbnail doesn't Exist in Cloudinary")
+        if (!lecture) {
+            return res.sendError(400, "Lecture Doesn't Exit For This LectureId")
+        }
+
+
+        // Now First we will delete the Data Stored Cloudinary of this document
+        const videoPublicId = lecture?.video?.public_id
+
+        if (videoPublicId) {
+            try {
+                const result = await cloudinary.v2.uploader.destroy(videoPublicId, {
+                    resource_type: "video" // Specify resource type as video
+                });
+
+                if (result.result === 'ok') {
+                    console.log("Lecture Video Deleted From Cloudinary");
+                } else {
+                    console.log("Lecture Video doesn't Exist in Cloudinary");
+                }
+            } catch (err) {
+                console.log("Error In Deleting The Video from Cloudinary: ", err.message);
             }
-            if (success && success.result === 'ok') {
-                console.log("Lecture Thumbnail Deleted From Cloudinary")
-            }
-        })
-    } else {
-        console.log("Thumbnaail PublicId Doesn't exist Or Invalid")
+        } else {
+            console.log("Video PublicId Doesn't exist Or Invalid");
+        }
+
+        //delete teh lecture
+        await Course.lectures.pull({ _id: lectureId })
+
+        //update the numberOfLectures for Course
+        Course.noOfLectures = Course?.lectures?.length
+
+        const updatedCourse = await Course.save()
+
+        return res.success(200, "Lecture Deleted Successfully", updatedCourse)
+    } catch (error) {
+        return res.sendError(400, "Error In Deleting Lecture", error.message)
     }
-
-    //delete teh lecture
-    const deletedLecture = await Course.lectures.pull({ _id: lectureId })
-
-    //update the numberOfLectures for Course
-    Course.noOfLectures = Course.lectures.length
-
-    await Course.save()
-
-    return res.success(200, "Lecture Deleted Successfully", deletedLecture)
 }
 
 const updateLecture = async (req, res, next) => {
@@ -407,76 +506,126 @@ const updateLecture = async (req, res, next) => {
         return sendError(400, "Lecture Doesn't exist for Given LectureId", { LectureId: lectureId })
     }
 
-    if (Object.keys(req.body).length != 0) {
+    try {
 
-        const updateData = req.body
+        if (Object.keys(req.body).length != 0) {
 
-        Object.keys(updateData).forEach((key) => {
-            Lecture[key] = updateData[key]
-        })
+            const updateData = req.body
+            const { video, ...updateDataWithoutVideo } = req.body
 
-        await Course.save()
-        console.log("Course Data Updated")
+            Object.keys(updateDataWithoutVideo).forEach((key) => {
+                Lecture[key] = updateDataWithoutVideo[key]
+            })
 
-    } else {
-        return res.sendError(400, "Please Send the Data in Multipart/Form-data", { "req.body:": req.body })
+            await Course.save()
+            console.log("Course Data Updated")
+
+        } else {
+            return res.sendError(400, "Please Send the Data in Multipart/Form-data", { "req.body:": req.body })
+        }
+
+        console.log("req.file: ", req.file)
+        //Now if Video is Provided for update 
+
+        if (req.file) {
+            // upload the video to Cloudinary and get publicId
+
+            const result = await cloudinary.v2.uploader.upload(req.file.path,
+                {
+                    folder: "lecturesVideos",
+                    resource_type: "video",
+                    context: { alt: "lectureVideos" }
+                }
+            )
+
+            if (!result) {
+                req.sendError(400, "Error in Uploading New Video To Cloudinary")
+            } else {
+                console.log("New Video Uploaded To Cloudinary")
+            }
+
+            const newPublicId = result.public_id
+            const newSecureUrl = result.secure_url
+
+            //we will delete the old thumbnail from Cloudnary
+            const oldPublicId = Lecture?.video?.public_id
+
+            if (oldPublicId) {
+                try {
+                    const result = await cloudinary.v2.uploader.destroy(oldPublicId);
+                    if (result.result === 'ok') {
+                        console.log("Deleted Old Video From Cloudinary");
+                    } else {
+                        console.log("Failed to delete the old video");
+                    }
+                } catch (err) {
+                    console.log("Error in Deleting Old Video from Cloudinary", err);
+                }
+            }
+
+            // Update the Thumbnail public id to New Public Id, and Update the Secure Url also 
+            Lecture.video.public_id = newPublicId
+            Lecture.video.secure_url = newSecureUrl
+
+            // Save all the Information of Course, Provided It follow the Validations
+            const updatedCourse = await Course.save({ runValidators: true, new: true })
+
+            return res.success(200, "Lecture Updated Successfully", updatedCourse)
+        } else {
+            const updatedCourse = await courseModel.findById(courseId)
+            return res.success(200, "Lecture Updated Successfully { Video Is As Previous }", updatedCourse)
+        }
+    } catch (error) {
+        return res.sendError(400, 'Error In Updating Lecture', error.message)
+    }
+}
+
+
+const updateRating = async (req, res) => {
+
+    const userId = req.user.id
+    const { userRating, courseId } = req.body
+
+    if (!userId) {
+        return res.sendError("Please Logged And Try Again")
     }
 
+    if (userRating === undefined || userRating === null) {
+        return res.sendError(400, "Rating is Required")
+    }
+    if (userRating < 0 || userRating > 5) {
+        return res.sendError(400, 'Rating Is Invalid, Rating Must Be Between 0 To 5', userRating)
+    }
 
-    console.log("req.file: ", req.file)
-    //Now if Thumbnail is Provided for update 
-    if (req.file) {
-        // upload the thumbnail to Cloudinary and get publicId
+    if (!courseId) {
+        return res.sendError(400, "CourseId Is Missing")
+    }
 
-        const result = await cloudinary.v2.uploader.upload(req.file.path,
-            {
-                folder: "lecturesThumbnail",
-                // transformation: [{ width: 1280, height: 720, }],
-                context: { alt: "lecturethumnail" }
+    // check karo ki is user in pahle is course ke liye rating kari hai ki nai
+    const course = await courseModel.findById(courseId)
 
-            }
-        )
-        if (!result) {
-            req.sendError(400, "Error in Uploading New thumnail To Cloudinary")
-        } else {
-            console.log("New Thumbnail Uploaded To Cloudinary")
+    const courseObject = await course?.allRatings?.find((rating) => rating?.userId?.toString() === userId)
+
+    if (!courseObject) {
+        //Now User Never rated earlier to this course, so we will add the rating
+
+        const newRating = {
+            userId,
+            value: userRating
         }
-
-        const newPublicId = result.public_id
-        const newSecureUrl = result.secure_url
-
-        //we will delete the old thumbnail from Cloudnary
-        const oldPublicId = Lecture.thumbnail.public_id
-
-        if (oldPublicId) {
-            try {
-                const result = await cloudinary.v2.uploader.destroy(oldPublicId);
-                if (result.result === 'ok') {
-                    console.log("Deleted Old Thumbnail From Cloudinary");
-                } else {
-                    console.log("Failed to delete the old thumbnail");
-                }
-            } catch (err) {
-                console.log("Error in Deleting Old thumbnail from Cloudinary", err);
-            }
-        }
-
-        // Update the Thumbnail public id to New Public Id, and Update the Secure Url also 
-        Lecture.thumbnail.public_id = newPublicId
-        Lecture.thumbnail.secure_url = newSecureUrl
-
-        // Save all the Information of Course, Provided It follow the Validations
-        const updatedCourse = await Course.save({ runValidators: true, new: true })
-        const updatedLecture = await updatedCourse.lectures.id(lectureId)
-
-        return res.success(200, "Lecture Updated Successfully", updatedLecture)
+        course.allRatings.push(newRating)
+        await course.save()
+        return res.success(200, "Rating Added Successfully", course.allRatings)
     } else {
-        return res.success(200, "Lecture Updated Successfully {Thumbnail Isn't Update}",)
+        // User Is trying to update the already existing Course Rating
+        courseObject.value = userRating
+        await course.save()
+        return res.success(200, "Rating Added Successfully", course.allRatings)
     }
 }
 
 export {
-    addLecture, createCourse, deleleLecture, deleteCourse, getCoursesByCategoryOrName, getLectures,
-    updateCourse, updateLecture, viewCourses
+    addLecture, createCourse, deleleLecture, deleteCourse, fetchCreatedCourses, fetchSubscribedCourses, getCoursesByCategoryOrName, getLectures,
+    updateCourse, updateLecture, updateRating, viewCourses
 }
 
