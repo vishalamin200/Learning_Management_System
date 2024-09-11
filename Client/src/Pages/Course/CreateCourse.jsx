@@ -15,12 +15,13 @@ const CreateCourse = () => {
     const dispatch = useDispatch()
 
     const { data } = useSelector((state) => state.Auth)
-    const creatorName = data.fullName
+    const creatorName = data?.fullName
+    const creatorEmail = data?.email
 
     const navigate = useNavigate()
 
 
-    const [courseDetail, setCourseDetail] = useState({ topic: "", thumbnail: "", description: "", category: "", price: 0, discount: 0, level: "", language: "", createdBy: creatorName })
+    const [courseDetail, setCourseDetail] = useState({ topic: "", thumbnail: "", description: "", category: "", price: 0, discount: 0, level: "", language: "", createdBy: creatorName, creatorEmail })
 
     const [previewThumbnail, setPreviewThumbnail] = useState(null)
 
@@ -48,10 +49,10 @@ const CreateCourse = () => {
         setCourseDetail({ ...courseDetail, [name]: value })
     }
 
-    const handleRemoveThumbnail = (e)=>{
+    const handleRemoveThumbnail = (e) => {
         e.preventDefault()
         setPreviewThumbnail(null)
-        setCourseDetail({...courseDetail,thumbnail:undefined})
+        setCourseDetail({ ...courseDetail, thumbnail: undefined })
     }
 
     const handleFormSubmit = async (e) => {
@@ -60,8 +61,8 @@ const CreateCourse = () => {
         //Validate the course Detals
         const { topic, category, description, thumbnail, price, discount, level, language } = courseDetail
 
-        if (!topic || !category || !description || !thumbnail || price === null || price === undefined || discount=== null || discount === undefined || !level || !language) {
-             toast('All Marked Fields Are Mandatory')
+        if (!topic || !category || !description || !thumbnail || price === null || price === undefined || discount === null || discount === undefined || !level || !language) {
+            toast('All Marked Fields Are Mandatory')
             return
         }
 
@@ -114,7 +115,7 @@ const CreateCourse = () => {
             if (courseId) {
                 setTimeout(() => {
                     navigate(`/addLecture/`, { state: { courseId } });
-                }, 2000); 
+                }, 2000);
             }
         } else {
             return
@@ -128,25 +129,30 @@ const CreateCourse = () => {
 
                 <div id="header" className="mb-12 flex items-center justify-center ">
                     <ul className="steps">
-                        <li className="step step-primary w-56 ">Create Course</li>
-                        <li className="step  w-56">Add Lectures</li>
-                        <li className="step  w-56">Publish</li>
+                        <li className="step step-primary w-32 md:w-56 ">Create Course</li>
+                        <li className="step w-32  md:w-56">Add Lectures</li>
+                        <li className="step w-32  md:w-56">Publish</li>
                     </ul>
                 </div>
 
-                <form onSubmit={handleFormSubmit} className="flex" >
-                    <div id="newCourseInformation" className="mx-10 flex min-w-[50%] flex-col gap-y-6">
+                <form onSubmit={handleFormSubmit} className="flex flex-wrap lg:flex-nowrap" >
+
+                    <div id="newCourseInformation" className="mx-7 flex min-w-[50%] flex-col gap-y-6 md:mx-10">
 
                         <h2 className="text-center text-2xl font-bold">Course Information</h2>
+
                         <label htmlFor="courseTitle">
                             <p className="mb-1 text-xl font-bold">Title</p>
                             <input onChange={handleInputChange} type="text" name="topic" value={courseDetail.topic} id="courseTitle" className="h-10 w-full rounded-lg px-5 text-lg" placeholder='e.g. The Ultimate Fullstack Web Development Bootcamp' />
                         </label>
-                        <div className="flex w-full justify-between gap-x-3">
+
+                        <div className="flex w-full flex-wrap justify-between gap-x-3 gap-y-5 md:flex-nowrap">
 
                             <label htmlFor="category" >
+
                                 <p className="mb-1 text-xl font-bold">Category</p>
-                                <select onChange={handleInputChange} name="category" value={courseDetail?.category}   id="category" className="h-10 w-56 rounded-lg text-center text-lg">
+                                
+                                <select onChange={handleInputChange} name="category" value={courseDetail?.category} id="category" className="h-10 w-56 rounded-lg text-center text-lg">
                                     <option value="" hidden>Select Category</option >
                                     {courseList.map((course) => <option key={course} value={course}>
                                         {course}
@@ -190,10 +196,10 @@ const CreateCourse = () => {
                         </label>
 
                     </div>
-                    <div id="Thumnail-upload-container" className="flex w-[50%] flex-col gap-y-10 px-12">
+                    <div id="Thumnail-upload-container" className="mt-8 flex flex-col gap-y-10 px-7 md:px-12 lg:mt-0 lg:w-[50%]">
                         <div className='thumbnail'>
                             <p className="mb-1 text-2xl font-bold">Thumbnail</p>
-                            <label htmlFor="thumbnail" className='inline-block h-[18rem] w-[36rem] cursor-pointer border-2 border-dashed border-black'>
+                            <label htmlFor="thumbnail" className='inline-block h-[10rem] w-[20rem] cursor-pointer border-2 border-dashed border-black md:h-[18rem] md:w-[36rem]'>
                                 {previewThumbnail && <img src={previewThumbnail} alt='thumbnail' className='object-fit inline-block h-full w-full' />}
                             </label>
                             <input
@@ -209,15 +215,15 @@ const CreateCourse = () => {
                             <div className='flex items-center justify-center pt-5'><button onClick={handleRemoveThumbnail} ><p>Remove Thumbnail</p></button></div>
                         </div>
 
-                        <div className="flex justify-between">
+                        <div className="flex justify-between gap-x-10">
                             <label htmlFor="price">
                                 <p className="mb-1 text-xl font-bold">Price (Rs.)</p>
-                                <input onChange={handleInputChange} type="text" name="price"  value={courseDetail?.price} id="price" className='h-10 rounded-lg text-center text-lg' defaultValue={0} />
+                                <input onChange={handleInputChange} type="text" name="price" value={courseDetail?.price} id="price" className='h-10 w-40 rounded-lg text-center text-lg md:w-fit' defaultValue={0} />
                             </label>
 
                             <label htmlFor="discount">
                                 <p className="mb-1 text-xl font-bold">Discount (%)</p>
-                                <input onChange={handleInputChange} type="text" name="discount" value={courseDetail?.discount} id="discount" className='h-10 rounded-lg text-center text-lg' defaultValue={0} />
+                                <input onChange={handleInputChange} type="text" name="discount" value={courseDetail?.discount} id="discount" className='h-10 w-40 rounded-lg text-center text-lg md:w-fit' defaultValue={0} />
                             </label>
                         </div>
 
@@ -225,10 +231,10 @@ const CreateCourse = () => {
                             <p className="mb-2 text-xl font-bold">Course Creator</p>
                             <input onChange={handleInputChange} type="text" name="createdBy" id="createdBy" className='h-10 cursor-not-allowed rounded-lg text-center text-lg' value={courseDetail.createdBy} />
                         </label>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between gap-x-10">
 
-                            <button className="h-12 w-32 rounded-xl bg-yellow-600 font-bold text-white">Save as Draft</button>
-                            <button type='submit' className="h-12 w-32 rounded-xl bg-[#4A00FF] font-bold text-white">Save & Next</button>
+                            <button className="h-12  w-32 rounded-xl bg-yellow-600 font-bold text-white">Save as Draft</button>
+                            <button type='submit' className="h-12  w-32  rounded-xl bg-[#4A00FF] font-bold text-white">Save & Next</button>
                         </div>
 
                     </div>

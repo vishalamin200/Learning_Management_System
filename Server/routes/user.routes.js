@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { deleteAccount, editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword } from "../controllers/user.controllers.js";
+import { deleteAccount, editProfile, fetchStudentsAndInstructors, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword } from "../controllers/user.controllers.js";
 import upload from "../middlewares/multer.middleware.js";
 import isLoggedIn from "../middlewares/authentication.middleware.js";
 
@@ -16,6 +16,9 @@ router.post('/forgetPassword', forgetPassword)
 
 router.post('/resetPassword/:userId/:token', resetPassword)
 router.delete('/deleteAccount', isLoggedIn, deleteAccount)
+
+router.get('/fetchStudentsAndInstructors',isLoggedIn,fetchStudentsAndInstructors)
+
 
 export default router
 

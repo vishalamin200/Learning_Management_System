@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -6,7 +7,7 @@ import EmptyState from '../../assets/Logos/emptystate.svg'
 import { BackButton, NextButton } from '../../Components/Course-components/Buttons'
 import MyCourseTemplate from '../../Components/Course-components/MyCourseTemplate'
 import HomeLayout from '../../Layouts/HomeLayout'
-import {fetchSubscribedCourses} from '../../Redux/CourseSlice.js'
+import { fetchAllCourses, fetchCreatedCourses, fetchSubscribedCourses, updateCourseRating } from '../../Redux/CourseSlice.js'
 
 const MyCourses = () => {
 
@@ -18,15 +19,18 @@ const MyCourses = () => {
     const [courses, setCourses] = useState([])
 
 
-    const { role } = useSelector((state) => state.Auth)
+    const { role, data } = useSelector((state) => state.Auth)
+    const userId = data?._id
 
     useEffect(() => {
         const fetchCourses = async () => {
-            const thunkResponse = await dispatch(fetchSubscribedCourses())
-             const courses = thunkResponse?.payload?.Data
+            const thunkResponse = role === 'ADMIN' ? await dispatch(fetchAllCourses()) : role === 'INSTRUCTOR'  ? await dispatch(fetchCreatedCourses())  : await dispatch(fetchSubscribedCourses())
+
+            const courses = thunkResponse?.payload?.Data
+            
 
             if (courses != undefined && courses.length > 0) {
-                setAllCourses(courses.map((course) => ({ ...course, userRating: 0 })))
+                setAllCourses(courses.map((course) => ({ ...course, userRating: course.allRatings.find((rating) => rating?.userId?.toString() == userId)?.value || 0 })))
             } else {
                 setAllCourses(() => [])
             }
@@ -41,6 +45,14 @@ const MyCourses = () => {
 
     const handleUserRating = (courseId, newUserRating) => {
         setCourses(courses.map((course) => course._id === courseId ? { ...course, userRating: newUserRating } : course))
+
+
+        setTimeout(async () => {
+            const thunkResponse = await dispatch(updateCourseRating({ userRating: newUserRating, courseId }))
+            if (!thunkResponse?.payload?.Success) {
+                toast.error(thunkResponse?.payload?.Message)
+            }
+        }, 0)
     }
 
     const handleNextButton = () => {
@@ -58,21 +70,23 @@ const MyCourses = () => {
 
     return (
         <HomeLayout>
-            <div className='mx-20 mt-20'>
-                <div id='header' className='mx-5 flex flex-wrap justify-between  pt-12 text-2xl font-bold'>
+            <div className='min-h-[94vh] pt-16 md:min-h-[90vh]   md:px-20'>
+                <div id='header' className='mx-5 flex flex-wrap justify-between   text-2xl font-bold md:pt-6'>
 
-                    <p className='underline'>My Courses</p>
+                    <p className='my-6 underline'>My Courses</p>
 
-                    {role === 'ADMIN' && <button onClick={() => navigate('/createCourse')} className="btn btn-primary btn-md text-white hover:bg-blue-700">Create New Course</button>}
+                    {(role === 'ADMIN' || role === 'INSTRUCTOR' ) && <button onClick={() => navigate('/createCourse')} className="btn btn-primary btn-md mt-5 text-white hover:bg-blue-700">Create New Course</button>}
 
                 </div>
-                <div id="courses" className="flex flex-wrap">
+                <div id="courses" className="flex   flex-wrap justify-center md:scale-100 md:justify-start">
 
                     {
                         courses.map((course) => <MyCourseTemplate key={course?.topic} course={course} role={role} handleUserRating={handleUserRating} />)
                     }
                     {
-                        (courses.length == 0) && <div className='relative mb-28 flex h-[100%] w-full flex-col items-center justify-center'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
+                        (courses.length == 0) && <div className='relative flex h-[100%] w-full flex-col items-center justify-center md:mb-60'>
+
+                            <img src={EmptyState} alt="Empty Page" className='mt-44 w-[72%] md:mt-24' />
                             <p className='text-base'>You have not subscribed any course</p>
                         </div>
                     }

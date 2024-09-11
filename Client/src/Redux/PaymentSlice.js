@@ -7,7 +7,8 @@ const initialState = {
     keyId: "",
     subscriptionId: "",
     orderId: "",
-    purchaseHistory: []
+    purchaseHistory: [],
+    allPayments : []
 }
 
 export const getKeyId = createAsyncThunk('payment/getKeyId', async (_, thunkApi) => {
@@ -79,6 +80,8 @@ export const fetchPurchaseHistory = createAsyncThunk('payment/purchaseHistory', 
         return thunkApi.rejectWithValue(error.message)
     }
 })
+
+
 
 
 const PaymentSlice = createSlice({

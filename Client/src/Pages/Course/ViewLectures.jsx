@@ -96,7 +96,7 @@ const ViewLectures = () => {
                 <div id="profilePicture" className="flex items-center justify-center">
                 </div>
 
-                {role === 'ADMIN' &&
+                {(role === 'ADMIN' || role === 'INSTRUCTOR' ) &&
                     <div className=" mb-6 flex justify-end gap-x-5 md:mb-0 md:gap-x-7">
                         <button onClick={handleAddLecture} id="add-new-lecture" className="text-bold btn btn-square btn-primary w-28 rounded-lg text-white md:w-32">Add Lecture</button>
 

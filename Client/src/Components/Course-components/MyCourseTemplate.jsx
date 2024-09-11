@@ -9,6 +9,7 @@ import CourseRating from "./CourseRating";
 
 const MyCourseTemplate = ({ course, role, handleUserRating }) => {
 
+
     const courseImage = course?.thumbnail?.secure_url
     const courseId = course?._id
     const topic = course?.topic
@@ -18,14 +19,13 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
     let courseRating = course.rating
     const userRating = course.userRating
 
-    courseRating = 4.5
-
+    
 
     const price = (discount) ? Math.trunc(originalPrice - (discount * originalPrice) / 100) : originalPrice
 
     const [rating, setRating] = useState(userRating)
     const [isFinilised, setIsFinilised] = useState(false)
-    const [editRating, seteditRating] = useState(false)
+    const [editRating, seteditRating] = useState(userRating > 0)
 
     const changeRating = () => {
         setIsFinilised(true)
@@ -42,7 +42,7 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
     }
 
 
-    const numberOfRating = 3
+    const numberOfRating = course?.allRatings?.length
     const completed = 20
 
     const ratingString = {
@@ -60,12 +60,16 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
 
     const navigate = useNavigate()
     const handleCourseClick = () => {
-        navigate('/viewLectures', { state: { course, role } })
+        if(role === 'ADMIN' || role === 'INSTRUCTOR' ){
+            navigate('/courseDetail', { state: { course, role } })
+        }else{
+            navigate('/viewLectures', { state: { course, role } })
+        } 
     }
 
     return (
-        <div  id="courseTemplate" className=" relative m-5  h-[21rem] w-72 cursor-pointer rounded-xl border-none bg-[#FFFFFF] p-2 text-black transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
-            <div onClick={handleCourseClick} id="courseImage" className="inset-2 h-36 w-full  ">
+        <div id="courseTemplate" className=" relative m-5  h-[21rem] w-80 cursor-pointer rounded-xl border-none bg-[#FFFFFF] p-2 text-black transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl md:w-72">
+            <div onClick={handleCourseClick} id="courseImage" className="inset-2 h-40 w-full md:h-36  ">
                 <img src={courseImage} alt="courseImage" className="h-full w-full rounded-xl object-cover" />
             </div>
 
@@ -74,7 +78,7 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
                 <div id="offeredBy" className="mb-2 mt-2 flex items-center gap-x-2 text-sm text-slate-700">{createdBy}</div>
                 <p onClick={handleCourseClick} id="courseName" className="mb-3 line-clamp-2 text-[18px] font-bold">{topic}</p>
 
-                {role === 'ADMIN' && <div onClick={handleCourseClick} className="flex items-center gap-x-1"><p>{courseRating}</p><CourseRating averageRating={courseRating} /> <p className="text-sm">({numberOfRating})</p></div>}
+                {(role === 'ADMIN' || role === 'INSTRUCTOR' ) && <div onClick={handleCourseClick} className="flex items-center gap-x-1"><p>{courseRating}</p><CourseRating averageRating={courseRating} /> <p className="text-sm">({numberOfRating})</p></div>}
 
                 {role === 'USER' && <div id="progrss-and-rating" className=" mt-3 flex w-full  flex-col justify-center gap-y-1">
                     <progress className="progress progress-primary w-full" value={completed} max={100} />
@@ -85,13 +89,13 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
                             <Stack spacing={1}>
                                 <Rating name="half-rating-read" value={userRating} precision={0.5} size='small' readOnly />
                             </Stack>
-                            <p  className="text-xs hover:underline z-20">{editRating ? 'Edit rating' : "Leave a rating"}</p>
+                            <p className="z-20 text-xs hover:underline">{editRating ? 'Edit rating' : "Leave a rating"}</p>
                         </div>
                     </div>
 
                 </div>}
 
-                {role === 'ADMIN' && <div id="price" className="mt-2  flex items-center gap-x-2 text-base">
+                {(role === 'ADMIN' || role === 'INSTRUCTOR' ) && <div id="price" className="mt-2  flex items-center gap-x-2 text-base">
                     <p id="type" className=" flex items-center  text-[#4790f6]">
                         {price == 0 || price == undefined ? "Free" : `₹${price}`}
 

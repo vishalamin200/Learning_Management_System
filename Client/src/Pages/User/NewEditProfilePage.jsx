@@ -30,9 +30,9 @@ const NewEditProfilePage = () => {
 
     const createdAt = new Date(data?.createdAt)
 
-    const joinDate = createdAt.toLocaleDateString('en-GB',{'day':'2-digit',"month":"short",'year':"numeric"})
+    const joinDate = createdAt.toLocaleDateString('en-GB', { 'day': '2-digit', "month": "short", 'year': "numeric" })
 
-    const joinTime = createdAt.toLocaleTimeString('en-US',{'timeZone':'Asia/Kolkata','hour':'2-digit','minute':'2-digit','second':'2-digit'})
+    const joinTime = createdAt.toLocaleTimeString('en-US', { 'timeZone': 'Asia/Kolkata', 'hour': '2-digit', 'minute': '2-digit', 'second': '2-digit' })
 
 
 
@@ -103,7 +103,8 @@ const NewEditProfilePage = () => {
         //valid contact number?
         if (contact.value.length > 0) {
 
-            const contactRegex = /(\+?( |-|\.)?\d{1,2}( |-|\.)?)?(\(?\d{3}\)?|\d{3})( |-|\.)?(\d{3}( |-|\.)?\d{4})/g
+            const contactRegex = /^(?:\d{10}|\+\d{1,2}\d{10})$/
+
             if (!contact.value.match(contactRegex)) {
                 toast.error("Provide Valid Contact Number")
                 return
@@ -156,10 +157,10 @@ const NewEditProfilePage = () => {
 
         <HomeLayout>
             <div >
-                <form noValidate onSubmit={handleSubmit} className={`flex w-[100%] flex-col items-center justify-center  bg-slate-500 pt-20 text-white md:flex md:h-screen md:flex-row `}>
+                <form noValidate onSubmit={handleSubmit} className={`flex  w-[100%] flex-col items-center justify-center  bg-slate-500 pt-16 text-white md:pt-12 lg:flex lg:h-screen lg:flex-row lg:pt-20  `}>
 
                     {/* bg-[#181A1B] */}
-                    <div className=" relative mt-8 flex h-96  w-[80vw] flex-col items-center justify-center bg-[#10162F] p-10 md:mt-0 md:h-[80%] md:w-[30vw]">
+                    <div className=" relative flex h-96 w-full  flex-col items-center justify-center bg-[#10162F] p-10 md:mt-8 lg:mt-0 lg:h-[80%] lg:w-[30vw]">
                         <div>
                             <label htmlFor="avatar" >
                                 <div className=" border-1 h-36 w-36 cursor-pointer rounded-full">
@@ -191,16 +192,22 @@ const NewEditProfilePage = () => {
                     </div>
 
 
-                    <div className="flex w-[80%] flex-col justify-center self-center  border-2 bg-white p-6 text-black md:h-[80%]  md:w-[50vw] md:px-10">
+                    <div className="flex w-full flex-col justify-center self-center  border-2 bg-white p-6 text-black lg:h-[80%]  lg:w-[50vw] lg:px-10">
 
-                        <div id="heading" className="flex items-center justify-center pb-5 pt-3">
+                        <div id="heading" className="flex items-center justify-between pb-6 pt-3">
                             <p className="text-3xl font-semibold text-black">Personal Information</p>
+
+                            <div className="mt-1  hidden items-center justify-center gap-2 lg:flex">
+                                <p className="text-lg text-red-700">
+                                    <a href="#deleteAccountModel" className="flex items-center justify-center gap-x-1 text-lg font-semibold text-[#BF2735]"><img src={deleteLogo} alt="deleteLogo" className="h-5 w-5" /> Delete Account</a>
+                                </p>
+                            </div>
                         </div>
 
 
-                        <div className="flex flex-wrap md:justify-between">
+                        <div className="flex flex-wrap lg:justify-between">
 
-                            <div className="mb-2 mt-5 w-full md:w-[45%]">
+                            <div className="mb-2 mt-5 w-full lg:w-[45%]">
                                 <p className="py-1 text-lg">Full Name</p>
 
                                 <label htmlFor="fullName" className='flex flex-col'>
@@ -222,7 +229,7 @@ const NewEditProfilePage = () => {
                                 </label>
                             </div>
 
-                            <div className="mb-2 mt-5 w-full md:w-[45%]">
+                            <div className="mb-2 mt-5 w-full lg:w-[45%]">
                                 <p className="py-1 text-lg">Email</p>
 
                                 <label htmlFor="email" className='flex flex-col '>
@@ -241,7 +248,7 @@ const NewEditProfilePage = () => {
                                     <hr className="my-1" />
                                 </label>
                             </div>
-                            <div className="mb-2 mt-5 w-full md:w-[45%]">
+                            <div className="mb-2 mt-5 w-full lg:w-[45%]">
                                 <p className="py-1 text-lg">Contact Number</p>
 
                                 <label htmlFor="contact" className='flex flex-col'>
@@ -261,7 +268,7 @@ const NewEditProfilePage = () => {
                                     <hr className="my-1" />
                                 </label>
                             </div>
-                            <div className="mb-2 mt-5 w-full md:w-[45%]">
+                            <div className="mb-2 mt-5 w-full lg:w-[45%]">
                                 <p className="py-1 text-lg">LinkedIn</p>
 
                                 <label htmlFor="linkedin" className='flex flex-col'>
@@ -306,13 +313,13 @@ const NewEditProfilePage = () => {
                             <div className="relative mt-8 flex w-full items-center justify-between">
 
                                 <div id="editButton" className="">
-                                    <label htmlFor="edit" className="flex h-12 w-24 cursor-pointer items-center justify-center rounded-xl border border-[#10162F] bg-inherit
+                                    <label htmlFor="edit" className="flex h-12 w-32 cursor-pointer items-center justify-center rounded-xl border border-[#10162F] bg-inherit
                         text-black transition-all duration-300 ease-in-out hover:bg-[#10162F] hover:text-white ">{isEditing ? "Cancel" : "Edit"}</label>
                                     <button onClick={toggleEdit} id="edit" className="hidden"></button>
                                 </div>
 
                                 {isEditing && <div id="submitButton" className="">
-                                    <label htmlFor="submit" className="flex h-12 w-24 cursor-pointer items-center justify-center rounded-xl border border-[#10162F] bg-inherit
+                                    <label htmlFor="submit" className="flex h-12 w-32 cursor-pointer items-center justify-center rounded-xl border border-[#10162F] bg-inherit
                         text-black transition-all duration-300 ease-in-out hover:bg-[#10162F] hover:text-white "><p>Save</p></label>
                                     <button onSubmit={handleSubmit} type="submit" id="submit" className="hidden"></button>
                                 </div>
@@ -320,25 +327,26 @@ const NewEditProfilePage = () => {
 
                             </div>
                         </div>
-
-                        <div className="mt-1 flex items-center justify-center gap-2">
-                            <p className="text-lg text-red-700"><a href="#deleteAccountModel" className="flex items-center justify-center gap-x-1 text-lg font-semibold text-[#BF2735]"><img src={deleteLogo} alt="deleteLogo" className="h-5 w-5" /> Delete Account</a></p>
+                        <div className="mb-6  mt-10 flex items-center justify-center gap-2 border py-2 shadow-md lg:hidden">
+                            <p className="text-lg text-red-700">
+                                <a href="#deleteAccountModel" className="flex items-center justify-center gap-x-1 text-lg font-semibold text-[#BF2735]"><img src={deleteLogo} alt="deleteLogo" className="h-5 w-5" /> Delete Account</a>
+                            </p>
                         </div>
                     </div>
                 </form>
 
                 <div className="modal text-black" role="dialog" id="deleteAccountModel">
-                    <div className="modal-box">
+                    <div className="modal-box text-base md:text-lg">
                         <h3 className="text-center  text-xl font-bold ">Are you sure you want to delete your account?</h3>
-                        <p className="text-md pt-6 md:pl-5">You will lose all active subscriptions if any.</p>
-                        <p className="text-md md:pl-5">This action can not be undone.</p>
+                        <p className="text-md pt-6 lg:pl-5">You will lose all active subscriptions if any.</p>
+                        <p className="text-md lg:pl-5">This action can not be undone.</p>
                         <div className="modal-action">
-                            <div className=" mt-10 flex w-full items-center justify-around">
+                            <div className=" mt-10 flex w-full items-center  justify-around">
 
-                                <button onClick={() => navigate(-1)} className=' btn-sqaure btn  mb-2  w-24 rounded-lg border-2   border-slate-700 bg-inherit text-xl text-slate-700 '>Cancel
+                                <button onClick={() => navigate(-1)} className=' btn-sqaure btn  mb-2  w-24 rounded-lg border-2    border-slate-700 bg-inherit text-xl text-slate-700 '>Cancel
                                 </button>
 
-                                <button onClick={handleDeleteAccount} className=' btn-sqaure w-46  btn btn-md  mb-2 rounded-lg border-none border-black  bg-red-700 text-lg text-white hover:bg-red-800'> Delete Account </button>
+                                <button onClick={handleDeleteAccount} className=' btn-sqaure w-46  btn btn-md  mb-2  block rounded-lg border-none  border-black bg-red-700 text-lg text-white hover:bg-red-800'> Delete Account </button>
                             </div>
                         </div>
                     </div>

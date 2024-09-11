@@ -448,6 +448,23 @@ const deleteAccount = async (req, res) => {
     }
 }
 
+const fetchStudentsAndInstructors = async (req,res)=>{
+    try {
+        const userRole = req?.user?.role
 
-export { deleteAccount, editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword }
+        if(userRole != 'ADMIN' &&  userRole != 'INSTRUCTOR'){
+            return res.sendError(400,'Unauthorized')
+        }
+
+        const students = await userModel.find({role:'USER'})
+        const instructors = await userModel.find({role:'INSTRUCTOR'})
+        return res.success(200,'Students Fetch Successfully',{students,instructors})
+
+    } catch (error) {
+        return res.sendError(400,"Error In Fetching Students and Instructors",error.message)   
+    }
+}
+
+
+export { deleteAccount, editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword, fetchStudentsAndInstructors }
 

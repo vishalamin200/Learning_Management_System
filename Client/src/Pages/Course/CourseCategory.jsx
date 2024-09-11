@@ -39,9 +39,9 @@ const CourseCategory = () => {
 
     return (
         <HomeLayout>
-            <div id="coursePage" className="mx-24 my-16 flex flex-col">
+            <div id="coursePage" className="mx-3 mb-16 flex flex-col pt-16 md:mx-24">
 
-                <CoursesCarousel />
+                <CoursesCarousel activeCategory={category} />
 
                 <p className="ml-5 pb-8 pt-10 text-4xl font-bold">{formattedName} Courses</p>
                 <div className="ml-5">
@@ -50,16 +50,16 @@ const CourseCategory = () => {
                     <div className="mb-1 flex gap-x-4">
                         <span>Most popular</span>
                         <span>New</span>
-                        <span>Tranding</span>
+                        <span>Trending</span>
                     </div>
                     <hr className="w-full font-bold" />
                 </div>
-                <div id="courses" className="carousel carousel-start flex w-full flex-nowrap">
+                <div id="courses" className="carousel carousel-start flex w-full  flex-nowrap">
                     {
-                        courses.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate  course={course} /></div>)
+                        courses.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate course={course} /></div>)
                     }
                     {
-                        (courses.length == 0) && <div className='relative mb-28 flex h-[100%] w-full flex-col items-center justify-center'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
+                        (courses.length == 0) && <div className='relative my-16 flex  h-[100%] w-full flex-col items-center justify-center md:mb-20 md:mt-20'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
                             <p className='text-base'>No Course Available For This Section</p>
                         </div>
                     }

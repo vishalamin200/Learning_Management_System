@@ -43,12 +43,13 @@ const ResetPassword = () => {
         <div className="flex items-center justify-center bg-[#bcc7d6]  text-xl">
             <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
 
-                <div className=' flex h-[40vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2 bg-white  shadow-2xl  md:h-[50vh] md:w-8/12'>
+                <div className=' flex h-[86vh] w-full flex-col items-center rounded-2xl border-2 bg-white pt-40 shadow-2xl md:h-[50vh]  md:w-8/12  md:justify-around md:pt-0'>
 
-                    <div className='flex items-center justify-center pt-3 text-3xl font-bold'><h1>Reset Password</h1>
-                    </div>
+
 
                     <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
+                        <div className='flex items-center justify-center pb-4 pt-3 text-3xl font-bold md:pb-0'><h1>Reset Password</h1>
+                        </div>
                         <div className="my-2 w-full">
                             <p className="py-1 text-lg">New Password</p>
                             <label htmlFor="newPassword" className='flex flex-col'>
@@ -70,7 +71,7 @@ const ResetPassword = () => {
 
 
                         <div className="mt-8 w-full">
-                            <button type="submit" className="flex h-9 w-full cursor-pointer items-center justify-center rounded-3xl bg-red-800 bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl text-white"><p>Reset Password</p></button>
+                            <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Reset Password</p></button>
                         </div>
                     </form>
                 </div>

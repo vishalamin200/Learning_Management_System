@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import { FaRegUser } from "react-icons/fa6";
 import { LuBookMinus } from "react-icons/lu";
-import { MdOutlineLogout } from "react-icons/md";
+import { MdOutlineLogout, MdOutlinePayments } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,9 +33,16 @@ const AvatarContent = ({ isActive }) => {
 
             <Link to={'/editProfile'} className="flex w-full  items-center gap-4 pl-10 "><FaRegUser /><p>Profile</p></Link>
             <Link to='/changePassword' className="flex w-full  items-center gap-4 pl-10 "><RiLockPasswordLine /><p>Change Password</p></Link>
+
+            <Link to='/my-courses/purchase-history' className="flex w-full  items-center gap-4 pl-10 "><MdOutlinePayments />
+                <p>Purchase History</p></Link>
             <Link onClick={handleLogout} className="flex w-full  items-center gap-4 pl-10"><MdOutlineLogout /><p>Logout</p></Link>
         </div>
     )
+}
+
+AvatarContent.propTypes = {
+    isActive: PropTypes.bool
 }
 
 export default AvatarContent

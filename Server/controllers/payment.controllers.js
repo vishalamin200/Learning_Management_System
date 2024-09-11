@@ -1,7 +1,7 @@
 import crypto from 'crypto'
+import courseModel from '../models/course.model.js'
 import userModel from "../models/user.model.js"
 import { razorpay } from "../server.js"
-import courseModel from '../models/course.model.js'
 
 const getKeyId = (req, res, next) => {
     try {
@@ -11,28 +11,28 @@ const getKeyId = (req, res, next) => {
     }
 }
 
-const createOrder = async (req,res)=>{
+const createOrder = async (req, res) => {
     try {
-        
-       const {courseId} = req.body
-       if(!courseId){
-           return res.sendError(400,"CourseId Is Missing")
+
+        const { courseId } = req.body
+        if (!courseId) {
+            return res.sendError(400, "CourseId Is Missing")
         }
-        
+
         const course = await courseModel.findById(courseId)
-        if(!course){
-            return res.sendError(400,"No Course Exists With Provided Course Id")
+        if (!course) {
+            return res.sendError(400, "No Course Exists With Provided Course Id")
         }
         const userId = req?.user?.id
-        if(!userId){
-            return res.sendError(401,"Please Login And Try Again")
+        if (!userId) {
+            return res.sendError(401, "Please Login And Try Again")
         }
 
         const user = await userModel.findById(userId)
-        if(!user){
-            return res.sendError(401,"Unauthorized User")
+        if (!user) {
+            return res.sendError(401, "Unauthorized User")
         }
-    
+
 
         //store the order_id in the database
         if (user.role === 'ADMIN') {
@@ -54,67 +54,71 @@ const createOrder = async (req,res)=>{
         const coursePrice = course?.price
         const discount = course?.discount
 
-        const finalPrice = Math.trunc(coursePrice - (discount*coursePrice)/100) 
+        const finalPrice = Math.trunc(coursePrice - (discount * coursePrice) / 100)
 
-        if(finalPrice === 0){
+        if (finalPrice === 0) {
             const expiryDate = new Date()
             expiryDate.setFullYear(expiryDate.getFullYear() + 2)
 
             const freeSubscribeDetails = {
                 courseId,
                 courseTitle: course.topic,
-                subscription_status : 'active',
-                purchaseAt:Date.now(),
-                expiresAt:expiryDate,
-                paymentDetails:{
-                    amount:0,
+                subscription_status: 'active',
+                purchaseAt: Date.now(),
+                expiresAt: expiryDate,
+                paymentDetails: {
+                    amount: 0,
+                    userName: user?.fullName,
+                    userEmail: user?.email
                 }
             }
 
             user.subscriptions.push(freeSubscribeDetails)
             await user.save()
-            
-            return res.success(200,"Enrolled Successfully",'Free')
+
+            return res.success(200, "Enrolled Successfully", 'Free')
         }
 
-       
+
         const options = {
-            amount:finalPrice*100,
+            amount: finalPrice * 100,
             currency: 'INR',
-            receipt:`order_reciept_${courseId}`,
-            payment_capture :1,
-            notes:{
+            receipt: `order_reciept_${courseId}`,
+            payment_capture: 1,
+            notes: {
                 courseId,
-                courseTitle : course?.topic,
-                finalPrice : finalPrice
+                courseTitle: course?.topic,
+                finalPrice: finalPrice,
+                userName: user?.fullName,
+                userEmail: user?.email
             },
         }
-    
+
         const order = await razorpay.orders.create(options)
- 
+
 
         const paymentDetails = {
             courseId,
             courseTitle: course?.topic,
-            order_id : order.id,
-            subscription_status : order?.status,
+            order_id: order.id,
+            subscription_status: order?.status,
         }
 
-        
+
         if (courseSubscription && courseSubscription?.subscription_status == 'created') {
             //order was created but payment wasn't completed
             courseSubscription.order_id = order?.id
-        }else{
+        } else {
             //First time purchasing user
             user?.subscriptions?.push(paymentDetails)
         }
 
         await user.save()
 
-        return res.success(200,"Order Created Successfully",order)
+        return res.success(200, "Order Created Successfully", order)
     } catch (error) {
-        console.log("CreateOrderError :",error)
-        return res.sendError(400,"Error In Creating Order",error.message)  
+        console.log("CreateOrderError :", error)
+        return res.sendError(400, "Error In Creating Order", error.message)
     }
 }
 
@@ -152,7 +156,7 @@ const createSubscription = async (req, res, next) => {
             return res.success(200, "You Have Already Purchased The Course", courseId)
         }
 
-         
+
         //Creating the end date of the subscription, subscription will end in 2 year after the purchase
 
         const startDate = new Date()
@@ -163,7 +167,7 @@ const createSubscription = async (req, res, next) => {
 
         const startAtDate = Math.floor(startDate.getTime() / 1000 + 300)
 
-    
+
         // create Subscription for User
         const subscription = await razorpay.subscriptions.create({
             plan_id: process.env.RAZORPAY_PLAN_ID,
@@ -172,7 +176,7 @@ const createSubscription = async (req, res, next) => {
             end_at: endAtDate,
         })
 
-        
+
 
         const courseSubscriptionDetails = {
             courseId,
@@ -197,29 +201,29 @@ const createSubscription = async (req, res, next) => {
     }
 }
 
-const verifyOrder = async (req,res)=>{
+const verifyOrder = async (req, res) => {
 
-    const {razorpay_payment_id,razorpay_order_id, razorpay_signature,courseId} = req.body
+    const { razorpay_payment_id, razorpay_order_id, razorpay_signature, courseId } = req.body
     const userId = req?.user?.id
 
     const user = await userModel.findById(userId)
-    if(!user){
-        return res.sendError(401,"Unauthorized User")
+    if (!user) {
+        return res.sendError(401, "Unauthorized User")
     }
 
-    const subscription =  user.subscriptions.find((sub)=>sub.courseId === courseId)
-    if(!subscription){
-        return res.sendError(400,"Payment Is Not Initiated For This Course")
+    const subscription = user.subscriptions.find((sub) => sub.courseId === courseId)
+    if (!subscription) {
+        return res.sendError(400, "Payment Is Not Initiated For This Course")
     }
 
     const orderId = subscription?.order_id
 
 
-    const generated_signature = await crypto.createHmac('sha256',process.env.RAZORPAY_SECRET_KEY)
-    .update(orderId + '|' + razorpay_payment_id).digest('hex')
+    const generated_signature = await crypto.createHmac('sha256', process.env.RAZORPAY_SECRET_KEY)
+        .update(orderId + '|' + razorpay_payment_id).digest('hex')
 
-    if(generated_signature !== razorpay_signature){
-        return res.sendError(400,'Payment Verification Failed!')
+    if (generated_signature !== razorpay_signature) {
+        return res.sendError(400, 'Payment Verification Failed!')
     }
 
     subscription.subscription_status = 'active'
@@ -230,7 +234,7 @@ const verifyOrder = async (req,res)=>{
     const purchaseDate = Date.now()
 
     subscription.expiresAt = expiryDate
-    subscription.purchaseAt=purchaseDate
+    subscription.purchaseAt = purchaseDate
 
 
     //Generate the payment details and store in db
@@ -239,7 +243,7 @@ const verifyOrder = async (req,res)=>{
 
     await user.save()
 
-    return res.success(200,"Payment Verified Successfully",user)
+    return res.success(200, "Payment Verified Successfully", user)
 }
 
 const verifySubscription = async (req, res, next) => {
@@ -267,7 +271,7 @@ const verifySubscription = async (req, res, next) => {
             return res.sendError(400, "No Subscription Exists For This Course")
         }
 
-         const subscriptionId = subscription?.subscription_id
+        const subscriptionId = subscription?.subscription_id
 
 
         const generateSignature = crypto
@@ -324,32 +328,32 @@ const cancelSubscription = async (req, res, next) => {
     }
 }
 
-const fetchPurchaseHistory = async (req,res)=>{
+const fetchPurchaseHistory = async (req, res) => {
     // Course title, createdAt, expiredAt, price, payment Method, status
     try {
-        
+
         const userId = req?.user?.id
         const user = await userModel.findById(userId)
-    
+
         const subscriptions = user?.subscriptions
 
-        const paymentHistory = subscriptions?.filter((sub)=>sub.subscription_status != 'created').map((sub)=>(
-            {    
-                courseId:sub?.courseId , 
+        const paymentHistory = subscriptions?.filter((sub) => sub.subscription_status != 'created').map((sub) => (
+            {
+                courseId: sub?.courseId,
                 purchaseAt: sub.purchaseAt,
                 expiresAt: sub.expiresAt,
-                status:sub.subscription_status,
+                status: sub.subscription_status,
                 amount: sub?.paymentDetails?.amount,
-                paymentMethod:sub?.paymentDetails?.method,
-                courseTitle : sub?.courseTitle,
-                notes:sub?.paymentDetails?.notes
+                paymentMethod: sub?.paymentDetails?.method,
+                courseTitle: sub?.courseTitle,
+                notes: sub?.paymentDetails?.notes
             }
         ))
-        console.log("PaymentHistory",paymentHistory)
-        return res.success(200,'Payment History Fetch Successfully',paymentHistory)
+        console.log("PaymentHistory", paymentHistory)
+        return res.success(200, 'Payment History Fetch Successfully', paymentHistory)
     } catch (error) {
-        return res.sendError(400,"Error In Fetching Payment History",error.message)     
-    }  
+        return res.sendError(400, "Error In Fetching Payment History", error.message)
+    }
 }
 
 const getAllSubscriptions = async (req, res) => {
@@ -365,6 +369,68 @@ const getAllSubscriptions = async (req, res) => {
     }
 }
 
-export {
-    cancelSubscription, createSubscription, getAllSubscriptions, getKeyId, verifySubscription,createOrder,verifyOrder,fetchPurchaseHistory
+const fetchAllPayments = async (req, res) => {
+
+    const { count = 100, skip = 0, year = 2024 } = req.body
+
+    // Function to fetch payments for a given month
+    async function fetchPaymentsForMonth(year, month) {
+        try {
+            // Create the date range for the month
+            const startDate = new Date(year, month - 1, 1); // First day of the month
+            const endDate = new Date(year, month, 0); // Last day of the month
+
+            const from = Math.floor(startDate.getTime() / 1000); // Convert to UNIX timestamp (seconds)
+            const to = Math.floor(endDate.getTime() / 1000); // Convert to UNIX timestamp (seconds)
+
+            const payments = await razorpay.payments.all({
+                from: from,
+                to: to,
+            });
+
+             return payments;
+        } catch (error) {
+            return res.sendError(400,"Error In fetching Monthly Payments",error.message)
+        }
+    }
+
+     async function fetchYearlyPayments(year) {
+        const paymentsByMonth = {};  
+        const totalAmountsByMonth = {}; 
+        let yearlyTotal = 0;
+        
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+
+        try {
+            for (let month = 1; month <= 12; month++) {
+                 const payments = await fetchPaymentsForMonth(year, month);
+
+                 const totalAmountForMonth = payments.items.reduce((sum, payment) => sum + payment.amount, 0);
+
+                paymentsByMonth[monthNames[month-1]] = payments;
+                totalAmountsByMonth[monthNames[month-1]] = totalAmountForMonth/100; // store in rupees
+
+                // Add the total amount for the month to the yearly total
+                yearlyTotal += totalAmountForMonth;
+            }
+
+            return {
+                paymentsByMonth,
+                totalAmountsByMonth,
+                yearlyTotal
+            };
+        } catch (error) {
+            return res.sendError(400,'Error In fetching yearly payments',error.message)
+        }
+    }
+
+    const {paymentsByMonth,totalAmountsByMonth,yearlyTotal} = await fetchYearlyPayments(year)
+
+    return res.success(200, "Fetched All Payment Successfully",  {paymentsByMonth,totalAmountsByMonth,yearlyTotal} )
 }
+
+ 
+export {
+    cancelSubscription, createOrder, createSubscription, fetchAllPayments, fetchPurchaseHistory, getAllSubscriptions, getKeyId, verifyOrder, verifySubscription
+}
+

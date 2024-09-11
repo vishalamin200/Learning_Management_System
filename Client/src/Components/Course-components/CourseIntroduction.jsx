@@ -3,6 +3,7 @@
 const CourseIntroduction = ({ category }) => {
   const getIntroduction = (category) => {
     switch (category) {
+      
       case 'web-development':
         return "This course is crafted for aspiring web developers aiming to build dynamic and responsive websites. It covers essential technologies such as HTML, CSS, and JavaScript, along with modern frameworks like React or Angular. By the end of this course, students will be able to create visually appealing, user-friendly web applications.";
 

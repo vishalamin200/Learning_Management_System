@@ -10,11 +10,11 @@ const CourseTemplate = ({ course }) => {
     const createdBy = course?.createdBy
     const originalPrice = course?.price
     const discount = course?.discount
- 
+
     const price = (discount) ? Math.trunc(originalPrice - (discount * originalPrice) / 100) : originalPrice
 
-    const averageRating = 4.2
-    const numberOfRating = 3
+    const averageRating = course?.rating
+    const numberOfRating = course?.allRatings?.length
 
     const navigate = useNavigate()
 
@@ -23,8 +23,8 @@ const CourseTemplate = ({ course }) => {
     }
 
     return (
-        <div onClick={handleCourseClick} id="courseTemplate" className=" relative m-5 h-[21rem] w-72 cursor-pointer rounded-xl border-none bg-[#FFFFFF] p-2 text-black transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
-            <div id="courseImage" className="inset-2 h-36 w-full  ">
+        <div onClick={handleCourseClick} id="courseTemplate" className=" relative m-5 h-[21rem] w-80 cursor-pointer rounded-xl border-none bg-[#FFFFFF] p-2 text-black transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl md:w-72">
+            <div id="courseImage" className="inset-2 h-40 w-full md:h-36  ">
 
                 <img src={courseImage} alt="courseImage" className="h-full w-full rounded-xl object-cover" />
             </div>
@@ -51,7 +51,6 @@ CourseTemplate.propTypes = {
     course: PropTypes.object
 
 }
-
 
 
 export default CourseTemplate

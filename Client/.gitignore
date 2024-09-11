@@ -25,6 +25,8 @@ dist-ssr
 
 *.env
 
+public
+
 
 src/assets/ImprovedTemplates
 src/assets/CourseImages

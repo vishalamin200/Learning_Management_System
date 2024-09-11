@@ -39,15 +39,17 @@ const ForgotPassword = () => {
 
 
     return (<HomeLayout>
-        <div className="flex items-center justify-center bg-[#bcc7d6]  text-xl">
-            <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
+        <div className="flex items-center justify-center bg-[#EAF3FF] pt-12 text-xl  md:pt-0">
+            <div className="flex w-screen items-center justify-around md:h-screen md:w-3/4 lg:w-1/2">
 
-                <div className=' flex h-[40vh] w-10/12 flex-col items-center justify-around rounded-2xl border-2  bg-white shadow-2xl md:h-[50vh] md:w-8/12'>
+                <div className=' flex h-[90vh] w-full flex-col items-center border-2 bg-white pt-40 shadow-2xl md:h-[50vh]  md:w-8/12 md:justify-around md:rounded-2xl md:pt-0'>
 
-                    <div className='flex items-center justify-center pt-3 text-3xl font-bold'><h1>Forgot Password</h1>
-                    </div>
 
-                    <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
+                    <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center '>
+
+                        <div className=' pb-16 pt-2 text-3xl font-bold'><h1>Forgot Password</h1>
+                        </div>
+
                         <div className="mb-2 w-full">
                             <p className="py-1 text-lg">Email</p>
                             <label htmlFor="forgotEmail" className='flex flex-col'>
@@ -61,7 +63,7 @@ const ForgotPassword = () => {
                                         value={userInfo.email}
                                         id="forgotEmail"
                                         placeholder='Enter Your Email'
-                                        className='w-10/12 border-none bg-transparent  text-xl outline-none' />
+                                        className='w-10/12 border-none bg-inherit  text-xl outline-none' />
                                 </div>
                                 <hr className="my-1" />
                             </label>
@@ -69,7 +71,7 @@ const ForgotPassword = () => {
 
 
                         <div className="mt-8 w-full">
-                            <button type="submit" className="flex h-9 w-full cursor-pointer items-center justify-center rounded-3xl bg-red-800 bg-gradient-to-r from-[#65D0DF] to-[#9346db] text-xl text-white"><p>Get Reset Password Email</p></button>
+                            <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Get Reset Password Email</p></button>
                         </div>
                     </form>
                 </div>

@@ -35,9 +35,9 @@ const Navbar = () => {
 
   return (
     <div>
-      <div id="navbar" className="absolute top-0 z-50 flex h-[10vh] w-[100%] flex-shrink  items-center justify-around bg-[#FFFFFF] shadow-lg" >
+      <div id="navbar" className="absolute top-0 z-50  hidden h-[10vh] w-[100%]  flex-shrink items-center justify-around bg-[#FFFFFF] shadow-lg lg:flex" >
         <div>
-          <img src={codeAcademyLogo} alt="CodeAcedemy-logo" className='h-6 w-36' />
+          <img onClick={()=>navigate('/')} src={codeAcademyLogo} alt="CodeAcedemy-logo" className='h-6 w-36 cursor-pointer' />
         </div>
         <div>
           <nav className='flex items-center justify-center gap-5'>
@@ -101,7 +101,7 @@ const Navbar = () => {
           <div className="mr-8 flex items-center">
             <img name="avatar" onClick={toggleNav} src={profilePicture} alt="user-profile" className="mr-3 h-11 w-11 cursor-pointer rounded-full" />
             <div >
-              <p className="m-0 p-0 text-xs text-gray-700">Hello</p>
+              <p className="m-0 p-0 text-sm font-bold italic text-[#E97862]">Hey</p>
               <p className="m-0 p-0 text-base font-bold text-black">{userName}</p>
             </div>
           </div>

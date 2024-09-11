@@ -1,3 +1,4 @@
+import aspectRatio from '@tailwindcss/aspect-ratio';
 import daisyui from 'daisyui';
 
 /** @type {import('tailwindcss').Config} */
@@ -9,7 +10,7 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [daisyui],
+  plugins: [daisyui, aspectRatio],
   daisyui: {
     themes: ["light", "dark", "cupcake"],
   },

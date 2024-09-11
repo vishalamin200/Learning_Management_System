@@ -1,7 +1,7 @@
 import { Editor } from '@tinymce/tinymce-react';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import deleteLogo from '../../assets/Logos/deleteLogo.png';
@@ -30,8 +30,10 @@ const EditCourse = () => {
     const editorRef = useRef(null);
     const category = toTitleCase(course?.category)
 
+    const {data} = useSelector((state)=>state.Auth)
 
-    const [courseDetail, setCourseDetail] = useState({ topic: course?.topic, thumbnail: course?.thumbnail, description: course?.description, category: category, price: course?.price, discount: course?.discount, level: course?.level, language: course?.language, createdBy: course?.createdBy})
+
+    const [courseDetail, setCourseDetail] = useState({ topic: course?.topic, thumbnail: course?.thumbnail, description: course?.description, category: category, price: course?.price, discount: course?.discount, level: course?.level, language: course?.language, createdBy: course?.createdBy , creatorEmail:data?.email })
 
     const [previewThumbnail, setPreviewThumbnail] = useState(course?.thumbnail?.secure_url)
 
@@ -62,7 +64,7 @@ const EditCourse = () => {
     const handleEditorChange = () => {
         if (editorRef.current) {
             const courseContent = editorRef.current.getContent()
-            setCourseDetail({...courseDetail,description:courseContent})
+            setCourseDetail({ ...courseDetail, description: courseContent })
         }
     };
 
@@ -86,8 +88,8 @@ const EditCourse = () => {
 
         //Validate the course Detals
         const { topic, category, description, price, discount, level, language } = courseDetail
-        
-        
+
+
         if (!topic || !category || !description || price === null || price === undefined || discount === null || discount === undefined || !level || !language) {
             toast('All Marked Fields Are Mandatory')
             return
@@ -167,17 +169,17 @@ const EditCourse = () => {
 
     return (
         <HomeLayout>
-            <div id='course-creation-page' className='mt-8 pb-24 pt-24'>
+            <div id='course-creation-page' className='pb-24  pt-24 md:mt-8'>
 
-                <form onSubmit={handleFormSubmit} className="flex" >
-                    <div id="newCourseInformation" className="mx-10 flex min-w-[50%] flex-col gap-y-8">
+                <form onSubmit={handleFormSubmit} className="flex  flex-wrap lg:flex-nowrap" >
+                    <div id="newCourseInformation" className="mx-7 flex min-w-[50%] flex-col gap-y-8 md:mx-10">
 
                         <h2 className="text-center text-2xl font-bold">Course Information</h2>
                         <label htmlFor="courseTitle">
                             <p className="mb-1 text-xl font-bold">Title</p>
                             <input onChange={handleInputChange} type="text" name="topic" value={courseDetail.topic} id="courseTitle" className="h-10 w-full rounded-lg px-5 text-lg" placeholder='e.g. The Ultimate Fullstack Web Development Bootcamp' />
                         </label>
-                        <div className="flex w-full justify-between gap-x-3">
+                        <div className="flex w-full flex-wrap justify-between gap-x-3 gap-y-5">
 
                             <label htmlFor="category" >
                                 <p className="mb-1 text-xl font-bold">Category</p>
@@ -242,16 +244,14 @@ const EditCourse = () => {
                                         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                                     }}
                                 />
-                             </div>
+                            </div>
                         </label>
 
-
-
                     </div>
-                    <div id="Thumnail-upload-container" className="flex w-[50%] flex-col gap-y-10 px-12">
+                    <div id="Thumnail-upload-container" className="flex flex-col gap-y-10 px-7 pt-8 md:w-[50%] md:px-12">
                         <div className='thumbnail'>
                             <p className="mb-1 text-2xl font-bold">Thumbnail</p>
-                            <label htmlFor="thumbnail" className='inline-block h-[18rem] w-[36rem] cursor-pointer border-2 border-dashed border-black'>
+                            <label htmlFor="thumbnail" className='inline-block  h-[10rem] w-[20rem] cursor-pointer border-2 border-dashed border-black md:h-[18rem] md:w-[36rem]'>
                                 {previewThumbnail && <img src={previewThumbnail} alt='thumbnail' className='object-fit inline-block h-full w-full' />}
                             </label>
                             <input
@@ -267,7 +267,7 @@ const EditCourse = () => {
                             <div className='flex items-center justify-center pt-5'><button onClick={handleRemoveThumbnail} ><p>Remove Thumbnail</p></button></div>
                         </div>
 
-                        <div className="flex justify-between">
+                        <div className="flex flex-wrap justify-between  gap-x-10 gap-y-10">
                             <label htmlFor="price">
                                 <p className="mb-1 text-xl font-bold">Price (Rs.)</p>
                                 <input onChange={handleInputChange} type="text" name="price" value={courseDetail?.price} id="price" className='h-10 rounded-lg text-center text-lg' defaultValue={0} />
@@ -283,7 +283,7 @@ const EditCourse = () => {
                             <p className="mb-8 text-xl font-bold">Course Creator</p>
                             <input onChange={handleInputChange} type="text" name="createdBy" id="createdBy" className='h-10 cursor-not-allowed rounded-lg text-center text-lg' value={courseDetail.createdBy} />
                         </label>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between gap-x-10">
 
                             <button onClick={handleCancelEdit} className="btn btn-square h-12 w-32 rounded-xl bg-yellow-600 font-bold text-white hover:bg-yellow-700">Cancel Edit</button>
                             <button type='submit' className="btn btn-square h-12 w-32 rounded-xl bg-[#4A00FF] font-bold  text-white hover:bg-[#450cd6]">Save Changes</button>
@@ -301,10 +301,10 @@ const EditCourse = () => {
                 <div className="modal text-black" role="dialog" id="deleteCourseModel">
                     <div className="modal-box text-lg">
                         <h3 className="text-center  text-xl font-bold ">Are you sure you want to delete your course?</h3>
-                        <p className="text-md pt-6 md:pl-5">You will lose all the lectures of the course.</p>
-                        <p className="text-md md:pl-5">This action can not be undone.</p>
+                        <p className="md:text-md pt-6 text-base md:pl-5">You will lose all the lectures of the course.</p>
+                        <p className="md:text-md text-base md:pl-5">This action can not be undone.</p>
                         <div className="modal-action">
-                            <div className=" mt-10 flex w-full items-center justify-around">
+                            <div className="mt-5 flex w-full items-center justify-around md:mt-10">
 
                                 <button onClick={() => navigate(-1)} className=' btn-sqaure btn  mb-2  w-24 rounded-lg border-2   border-slate-700 bg-inherit text-xl text-slate-700 '>Cancel
                                 </button>

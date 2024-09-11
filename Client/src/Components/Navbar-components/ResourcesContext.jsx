@@ -1,9 +1,8 @@
-
+import PropTypes from 'prop-types'
 
 
 const ResourcesContent = ({isActive}) => {
     const courseList = ['Web Development', 'Data Science', 'Machine Learning', 'React', 'Git-Version Control', 'Data Structures', 'Operating System', 'Computer Networks', 'Java', 'System Design', 'SQL', 'C++']
-
 
     return (
         <div id='resourceContent' className={`absolute left-40 top-[9vh] z-40 w-full border-2 border-black bg-white md:w-[65vw]  ${isActive? "translate-y-0" : "-translate-y-[200%]"} transition-all duration-500 ease-in-out`}>
@@ -48,6 +47,10 @@ const ResourcesContent = ({isActive}) => {
             </div>
         </div>
     )
+}
+
+ResourcesContent.propTypes = {
+    isActive: PropTypes.bool
 }
 
 export default ResourcesContent

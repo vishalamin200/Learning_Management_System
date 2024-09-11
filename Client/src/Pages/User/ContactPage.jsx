@@ -11,12 +11,12 @@ const ContactPage = () => {
     return (
 
         <HomeLayout>
-            <div className={`flex w-[100%] flex-col items-center justify-center  bg-[#bcc7d6]  pt-20 text-white md:flex md:h-screen md:flex-row `} >
+            <div className={`flex w-[100%] flex-col items-center justify-center  bg-[#bcc7d6]  pt-16 text-white md:flex md:h-screen md:flex-row md:pt-20 `} >
 
                 {/* bg-[#181A1B] */}
 
 
-                <div className="flex w-[80%] flex-col justify-center self-center  border-2 bg-white p-6 text-black md:h-[80%]  md:w-[50vw] md:p-10">
+                <div className="flex w-full flex-col justify-center self-center  border-2 bg-white p-6 text-black md:h-[80%]  md:w-[50vw] md:p-10">
                     <div className="pb-5 pt-3">
                         <p className="text-3xl font-semibold text-black ">Send us a message</p>
                     </div>
@@ -49,7 +49,7 @@ const ContactPage = () => {
                 </div>
 
                 {/* bg-[#323F90]  */}
-                <div className=" relative mt-8 flex h-96  w-[80vw] flex-col items-center justify-center bg-[#10162F] p-10 md:mt-0 md:h-[80%] md:w-[30vw]">
+                <div className=" relative flex h-96 w-full  flex-col items-center justify-center bg-[#10162F] p-10 md:mt-0  md:h-[80%] md:w-[30vw]">
                     <p className="absolute left-10 top-10 text-3xl font-bold text-white ">Contact Information</p>
                     <p className="text-xl">support@gmail.com</p>
 

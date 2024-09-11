@@ -14,7 +14,7 @@ const initialState = {
 
 export const createAccount = createAsyncThunk('/auth/singup/', async (formData, thunkApi) => {
     try {
-        const response = axiosInstance.post('/register', formData);
+        const response = axiosInstance.post('/auth/register', formData);
         toast.promise(response, {
             loading: "Creating Your Account",
             success: (response) => response?.data?.Message,
@@ -33,7 +33,7 @@ export const createAccount = createAsyncThunk('/auth/singup/', async (formData, 
 
 export const login = createAsyncThunk('/auth/login/', async (formData, thunkApi) => {
     try {
-        const response = axiosInstance.post('/login', formData)
+        const response = axiosInstance.post('/auth/login', formData)
 
         toast.promise(response, {
             loading: "Verifying Credentials...",
@@ -55,7 +55,7 @@ export const login = createAsyncThunk('/auth/login/', async (formData, thunkApi)
 
 export const getProfile = createAsyncThunk('/auth/getProfile',async (_,thunkApi)=>{
     try {
-        const axiosPromise = await axiosInstance.get('/getProfile')
+        const axiosPromise = await axiosInstance.get('/auth/getProfile')
         return axiosPromise.data
     } catch (error) {
         // we get error meaans token is expired or server error
@@ -67,7 +67,7 @@ export const getProfile = createAsyncThunk('/auth/getProfile',async (_,thunkApi)
 export const logout = createAsyncThunk('/auth/logout/', async (_,thunkApi) => {
 
     try {
-        const res = axiosInstance.get('/logout')
+        const res = axiosInstance.get('/auth/logout')
         toast.promise(res, {
             loading: "Logging Out...",
             success: (response) => response?.data?.Message,
@@ -86,7 +86,7 @@ export const logout = createAsyncThunk('/auth/logout/', async (_,thunkApi) => {
 
 export const forgotPassword = createAsyncThunk('/auth/forgotPassword/', async (formData, thunkApi) => {
     try {
-        const res = axiosInstance.post('/forgetPassword', formData)
+        const res = axiosInstance.post('/auth/forgetPassword', formData)
 
         toast.promise(res, {
             loading: "Sending Mail...",
@@ -107,7 +107,7 @@ export const forgotPassword = createAsyncThunk('/auth/forgotPassword/', async (f
 export const resetPassword = createAsyncThunk('/auth/resetPassword/', async (formData, thunkApi) => {
     try {
         const { userId, token } = formData
-        const res = axiosInstance.post(`/resetPassword/${userId}/${token}`, formData)
+        const res = axiosInstance.post(`/auth/resetPassword/${userId}/${token}`, formData)
 
         toast.promise(res, {
             loading: "Reseting Your Password...",
@@ -127,7 +127,7 @@ export const resetPassword = createAsyncThunk('/auth/resetPassword/', async (for
 
 export const changePassword = createAsyncThunk('/auth/changePassword/', async (formData, thunkApi) => {
     try {
-        const res = axiosInstance.post('/updatePassword/', formData)
+        const res = axiosInstance.post('/auth/updatePassword/', formData)
 
         toast.promise(res, {
             loading: "Changing Your Password...",
@@ -148,7 +148,7 @@ export const changePassword = createAsyncThunk('/auth/changePassword/', async (f
 
 export const editProfile = createAsyncThunk('/auth/editProfile/', async (formData, thunkApi) => {
     try {
-        const axiosPromise = axiosInstance.patch('/editProfile', formData)
+        const axiosPromise = axiosInstance.patch('/auth/editProfile', formData)
 
         toast.promise(axiosPromise, {
             loading: "Updating Your Profile...",
@@ -169,7 +169,7 @@ export const editProfile = createAsyncThunk('/auth/editProfile/', async (formDat
 
 export const deleteAccount = createAsyncThunk('/auth/deleteAccount/', async (thunkApi) => {
     try {
-        const axiosPromise = axiosInstance.delete('/deleteAccount')
+        const axiosPromise = axiosInstance.delete('/auth/deleteAccount')
 
         toast.promise(axiosPromise, {
             loading: "Deleting Your Account...",

@@ -18,11 +18,11 @@ const CatalogContent = ({ isActive }) => {
 
                 <button onClick={() => navigate('/course/all-courses')} className="btn btn-md bg-[#FFD301] hover:bg-[rgb(253,220,57)]">Explore All Courses</button>
             </div>
+            
             <div className="flex w-[60%] flex-wrap justify-center gap-4 p-10 md:min-w-[65%] lg:min-w-[72%]">
                 {
                     courseList.map((course) => <Link key={course} to={`/course/${course.trim().replace(/[\s/]+/g, '-').toLowerCase()}`}><p className="flex h-14 w-36 items-center justify-center">{course}</p></Link>)
                 }
-
             </div>
 
         </div>
