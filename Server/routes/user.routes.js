@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { deleteAccount, editProfile, fetchStudentsAndInstructors, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword } from "../controllers/user.controllers.js";
+import { deleteAccount, deleteUserOrInstructor, editProfile, fetchStudentsAndInstructors, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword } from "../controllers/user.controllers.js";
 import upload from "../middlewares/multer.middleware.js";
 import isLoggedIn from "../middlewares/authentication.middleware.js";
+import { authorizedRoles } from "../middlewares/authorization.middleware.js";
 
 const router = Router()
 
-
+      
 router.post('/register', upload.single('avatar'), register)
 router.post('/login', login)
 router.get('/getProfile', isLoggedIn, getProfile)
@@ -18,6 +19,7 @@ router.post('/resetPassword/:userId/:token', resetPassword)
 router.delete('/deleteAccount', isLoggedIn, deleteAccount)
 
 router.get('/fetchStudentsAndInstructors',isLoggedIn,fetchStudentsAndInstructors)
+router.post('/deleteUserOrInstructor',isLoggedIn,authorizedRoles('ADMIN'),deleteUserOrInstructor)
 
 
 export default router

@@ -48,9 +48,7 @@ const register = async (req, res, next) => {
             password
         })
 
-
-        console.log("req.file :", req.file)
-        if (req.file) {
+         if (req.file) {
 
             // Upload the profile to Cloudinary File Storage Server
             const uploadProfilePicture = await cloudinary.v2.uploader.upload(req.file.path, {
@@ -67,8 +65,6 @@ const register = async (req, res, next) => {
             }, (err, result) => {
                 if (err) {
                     return res.sendError(501, "Error in Uploading Profile to Cloudinary")
-                } else {
-                    console.log("Profile Successfully uploaded to Cloudinary")
                 }
             })
 
@@ -80,8 +76,7 @@ const register = async (req, res, next) => {
 
                 //Delete file from local storage
                 fs.rmSync(req.file.path)
-                console.log("Removed Profile Picture From Local Storage")
-            }
+             }
 
             const userInfo = newUser.toObject()
             const { password, ...userWithoutPassword } = userInfo
@@ -90,8 +85,7 @@ const register = async (req, res, next) => {
             res.success(200, "Account Created Successfully", { User: userWithoutPassword })
 
         } else {
-            console.log("Registed Without Profile Picture")
-
+ 
             //Remove the Password before sending User information to client
             const userInfo = newUser.toObject()
             const { password, ...userWithoutPassword } = userInfo
@@ -190,9 +184,9 @@ const editProfile = async (req, res, next) => {
             if (avatar_public_id) {
                 const response = await cloudinary.v2.uploader.destroy(avatar_public_id)
                 if (response.result == 'ok') {
-                    console.log('Profile picture removed from cloudinary')
+                    // console.log('Profile picture removed from cloudinary')
                 } else {
-                    console.log('Profile picture does not exists in cloudinary')
+                    // console.log('Profile picture does not exists in cloudinary')
                 }
             }
 
@@ -212,9 +206,9 @@ const editProfile = async (req, res, next) => {
                 if (User?.avatar?.public_id) {
                     const response = await cloudinary.v2.uploader.destroy(User?.avatar?.public_id)
                     if (response.result == 'ok') {
-                        console.log("Removed Old Profile Picture From Cloudinary")
+                        // console.log("Removed Old Profile Picture From Cloudinary")
                     } else {
-                        console.log("Old Profile Does Not exists in Cloudinary")
+                        // console.log("Old Profile Does Not exists in Cloudinary")
                     }
                 }
 
@@ -234,7 +228,7 @@ const editProfile = async (req, res, next) => {
                     })
 
                     if (response.public_id) {
-                        console.log("New Profile Uploaded to Cloudinary")
+                        // console.log("New Profile Uploaded to Cloudinary")
 
                         // set new Public_Id and Secure_url
 
@@ -358,7 +352,7 @@ const forgetPassword = async (req, res, next) => {
         res.success(200, "Email Send Successfully", { fullName: User.fullName, email: User.email })
 
     } catch (error) {
-        console.log("Error :" ,error)
+        // console.log("Error :" ,error)
         User.forgetPasswordToken = undefined
         User.forgetPasswordExpiry = undefined
         User.save()
@@ -418,6 +412,10 @@ const deleteAccount = async (req, res) => {
         if (!User) {
             return res.sendError(401, "User Doesn't Exist!")
         }
+        if(User.role === 'ADMIN'){
+            return res.sendError(400,"Admin Can't Delete Their Account")
+        }
+
 
         const public_id = User?.avatar?.public_id
 
@@ -426,9 +424,9 @@ const deleteAccount = async (req, res) => {
 
             const response = await cloudinary.v2.uploader.destroy(public_id)
             if (response.result == 'ok') {
-                console.log("Profile Picture Deleted From Cloudinary")
+                // console.log("Profile Picture Deleted From Cloudinary")
             } else {
-                console.log("Profile Picture Doesn't Exits in Cloudinary")
+                // console.log("Profile Picture Doesn't Exits in Cloudinary")
             }
         }
 
@@ -457,7 +455,7 @@ const fetchStudentsAndInstructors = async (req,res)=>{
         }
 
         const students = await userModel.find({role:'USER'})
-        const instructors = await userModel.find({role:'INSTRUCTOR'})
+        const instructors = await userModel.find({role:'INSTRUCTOR'}).populate('createdCourses.courseId')
         return res.success(200,'Students Fetch Successfully',{students,instructors})
 
     } catch (error) {
@@ -465,6 +463,50 @@ const fetchStudentsAndInstructors = async (req,res)=>{
     }
 }
 
+const deleteUserOrInstructor = async (req,res)=>{
+    try {
+        if (req?.user?.role !== 'ADMIN') {
+            return res.sendError(401, "Unauthorized")
+        }
 
-export { deleteAccount, editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword, fetchStudentsAndInstructors }
+        const {userId} = req.body
+
+        if(!userId){
+            return res.sendError(400,"UserId Is Missing")
+        }
+
+        const user = await userModel.findById(userId)
+        if (!user) {
+            return res.sendError(401, "User Doesn't Exist!")
+        }
+
+        const public_id = user?.avatar?.public_id
+
+        if (public_id) {
+            // Now Delete the User Profile from Cloudinary
+
+            const response = await cloudinary.v2.uploader.destroy(public_id)
+            if (response.result == 'ok') {
+                // console.log("Profile Picture Deleted From Cloudinary")
+            } else {
+                // console.log("Profile Picture Doesn't Exits in Cloudinary")
+            }
+        }
+
+        try {
+            const deletedUser = await userModel.findByIdAndDelete(userId)
+            if (!deletedUser) {
+                return res.sendError(401, "User Doesn't Exists!")
+            }
+            return res.success(200, "Account Suspended Successfully")
+        } catch (error) {
+            return res.sendError(501, "Error In Deleting Account", error.message)
+        }
+    } catch (error) {
+        return res.sendError(400, "Error In Delete Account", error.message)
+    }
+}
+
+
+export { deleteAccount, editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword, fetchStudentsAndInstructors ,deleteUserOrInstructor}
 

@@ -1,14 +1,18 @@
-import mongoose  from "mongoose"
+import mongoose from "mongoose"
 
 
-const connectMongo = async ()=>{
+const connectMongo = async () => {
 
     try {
-        const {connection} = await mongoose.connect(process.env.MONGO_URI)
+        const { connection } = await mongoose.connect(
+            process.env.MONGO_URI,
+            // {
+            //     dbName: "learning_management_system"
+            // }
+        )
         console.log("Database Connected Successfully", connection.name)
     } catch (error) {
-        console.log(error.message)
-        process.exit(1)
+         process.exit(1)
     }
 }
 

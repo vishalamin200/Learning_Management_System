@@ -31,5 +31,5 @@ const httpsServer = https.createServer(credentials, app)
 
 
 httpsServer.listen(PORT, () => {
-    console.log(`Server is running at ${process.env.CLIENT_URL}`)
+    console.log(`Server is running at https://localhost:${process.env.PORT}`)
 })

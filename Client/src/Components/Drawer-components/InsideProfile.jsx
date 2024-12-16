@@ -26,8 +26,7 @@ const InsideProfile = () => {
         const promise = await dispatch(logout())
 
         if (promise?.payload?.Message) {
-            console.log("Message In handleOutput:", promise?.payload?.Message)
-            localStorage.clear()
+             localStorage.clear()
             dispatch(logoutUser())
 
             dispatch(setDrawer(false))

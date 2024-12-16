@@ -22,6 +22,13 @@ AxiosInstance.interceptors.response.use(
                 window.location.href = '/login';
             }, 3000);
         }
+
+        if (error?.response?.Error === 'invalid signature') {
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.href = '/login';
+            }, 3000);
+        }
         return Promise.reject(error);
     }
 );

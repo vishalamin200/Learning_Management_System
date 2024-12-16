@@ -117,7 +117,6 @@ const createOrder = async (req, res) => {
 
         return res.success(200, "Order Created Successfully", order)
     } catch (error) {
-        console.log("CreateOrderError :", error)
         return res.sendError(400, "Error In Creating Order", error.message)
     }
 }
@@ -196,8 +195,7 @@ const createSubscription = async (req, res, next) => {
         return res.success(200, "Subscription Created Successfully", subscription)
 
     } catch (error) {
-        console.log(error)
-        return res.sendError(400, "Error In Creating A Subscription", error.message)
+         return res.sendError(400, "Error In Creating A Subscription", error.message)
     }
 }
 
@@ -287,7 +285,6 @@ const verifySubscription = async (req, res, next) => {
         await User.save()
         return res.success(200, "Payment Verified Successfully", User)
     } catch (error) {
-        console.log(error)
         return res.sendError(400, "Error in Verification of Subscription", error.description)
     }
 }
@@ -349,8 +346,7 @@ const fetchPurchaseHistory = async (req, res) => {
                 notes: sub?.paymentDetails?.notes
             }
         ))
-        console.log("PaymentHistory", paymentHistory)
-        return res.success(200, 'Payment History Fetch Successfully', paymentHistory)
+         return res.success(200, 'Payment History Fetch Successfully', paymentHistory)
     } catch (error) {
         return res.sendError(400, "Error In Fetching Payment History", error.message)
     }
@@ -371,62 +367,68 @@ const getAllSubscriptions = async (req, res) => {
 
 const fetchAllPayments = async (req, res) => {
 
-    const { count = 100, skip = 0, year = 2024 } = req.body
-
-    // Function to fetch payments for a given month
-    async function fetchPaymentsForMonth(year, month) {
-        try {
-            // Create the date range for the month
-            const startDate = new Date(year, month - 1, 1); // First day of the month
-            const endDate = new Date(year, month, 0); // Last day of the month
-
-            const from = Math.floor(startDate.getTime() / 1000); // Convert to UNIX timestamp (seconds)
-            const to = Math.floor(endDate.getTime() / 1000); // Convert to UNIX timestamp (seconds)
-
-            const payments = await razorpay.payments.all({
-                from: from,
-                to: to,
-            });
-
-             return payments;
-        } catch (error) {
-            return res.sendError(400,"Error In fetching Monthly Payments",error.message)
-        }
-    }
-
-     async function fetchYearlyPayments(year) {
-        const paymentsByMonth = {};  
-        const totalAmountsByMonth = {}; 
-        let yearlyTotal = 0;
-        
-        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-
-        try {
-            for (let month = 1; month <= 12; month++) {
-                 const payments = await fetchPaymentsForMonth(year, month);
-
-                 const totalAmountForMonth = payments.items.reduce((sum, payment) => sum + payment.amount, 0);
-
-                paymentsByMonth[monthNames[month-1]] = payments;
-                totalAmountsByMonth[monthNames[month-1]] = totalAmountForMonth/100; // store in rupees
-
-                // Add the total amount for the month to the yearly total
-                yearlyTotal += totalAmountForMonth;
+    try {
+        const { count, skip, year  } = req.body
+       
+    
+        // Function to fetch payments for a given month
+        async function fetchPaymentsForMonth(year, month) {
+            try {
+                // Create the date range for the month
+                const startDate = new Date(year, month - 1, 1); // First day of the month
+                const endDate = new Date(year, month, 0); // Last day of the month
+    
+                const from = Math.floor(startDate.getTime() / 1000); // Convert to UNIX timestamp (seconds)
+                const to = Math.floor(endDate.getTime() / 1000); // Convert to UNIX timestamp (seconds)
+    
+                const payments = await razorpay.payments.all({
+                    from: from,
+                    to: to,
+                });
+    
+                 return payments;
+            } catch (error) {
+                return res.sendError(400,"Error In fetching Monthly Payments",error.message)
             }
-
-            return {
-                paymentsByMonth,
-                totalAmountsByMonth,
-                yearlyTotal
-            };
-        } catch (error) {
-            return res.sendError(400,'Error In fetching yearly payments',error.message)
         }
+    
+         async function fetchYearlyPayments(year) {
+     
+            const paymentsByMonth = {};  
+            const totalAmountsByMonth = {}; 
+            let yearlyTotal = 0;
+            
+            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    
+            try {
+                for (let month = 1; month <= 12; month++) {
+                     const payments = await fetchPaymentsForMonth(year, month);
+    
+                     const totalAmountForMonth = payments.items.reduce((sum, payment) => sum + payment.amount, 0);
+    
+                    paymentsByMonth[monthNames[month-1]] = payments;
+                    totalAmountsByMonth[monthNames[month-1]] = totalAmountForMonth/100; // store in rupees
+    
+                    // Add the total amount for the month to the yearly total
+                    yearlyTotal += totalAmountForMonth;
+                }
+    
+                return {
+                    paymentsByMonth,
+                    totalAmountsByMonth,
+                    yearlyTotal
+                };
+            } catch (error) {
+                return res.sendError(400,'Error In fetching yearly payments',error.message)
+            }
+        }
+         const {paymentsByMonth,totalAmountsByMonth,yearlyTotal} = await fetchYearlyPayments(year)
+    
+        return res.success(200, "Fetched All Payment Successfully",  {paymentsByMonth,totalAmountsByMonth,yearlyTotal} )
+        
+    } catch (error) {
+        // return res.sendError(400,"Error In Fetching All Payments" ,error.message) 
     }
-
-    const {paymentsByMonth,totalAmountsByMonth,yearlyTotal} = await fetchYearlyPayments(year)
-
-    return res.success(200, "Fetched All Payment Successfully",  {paymentsByMonth,totalAmountsByMonth,yearlyTotal} )
 }
 
  

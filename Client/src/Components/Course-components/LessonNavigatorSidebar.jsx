@@ -38,8 +38,7 @@ const LessonNavigator = () => {
         const promise = await dispatch(logout())
 
         if (promise?.payload?.Message) {
-            console.log("Message In handleOutput:", promise?.payload?.Message)
-            localStorage.clear()
+             localStorage.clear()
             dispatch(logoutUser())
             navigate('/')
         } else {

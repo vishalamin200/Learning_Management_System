@@ -30,8 +30,6 @@ const ForgotPassword = () => {
         }
 
         const promise = await dispatch(forgotPassword(userInfo))
-        console.log("Payload:", promise?.payload)
-
         if (promise?.payload?.Message) {
             setUserInfo({ email: "" })
         }

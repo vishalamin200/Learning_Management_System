@@ -8,7 +8,14 @@ const initialState = {
     instructors: [],
     yearlyTotal:0,
     totalAmountsByMonth:{},
-    paymentsByMonth:{}
+    paymentsByMonth:{},
+    
+    userStatus : 'enrolled',
+    selectedUserId : null,
+    selectedSubscriptions : {},
+    selectedCourses:{},
+    viewProfile: null,
+    deleteUser:null
 }
 
 export const fetchStudentsAndInstructors = createAsyncThunk('user/fetchStudentsAndInstructors', async (_, thunkApi) => {
@@ -33,11 +40,55 @@ export const fetchAllPayments = createAsyncThunk('payment/fetchAllPayments', asy
     }
 })
 
+export const deleteUserOrInstructor = createAsyncThunk('/dashboard/deleteUserOrInstructor',async (data,thunkApi)=>{
+
+    try {
+        const response = AxiosInstance.post('auth/deleteUserOrInstructor',data)
+        toast.promise(response,{
+            loading:'Deleting User Account...',
+            success:(res)=>res?.data?.Message,
+            error:(err)=>err?.response?.data?.Message
+        })
+
+        return (await response).data
+    } catch (error) {
+        return thunkApi.rejectWithValue(error.message)
+    }
+})
+
 
 const StatisticSlice = createSlice({
     name: 'Statistics',
     initialState,
     reducers: {
+        setUserStatus : (state,action)=>{
+            state.userStatus = action.payload
+        },
+
+        setSelectedUserId: (state,action)=>{
+            state.selectedUserId = action.payload
+        },
+
+        setSelectedSubscriptions: (state,action)=>{
+            const {userId,selectedSubscription} = action.payload
+            state.selectedSubscriptions[userId] = selectedSubscription
+        },
+
+        setSelectedCourses: (state,action)=>{
+            const {userId,selectedCourse} = action.payload
+            state.selectedCourses[userId] = selectedCourse
+        },
+
+        setViewProfile: (state,action)=>{
+            state.viewProfile = action.payload
+        },
+
+        setDeleteUser: (state,action)=>{
+            state.deleteUser = action.payload
+        },
+        toggleViewProfile: (state,action)=>{
+            state.viewProfile ? state.viewProfile = null : state.viewProfile = action.payload 
+        },
 
     },
     extraReducers: (builder) => {
@@ -56,6 +107,8 @@ const StatisticSlice = createSlice({
                 state.yearlyTotal = yearlyTotal
             })
     }
-})
+})   
+
+export const {setUserStatus,setSelectedUserId, setSelectedSubscriptions, setSelectedCourses,setViewProfile, setDeleteUser,toggleViewProfile} = StatisticSlice.actions
 
 export default StatisticSlice.reducer

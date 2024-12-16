@@ -123,7 +123,8 @@ const courseSchema = new Schema({
     }
 
 }, {
-    timestamps: true
+    timestamps: true,
+    autoIndex:false,
 })
 
 courseSchema.pre("save", function (next) {
@@ -146,7 +147,7 @@ courseSchema.post('save', async function (document,next) {
         }
         next()    
     } catch (error) {
-        console.log("Error In Course Model, Post Save function",error.message)
+        // console.log("Error In Course Model, Post Save function",error.message)
     }
 })
 
@@ -158,5 +159,18 @@ courseSchema.pre("update", function (next) {
 
 
 const courseModel = model('Courses', courseSchema)
+
+async function getIndexes() {
+    try {
+        // Step 1: Get existing indexes
+        const indexes = await courseModel.collection.indexes();
+        // console.log("courseModel Indexes:", indexes);
+
+    } catch (error) {
+        console.error("Error In CourseModel Indexes:", error.message);
+    }
+}
+
+// getIndexes();
 
 export default courseModel

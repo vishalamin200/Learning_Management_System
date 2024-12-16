@@ -43,7 +43,7 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
 
 
     const numberOfRating = course?.allRatings?.length
-    const completed = 20
+    const completed = 0
 
     const ratingString = {
         0.5: 'Worst/Did not like it at all',

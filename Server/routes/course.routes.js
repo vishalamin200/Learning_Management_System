@@ -1,9 +1,8 @@
-import express from 'express'
 import { Router } from 'express'
-import { createCourse, viewCourses, getLectures, updateCourse, deleteCourse, addLecture, deleleLecture, updateLecture, getCoursesByCategoryOrName, fetchSubscribedCourses, updateRating, fetchCreatedCourses } from '../controllers/course.controllers.js'
-import upload from '../middlewares/multer.middleware.js'
+import { addLecture, createCourse, deleleLecture, deleteCourse, fetchCreatedCourses, fetchSubscribedCourses, getCoursesByCategoryOrName, getLectures, updateCourse, updateLecture, updateRating, viewCourses } from '../controllers/course.controllers.js'
 import isLoggedIn from '../middlewares/authentication.middleware.js'
-import { authorizedRoles, isSubscribed } from '../middlewares/authorization.middleware.js'
+import { authorizedRoles } from '../middlewares/authorization.middleware.js'
+import upload from '../middlewares/multer.middleware.js'
 
 
 const router = Router()
@@ -11,7 +10,7 @@ const router = Router()
 router.route('/')
     .post(
         isLoggedIn,
-        authorizedRoles('INSTRUCTOR','ADMIN'),
+        authorizedRoles('INSTRUCTOR', 'ADMIN'),
         upload.single('thumbnail'),
         createCourse
     )
@@ -21,11 +20,13 @@ router.route('/')
 
 router.route('/courses/').post(getCoursesByCategoryOrName)
 
-router.route('/subscribedCourses/').get(isLoggedIn,fetchSubscribedCourses)
+router.route('/subscribedCourses/').get(isLoggedIn, fetchSubscribedCourses)
 
-router.route('/createdCourses/').get(isLoggedIn,fetchCreatedCourses)
+router.route('/createdCourses/').get(isLoggedIn, fetchCreatedCourses)
 
-router.route('/updateRating/').post(isLoggedIn,updateRating)
+router.route('/updateRating/').post(isLoggedIn, updateRating)
+
+
 
 
 router.route('/:id')
@@ -35,18 +36,18 @@ router.route('/:id')
     )
     .put(
         isLoggedIn,
-        authorizedRoles('INSTRUCTOR','ADMIN'),
+        authorizedRoles('INSTRUCTOR', 'ADMIN'),
         upload.single('thumbnail'),
         updateCourse
     )
     .delete(
         isLoggedIn,
-        authorizedRoles('INSTRUCTOR','ADMIN'),
+        authorizedRoles('INSTRUCTOR', 'ADMIN'),
         deleteCourse
     )
     .post(
         isLoggedIn,
-        authorizedRoles('INSTRUCTOR','ADMIN'),
+        authorizedRoles('INSTRUCTOR', 'ADMIN'),
         upload.single('video'),
         addLecture
     )
@@ -55,11 +56,11 @@ router.route('/:id')
 router.route('/:courseId/:lectureId')
     .delete(
         isLoggedIn,
-        authorizedRoles('INSTRUCTOR','ADMIN'),
+        authorizedRoles('INSTRUCTOR', 'ADMIN'),
         deleleLecture
     )
     .put(isLoggedIn,
-        authorizedRoles('INSTRUCTOR','ADMIN'),
+        authorizedRoles('INSTRUCTOR', 'ADMIN'),
         upload.single('video'),
         updateLecture
     )

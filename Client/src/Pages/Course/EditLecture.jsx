@@ -80,8 +80,6 @@ const EditLecture = () => {
             return
         }
 
-        console.log("lectureInfo", lectureInfo)
-
 
         const formData = new FormData()
 

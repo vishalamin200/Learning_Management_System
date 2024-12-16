@@ -49,11 +49,11 @@ function sendResetEmail(userId, userEmail,userName, token) {
             if (error) {
                 return console.error("Error sending email:", error);
             }
-            console.log("Email sent:", info.response);
+            // console.log("Email sent:", info.response);
         });
         
     } catch (error) {
-        console.log("Error in Sending Mail", error.message)   
+        // console.log("Error in Sending Mail", error.message)   
     }
 
 }

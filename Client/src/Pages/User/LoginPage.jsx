@@ -66,7 +66,7 @@ const LoginPage = ({ isActive }) => {
     return (
 
         <HomeLayout>
-            <div className={` inset-0 flex items-center justify-center  bg-[#bcc7d6] pt-16 text-xl md:pb-20 md:pt-0`} >
+            <div className={` inset-0 flex items-center justify-center  bg-[#dbe2ed] pt-16 text-xl md:pb-20 md:pt-0`} >
                 <div className="flex h-fit w-screen justify-around md:h-screen md:w-3/4 md:items-end lg:w-1/2">
 
                     <div className=' flex h-[85vh] w-full flex-col items-center justify-evenly border-2 bg-white shadow-2xl  transition-all  duration-500 ease-in-out md:mb-5 md:h-[85vh] md:w-8/12 md:scale-95 md:justify-around md:rounded-2xl'>

@@ -36,7 +36,7 @@ const createCourse = async (req, res, next) => {
             if (err) {
                 return res.sendError(400, "Error in Uploading Thumbnail to Cloudinary", err)
             } if (result) {
-                console.log(200, "Successfully Uploaded thumbnail to Cloudinary file Server")
+                // console.log(200, "Successfully Uploaded thumbnail to Cloudinary file Server")
             }
         })
 
@@ -49,7 +49,12 @@ const createCourse = async (req, res, next) => {
 
             //Delete file from local storage
             fs.rmSync(req.file.path)
-            console.log("Removed Thumbnail From Temporary Storage In Server")
+ 
+            // Save Course Details in the instructors data
+            const instructorId = req?.user?.id
+            const instructor = await userModel.findById(instructorId)
+            instructor.createdCourses.push({ courseId: newCourse._id })
+            await instructor.save()
 
             return res.success(200, "Course Created Successfully", newCourse)
         }
@@ -65,7 +70,7 @@ const viewCourses = async (req, res, next) => {
     try {
         const allCourses = await courseModel.find({})
         if (allCourses.length >= 0) {
-            return res.success(200, "Fetch Courses Successfully", allCourses )
+            return res.success(200, "Fetch Courses Successfully", allCourses)
         } else {
             return res.sendError(400, "Error in Get Courses")
         }
@@ -153,11 +158,11 @@ const fetchCreatedCourses = async (req, res) => {
     }
 }
 
-
 const updateCourse = async (req, res, next) => {
 
     try {
         const courseId = req.params.id
+
 
         const isValidCourseId = await mongoose.isObjectIdOrHexString(courseId)
 
@@ -169,7 +174,6 @@ const updateCourse = async (req, res, next) => {
         if (!Course) {
             return res.sendError(404, "Course Doesn't Exist")
         }
-
 
 
         // fetch Details for updates
@@ -195,9 +199,6 @@ const updateCourse = async (req, res, next) => {
             return res.success(200, "No Updation in Course", "No Value Provided For Updation")
         }
 
-        console.log("req.file: ", req.file)
-
-
         //Now if Thumbnail is Provided for update 
         if (req.file) {
 
@@ -213,7 +214,7 @@ const updateCourse = async (req, res, next) => {
             if (!result) {
                 req.sendError(400, "Error in Uploading New thumnail To Cloudinary")
             } else {
-                console.log("New Thumbnail Uploaded To Cloudinary")
+                // console.log("New Thumbnail Uploaded To Cloudinary")
             }
 
             const newPublicId = result.public_id
@@ -226,14 +227,14 @@ const updateCourse = async (req, res, next) => {
 
                 const deleteOldThumbnail = await cloudinary.v2.uploader.destroy(oldPublicId, (err, success) => {
                     if (err) {
-                        console.log("Error in Deleting Old thumbnail from Cloudinary ")
+                        // console.log("Error in Deleting Old thumbnail from Cloudinary ")
                     } else if (success && success.result == 'ok') {
-                        console.log("Deleted Old Thumbnail From Cloudinary")
+                        // console.log("Deleted Old Thumbnail From Cloudinary")
                     }
                 })
 
             } else {
-                console.log("Old thumbnail Doesn't exist")
+                // console.log("Old thumbnail Doesn't exist")
             }
 
             // Update the Thumbnail public id, and secure url to New Public Id and  
@@ -278,8 +279,7 @@ const deleteCourse = async (req, res, next) => {
             await cloudinary.v2.uploader.destroy(thumbnailPublicId)
             remarks.push("Deleted The Course Thumbnail from Cloudinary")
         } else {
-            console.log(" Thumbnail Of Course Doesn't exists on Cloudinary")
-            remarks.push("Thumbnail Of Course Doesn't exists on Cloudinary")
+             remarks.push("Thumbnail Of Course Doesn't exists on Cloudinary")
         }
 
         //delete All lecture thumbnail if exists
@@ -299,20 +299,28 @@ const deleteCourse = async (req, res, next) => {
                 const result = await cloudinary.v2.api.delete_resources(lectureIdList)
 
                 if (!result) {
-                    console.log("Error in Deleting Lecture thumbnail from Cloudinary")
-                    remarks.push("Error in Deleting Lecture thumbnail from Cloudinary")
+                     remarks.push("Error in Deleting Lecture thumbnail from Cloudinary")
                 } else {
-                    console.log("Deleted All The Lecture thumbnails from Cloudinary")
-                    remarks.push("Deleted All The Lecture thumbnails from Cloudinary")
+                     remarks.push("Deleted All The Lecture thumbnails from Cloudinary")
                 }
             } else {
-                console.log("No Thumbnail Of Any Lecture Exists on Cloudinary")
-                remarks.push("No Thumbnail Of Any Lecture Exists on Cloudinary")
+                 remarks.push("No Thumbnail Of Any Lecture Exists on Cloudinary")
             }
         } else {
-            console.log("No Thumbnail Of Any Lecture Exists on Cloudinary")
-            remarks.push("No Thumbnail Of Any Lecture Exists on Cloudinary")
+             remarks.push("No Thumbnail Of Any Lecture Exists on Cloudinary")
         }
+
+        // Delete Course Details from the Instructor or Data
+        const instructorId = req?.user?.id
+
+        await userModel.updateOne(
+            {_id:instructorId},
+            {$pull:{createdCourses:{courseId:courseId}}}
+        ).then((result)=>{
+            // console.log('courseDetails Removed From Instructor Data',result)
+        }).catch((err)=>{
+            // console.log("Error In Remove the Course Data from Instructor")
+        })
 
         // Delete course from Mongo
         const deletedCourse = await courseModel.findByIdAndDelete(courseId)
@@ -379,7 +387,7 @@ const addLecture = async (req, res, next) => {
                 });
 
                 if (result) {
-                    console.log("Lecture Video Successfully Uploaded to Cloudinary");
+                    // console.log("Lecture Video Successfully Uploaded to Cloudinary");
                 }
 
                 if (result) {
@@ -465,16 +473,14 @@ const deleleLecture = async (req, res, next) => {
                 });
 
                 if (result.result === 'ok') {
-                    console.log("Lecture Video Deleted From Cloudinary");
+                    // console.log("Lecture Video Deleted From Cloudinary");
                 } else {
-                    console.log("Lecture Video doesn't Exist in Cloudinary");
+                    // console.log("Lecture Video doesn't Exist in Cloudinary");
                 }
             } catch (err) {
-                console.log("Error In Deleting The Video from Cloudinary: ", err.message);
+                // console.log("Error In Deleting The Video from Cloudinary: ", err.message);
             }
-        } else {
-            console.log("Video PublicId Doesn't exist Or Invalid");
-        }
+        } 
 
         //delete teh lecture
         await Course.lectures.pull({ _id: lectureId })
@@ -518,14 +524,12 @@ const updateLecture = async (req, res, next) => {
             })
 
             await Course.save()
-            console.log("Course Data Updated")
-
+ 
         } else {
             return res.sendError(400, "Please Send the Data in Multipart/Form-data", { "req.body:": req.body })
         }
 
-        console.log("req.file: ", req.file)
-        //Now if Video is Provided for update 
+         //Now if Video is Provided for update 
 
         if (req.file) {
             // upload the video to Cloudinary and get publicId
@@ -540,9 +544,7 @@ const updateLecture = async (req, res, next) => {
 
             if (!result) {
                 req.sendError(400, "Error in Uploading New Video To Cloudinary")
-            } else {
-                console.log("New Video Uploaded To Cloudinary")
-            }
+            } 
 
             const newPublicId = result.public_id
             const newSecureUrl = result.secure_url
@@ -554,12 +556,12 @@ const updateLecture = async (req, res, next) => {
                 try {
                     const result = await cloudinary.v2.uploader.destroy(oldPublicId);
                     if (result.result === 'ok') {
-                        console.log("Deleted Old Video From Cloudinary");
+                        // console.log("Deleted Old Video From Cloudinary");
                     } else {
-                        console.log("Failed to delete the old video");
+                        // console.log("Failed to delete the old video");
                     }
                 } catch (err) {
-                    console.log("Error in Deleting Old Video from Cloudinary", err);
+                    // console.log("Error in Deleting Old Video from Cloudinary", err);
                 }
             }
 
@@ -579,7 +581,6 @@ const updateLecture = async (req, res, next) => {
         return res.sendError(400, 'Error In Updating Lecture', error.message)
     }
 }
-
 
 const updateRating = async (req, res) => {
 
@@ -623,6 +624,8 @@ const updateRating = async (req, res) => {
         return res.success(200, "Rating Added Successfully", course.allRatings)
     }
 }
+
+
 
 export {
     addLecture, createCourse, deleleLecture, deleteCourse, fetchCreatedCourses, fetchSubscribedCourses, getCoursesByCategoryOrName, getLectures,

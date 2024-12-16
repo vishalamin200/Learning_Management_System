@@ -13,6 +13,7 @@ const isLoggedIn = async (req, res, next) => {
 
         // user have a valid token
         if (token && token != "") {
+
             const userDetails = JWT.verify(token, process.env.JWT_SECRET_KEY)
  
             const userId = userDetails.id
@@ -33,7 +34,10 @@ const isLoggedIn = async (req, res, next) => {
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
             return res.sendError(401, "Session Expired, Please Login Again", error.name)
-        } else {
+        }else if(error.message === 'invalid signature'){
+            return res.sendError(401,"Token Is Tempered, Please Login Again",error.name)
+        }
+         else {
             return res.sendError(400, "Error in isLoggedIn Middleware", error.message)
         }
     }

@@ -4,6 +4,8 @@ import { Route, Routes } from 'react-router-dom'
 
 import AccessDeniedPage from './Pages/AccessDeniedPage'
 import Dashboard from './Pages/Admin-and-Instructor/Dashboard'
+import Instructors from './Pages/Admin-and-Instructor/Instructors'
+import Students from './Pages/Admin-and-Instructor/Students'
 import AddLecture from './Pages/Course/AddLecture'
 import AllCoursesPage from './Pages/Course/AllCoursesPage'
 import CourseCategory from './Pages/Course/CourseCategory'
@@ -62,6 +64,8 @@ function App() {
 
         <Route path='/course/checkout' element={<PaymentPage />} />
         <Route path='/admin/dashboard' element={<Dashboard />} />
+        <Route path='/admin/dashboard/students' element={<Students />} />
+        <Route path='/admin/dashboard/instructors' element={<Instructors />} />
 
       </Routes>
     </>

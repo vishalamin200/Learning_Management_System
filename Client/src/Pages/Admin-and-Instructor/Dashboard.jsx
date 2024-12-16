@@ -3,9 +3,9 @@ import { useEffect } from 'react'
 import { Bar, Pie } from 'react-chartjs-2'
 import { useDispatch, useSelector } from 'react-redux'
 
-import DashboardSidebar from '../../Components/Admin-and-Instructor/DashboardSidebar.jsx'
-import HomeLayout from '../../Layouts/HomeLayout.jsx'
-import { fetchAllPayments, fetchStudentsAndInstructors } from '../../Redux/StatisticsSlice.js'
+import Payments from '../../Components/Admin-and-Instructor/Payments.jsx'
+import DashboardLayout from '../../Layouts/DashbaordLayout.jsx'
+import { fetchStudentsAndInstructors } from '../../Redux/StatisticsSlice.js'
 
 Charjs.register(ArcElement, BarElement, CategoryScale, Legend, LinearScale, Title, Tooltip)
 
@@ -14,14 +14,10 @@ const Dashboard = () => {
   // const subscribedStudents
   // const categoryWiseNumberOfEnrolledStudents
   const dispatch = useDispatch()
-  const { students, instructors, yearlyTotal, totalAmountsByMonth, paymentsByMonth } = useSelector((state) => state.Statistics)
-
-  const count = 50
-  const skip = 0
-  const year = 2024
+  const { students, yearlyTotal, totalAmountsByMonth } = useSelector((state) => state.Statistics)
 
   const registeredUsers = students?.length
-  const enrolledUsers = students.filter(student => student.subscriptions.length != 0).length
+  const enrolledUsers = students.filter((student) => student.subscriptions.length > 0 && student?.subscriptions.some((sub) => sub.subscription_status === 'active')).length
 
   const userData = {
     labels: ['Registered Users', 'Enrolled Users'],
@@ -32,7 +28,6 @@ const Dashboard = () => {
       borderWidth: 1
     }]
   }
-
 
   const sellsData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -66,7 +61,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchAllPayments({ count, skip, year }))
+
       await dispatch(fetchStudentsAndInstructors())
     }
     fetchData()
@@ -74,9 +69,7 @@ const Dashboard = () => {
 
 
   return (
-    <HomeLayout>
-      <DashboardSidebar />
-
+    <DashboardLayout>
       <div className='pl-[20rem] pt-20'>
         <div className='min-h-screen w-full'>
 
@@ -108,12 +101,10 @@ const Dashboard = () => {
 
             </div>
           </div>
-
-
+          <Payments />
         </div>
       </div>
-
-    </HomeLayout>
+    </DashboardLayout>
   )
 }
 

@@ -11,11 +11,12 @@ import Default_Profile from '../../assets/Images/Default_Profile.webp';
 import deleteLogo from '../../assets/Logos/deleteLogo.png';
 import HomeLayout from "../../Layouts/HomeLayout";
 import { deleteAccount, editProfile } from "../../Redux/AuthSlice";
+import { toggleNavbar } from "../../Redux/NavbarSlice";
 
 
 const NewEditProfilePage = () => {
 
-    const { data } = useSelector((state) => state.Auth)
+    const { data,role} = useSelector((state) => state.Auth)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -29,7 +30,6 @@ const NewEditProfilePage = () => {
     const inputRef = useRef(null)
 
     const createdAt = new Date(data?.createdAt)
-
     const joinDate = createdAt.toLocaleDateString('en-GB', { 'day': '2-digit', "month": "short", 'year': "numeric" })
 
     const joinTime = createdAt.toLocaleTimeString('en-US', { 'timeZone': 'Asia/Kolkata', 'hour': '2-digit', 'minute': '2-digit', 'second': '2-digit' })
@@ -145,10 +145,16 @@ const NewEditProfilePage = () => {
 
     const handleDeleteAccount = async (e) => {
         e.preventDefault()
+        if(role == 'ADMIN'){
+            toast.error("Admin Account Can Not Delete")
+            navigate(-1)
+            return;
+        }
 
         const thunkPromise = await dispatch(deleteAccount())
         if (thunkPromise?.payload?.Message) {
             navigate('/')
+            dispatch(toggleNavbar(null))
         }
     }
 
@@ -157,7 +163,7 @@ const NewEditProfilePage = () => {
 
         <HomeLayout>
             <div >
-                <form noValidate onSubmit={handleSubmit} className={`flex  w-[100%] flex-col items-center justify-center  bg-slate-500 pt-16 text-white md:pt-12 lg:flex lg:h-screen lg:flex-row lg:pt-20  `}>
+                <form noValidate onSubmit={handleSubmit} className={`flex  w-[100%] flex-col items-center justify-center  bg-[#EAF3FF] pt-16 text-white md:pt-12 lg:flex lg:h-screen lg:flex-row lg:pt-20  `}>
 
                     {/* bg-[#181A1B] */}
                     <div className=" relative flex h-96 w-full  flex-col items-center justify-center bg-[#10162F] p-10 md:mt-8 lg:mt-0 lg:h-[80%] lg:w-[30vw]">

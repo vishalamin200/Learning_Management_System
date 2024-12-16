@@ -26,7 +26,7 @@ const PurchaseHistory = () => {
       return null
     }
     const date = new Date(mongooseDate)
-    const formatedDate = date.toLocaleDateString('in', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })
+    const formatedDate = date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })
     return formatedDate
 
   }

@@ -2,18 +2,20 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import JWT from 'jsonwebtoken';
 import mongoose, { Schema } from "mongoose";
+import courseModel from './course.model.js';
 
 
 const userSchema = new Schema({
 
-    googleId:{
-        type:String,
+    googleId: {
+        type: String,
+        unique: true,
     },
 
     fullName: {
         type: String,
         trim: true,
-        minlengh: [2, "Name is too short"],
+        minlength: [2, "Name is too short"],
         maxlength: [30, "Name is too long"],
         required: true
     },
@@ -47,13 +49,12 @@ const userSchema = new Schema({
     password: {
         type: String,
         minlength: [6, "Password should have atleast 6 characters"],
-        require: true,
         select: false
     },
 
     role: {
         type: String,
-        enum: ['USER','INSTRUCTOR','ADMIN'],
+        enum: ['USER', 'INSTRUCTOR', 'ADMIN'],
         default: "USER"
     },
 
@@ -72,36 +73,48 @@ const userSchema = new Schema({
         {
             courseId: {
                 type: String,
-                default: null,
-                unique:true
+                unique:true,
             },
             courseTitle: {
                 type: String,
-                default: null,
-             },
+                trim: true,
+            },
             subscription_id: {
                 type: String,
                 default: ""
             },
-            order_id:{
-                type:String,
-                default:""
+            order_id: {
+                type: String,
+                default: ""
             },
-
             subscription_status: {
                 type: String,
                 default: "Inactive"
             },
 
-            purchaseAt:{
-                type:Date,
+            purchaseAt: {
+                type: Date,
             },
-            expiresAt:{
-                type:Date,
+            expiresAt: {
+                type: Date,
             },
-            paymentDetails:{
-                type:Object
+            paymentDetails: {
+                type: Object
             }
+        }
+    ],
+
+    createdCourses: [
+        {
+            courseId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: courseModel,
+                required: true
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now()
+            },
         }
     ],
 
@@ -110,7 +123,8 @@ const userSchema = new Schema({
     forgetPasswordExpiry: Date
 
 }, {
-    timestamps: true
+    timestamps: true,
+    autoIndex: false,
 })
 
 userSchema.pre("save", async function (next) {
@@ -182,12 +196,26 @@ userSchema.methods = {
         } catch (error) {
             console.error("Error in Validating the Reset Password Token", error.message)
         }
-    }
+    } 
 }
 
 
-
 const userModel = mongoose.model('users', userSchema)
+
+async function getIndexes() {
+    try {
+        // Step 1: Get existing indexes
+        const indexes = await userModel.collection.indexes();
+        // console.log("UserModel Indexes:", indexes);
+
+    } catch (error) {
+        console.error("Error handling indexes:", error.message);
+    }
+}
+
+// getIndexes();
+
+
 
 export default userModel
 

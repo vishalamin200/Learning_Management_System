@@ -67,7 +67,6 @@ const MyCourses = () => {
     }
 
 
-
     return (
         <HomeLayout>
             <div className='min-h-[94vh] pt-16 md:min-h-[90vh]   md:px-20'>

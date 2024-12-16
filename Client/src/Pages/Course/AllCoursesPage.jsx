@@ -1,23 +1,18 @@
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import EmptyState from '../../assets/Logos/emptystate.svg'
 import { BackButton, NextButton } from '../../Components/Course-components/Buttons'
 import CoursesCarousel from '../../Components/Course-components/CoursesCarousel'
 import CourseTemplate from "../../Components/Course-components/CourseTemplate"
 import HomeLayout from '../../Layouts/HomeLayout'
-import { fetchAllCourses } from '../../Redux/CourseSlice'
+import { fetchAllCourses, setActiveButton, setAllCourses, setCoursePage, setCourses, setMostPopularCourses, setNewCourses, setTopRatedCourses } from '../../Redux/CourseSlice'
 
 
 const AllCoursesPage = () => {
 
     const dispatch = useDispatch()
-    const [allCourses, setAllCourses] = useState([])
-
-    const [coursePage, setCoursePage] = useState(1)
-    const [courses, setCourses] = useState([])
-    const [activeButton, setActiveButton] = useState()
-
+    const { allCourses, coursePage, courses, activeButton } = useSelector((state) => state.Course)
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -25,70 +20,46 @@ const AllCoursesPage = () => {
             const courses = thunkResponse?.payload?.Data
 
             if (courses != undefined && courses.length > 0) {
-                setAllCourses(courses)
+                dispatch(setAllCourses(courses))
             } else {
-                setCourses(() => [])
+                dispatch(setCourses(() => []))
             }
         }
         fetchCourses()
     }, [])
 
     useEffect(() => {
-        allCourses ? setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8)) : null
-    }, [allCourses, coursePage,])
+        allCourses ? dispatch(setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8))) : null
+    }, [allCourses, coursePage,dispatch])
 
     const handleNextButton = () => {
         if (Math.ceil(allCourses?.length / 8) > coursePage) {
-            setCoursePage(coursePage + 1)
+            dispatch(setCoursePage(coursePage + 1))
         }
     }
     const handleBackButton = () => {
         if (coursePage > 1) {
-            setCoursePage(coursePage - 1)
+            dispatch(setCoursePage(coursePage - 1))
         }
     }
 
     const handleMostPopular = (e) => {
-        setActiveButton(e.target.name)
-        const getTotalRatings = (course) => {
-            return course?.allRatings.reduce((sum, rating) => sum += rating.value, 0)
-        }
-
-        const mostPopularCourses = allCourses.sort((first, second) => {
-            const firstTotalRatings = getTotalRatings(first)
-            const secondTotalRatings = getTotalRatings(second)
-            return secondTotalRatings - firstTotalRatings
-        })
-
-        setAllCourses(mostPopularCourses)
-        allCourses ? setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8)) : null
+        dispatch(setActiveButton(e.target.name))
+        dispatch(setMostPopularCourses())
+        allCourses ? dispatch(setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8))) : null
     }
 
     const handleTopRated = (e) => {
-        setActiveButton(e.target.name)
-        const topRatedCourses = allCourses.sort((a, b) => {
-            if (b.rating === a.rating) {
-                return b.noOfRatings - a.noOfRatings; // If ratings are equal, prioritize by number of ratings
-            }
-            return b.rating - a.rating; // Otherwise, sort by rating
-        });
-
-
-        setAllCourses(topRatedCourses)
-        allCourses ? setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8)) : null
+        dispatch(setActiveButton(e.target.name))
+        dispatch(setTopRatedCourses())
+        allCourses ? dispatch(setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8))) : null
     }
 
     const handleNew = (e) => {
-        setActiveButton(e.target.name)
-        const newCourses = allCourses.sort((first, second) => {
-            return new Date(second.createdAt) - new Date(first.createdAt)
-        })
-
-        setAllCourses(newCourses)
-        allCourses ? setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8)) : null
+        dispatch(setActiveButton(e.target.name))
+        dispatch(setNewCourses())
+        allCourses ? dispatch(setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8))) : null
     }
-
-
 
 
     return (
@@ -99,7 +70,6 @@ const AllCoursesPage = () => {
                     <h1 className='pb-8 pt-8 text-4xl font-bold md:pb-2 md:pt-20 '>All the skills you need in one place</h1>
                     <p className='text-base '>From critical skills to technical topics, We supports your proffessional development.</p>
                 </div>
-
                 <CoursesCarousel />
 
                 <p className="ml-5 pb-8 pt-10 text-4xl font-bold">Explore All Courses</p>
@@ -136,8 +106,6 @@ const AllCoursesPage = () => {
                     <p className='text-xl'>{coursePage}</p>
                     <NextButton handleNext={handleNextButton} />
                 </div>}
-
-
             </div>
         </HomeLayout>
     )

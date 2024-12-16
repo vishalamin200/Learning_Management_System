@@ -104,15 +104,16 @@ const SignupPage = ({ isActive }) => {
     return (
 
         <HomeLayout>
-            <div className={` inset-0 flex items-center justify-center bg-[#bcc7d6]  pt-16 text-xl md:top-[10vh] md:pb-24 md:pt-0 `}>
+            <div className={` inset-0 flex items-center justify-center bg-[#dbe2ed]  pt-16 text-xl md:top-[10vh] md:pb-24 md:pt-0 `}>
                 <div className="flex w-screen items-center justify-around  md:h-screen md:w-3/4 md:items-end lg:w-1/2">
 
                     <div className=' flex h-[85vh] w-full flex-col items-center justify-evenly border-2 bg-white md:mb-5 md:w-8/12  md:scale-95   md:rounded-2xl md:pb-5 md:shadow-2xl'>
 
-                        <div className='flex items-center justify-center py-3 text-3xl font-bold'><h1>Sign Up</h1>
+                        <div className='flex items-center justify-center py-3 text-3xl font-bold'>
+                            <h1>Sign Up</h1>
                         </div>
 
-                        <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
+                        <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 select-none flex-col items-center justify-center'>
                             {/* <div>
                                 <label htmlFor="avatar" >
                                     <div className=" h-36 w-36 cursor-pointer rounded-full">
@@ -145,21 +146,17 @@ const SignupPage = ({ isActive }) => {
                                             value={userDetails.fullName}
                                             id="fullName"
                                             placeholder='Enter Your Name'
-                                            className='w-10/12 border-none bg-transparent  text-xl outline-none' />
+                                            className='w-10/12 select-none border-none  bg-white text-xl outline-none' />
                                     </div>
                                     <hr className="my-1" />
                                 </label>
-
                             </div>
 
                             <div className="my-2 w-full">
-
                                 <p className="py-1 text-lg">Email</p>
-
                                 <label htmlFor="userEmail" className='flex flex-col'>
                                     <div className="flex  items-center gap-4">
                                         <AiOutlineMail className="text-slate-500" />
-
                                         <input
                                             onChange={handleChange}
                                             type="email"

@@ -138,13 +138,11 @@ const EditCourse = () => {
 
         const thunkResponse = await (dispatch(editCourse({ formData, courseId })))
         if (thunkResponse?.payload?.Data) {
-            console.log("Response : ", thunkResponse?.payload?.Data)
-
+ 
             const course = thunkResponse?.payload?.Data?.updatedCourse
 
             if (course) {
-                console.log("Response: ", course)
-                navigate(`/courseDetail`, { state: { course } });
+                 navigate(`/courseDetail`, { state: { course } });
             }
         } else {
             return
@@ -157,8 +155,7 @@ const EditCourse = () => {
             const thunkResponse = await dispatch(deleteCourse(selectedCourseId))
 
             if (thunkResponse?.payload?.Data) {
-                console.log("Data: ", thunkResponse?.payload?.Data)
-                setTimeout(() => {
+                 setTimeout(() => {
                     navigate('/myCourses')
                 }, 2000)
             }

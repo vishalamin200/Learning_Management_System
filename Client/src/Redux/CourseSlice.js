@@ -2,7 +2,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import toast from "react-hot-toast"
 
 import AxiosInstance from "../Helper/AxiosInstance"
-const initialState = {}
+const initialState = {
+    allCourses : [], 
+    coursePage :1,
+    courses :[],
+    activeButton:null,
+}
 
 export const fetchCourseByCategory = createAsyncThunk('courses/getCourseByCategory/', async (formData, thunkApi) => {
 
@@ -165,14 +170,70 @@ export const updateCourseRating = createAsyncThunk('course/updateCourseRating/',
     }
 })
 
+export const fetchInstructorCourses = createAsyncThunk('course/fetchInstructorCourses/', async (data, thunkApi) => {
+
+    try {
+        const res = AxiosInstance.post(`/course/instructorCourses/`, data)
+        return (await res).data
+
+    } catch (error) {
+        toast.error(error?.response.data?.Message || "Error In Fetching Instructor Courses")
+        return thunkApi.rejectWithValue(error.message)
+    }
+})
+
 
 const CourseSlice = createSlice({
     name: "Course",
     initialState,
     reducers: {
+        setAllCourses:(state,action)=>{
+            state.allCourses = action.payload
+        },
+        setCoursePage:(state,action)=>{
+            state.coursePage = action.payload
+        },
 
+        setCourses:(state,action)=>{
+            state.courses = action.payload
+        },
+        setActiveButton:(state,action)=>{
+            state.activeButton = action.payload
+        },
+
+        setTopRatedCourses : (state)=>{
+            const topRatedCourses = state.allCourses.sort((a, b) => {
+                if (b.rating === a.rating) {
+                    return b.noOfRatings - a.noOfRatings; // If ratings are equal, prioritize by number of ratings
+                }
+                return b.rating - a.rating; // Otherwise, sort by rating
+            });
+            state.courses = topRatedCourses
+        },
+        setMostPopularCourses:(state)=>{
+
+            const getTotalRatings = (course) => {
+                return course?.allRatings.reduce((sum, rating) => sum += rating.value, 0)
+            }
+    
+            const mostPopularCourses = state.allCourses.sort((first, second) => {
+                const firstTotalRatings = getTotalRatings(first)
+                const secondTotalRatings = getTotalRatings(second)
+                return secondTotalRatings - firstTotalRatings
+            })
+    
+            state.allCourses = mostPopularCourses
+        },
+        setNewCourses : (state)=>{
+
+            const newCourses = state.allCourses.sort((first, second) => {
+                return new Date(second.createdAt) - new Date(first.createdAt)
+            })
+    
+            state.allCourses = newCourses
+        }
     }
 })
 
-
+export const {setAllCourses,setCoursePage,setCourses,setActiveButton,setTopRatedCourses,setMostPopularCourses,setNewCourses} = CourseSlice.actions
 export default CourseSlice.reducer

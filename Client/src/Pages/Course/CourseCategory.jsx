@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import EmptyState from '../../assets/Logos/emptystate.svg'
 import CoursesCarousel from '../../Components/Course-components/CoursesCarousel'
 import CourseTemplate from "../../Components/Course-components/CourseTemplate"
 import HomeLayout from '../../Layouts/HomeLayout'
-import { fetchCourseByCategory } from '../../Redux/CourseSlice'
+import { fetchCourseByCategory, setCourses } from '../../Redux/CourseSlice'
 
 
 const CourseCategory = () => {
@@ -15,7 +15,7 @@ const CourseCategory = () => {
     const formattedName = category.replace(/-/, " ").replace(/\b\w/g, char => char.toUpperCase());
 
     const dispatch = useDispatch()
-    const [courses, setCourses] = useState([{ topic: "", }])
+    const { courses } = useSelector(state => state?.Course)
 
 
     useEffect(() => {
@@ -25,10 +25,10 @@ const CourseCategory = () => {
                 const courses = thunkResponse?.payload?.Data?.Course
                 if (courses != undefined) {
                     if (courses.length > 0) {
-                        setCourses(() => courses);
+                        dispatch(setCourses(courses));
                     }
                 } else {
-                    setCourses([])
+                    dispatch(setCourses([]))
                 }
             }
         };

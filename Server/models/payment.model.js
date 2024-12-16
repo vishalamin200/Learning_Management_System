@@ -16,9 +16,23 @@ const paymentSchema = new Schema({
         required: [true, "Signature Required"]
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    autoIndex:false,
 })
 
 const paymentModel = model("Payments", paymentSchema)
+
+async function getIndexes() {
+    try {
+        // Step 1: Get existing indexes
+        const indexes = await paymentModel.collection.indexes();
+        // console.log("paymentModel Indexes:", indexes);
+
+    } catch (error) {
+        console.error("Error In paymentModel Indexes:", error.message);
+    }
+}
+
+// getIndexes();
 
 export default paymentModel;

@@ -34,7 +34,7 @@ const upload = multer({
             cb(null,true)
         }
         else{
-            console.log("Invalid File format")
+            // console.log("Invalid File format")
             cb(null,false)
         }
     }

@@ -108,8 +108,7 @@ const CreateCourse = () => {
 
         const thunkResponse = await (dispatch(createCourse(formData)))
         if (thunkResponse?.payload?.Data) {
-            console.log("Response : ", thunkResponse?.payload?.Data)
-
+ 
             const courseId = thunkResponse?.payload?.Data?._id
 
             if (courseId) {
