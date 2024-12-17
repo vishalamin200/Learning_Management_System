@@ -3,9 +3,7 @@ import axios from "axios";
 
 const AxiosInstance = axios.create({
 
-
-    // baseURL: `https://192.168.1.101:4050/user`,
-    baseURL: "https://localhost:4050/user",     //server default url
+    baseURL: `https://codeacademy.root.sx:4050/user`,
 
     withCredentials: true,
     timeout: 12000,
