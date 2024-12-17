@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom"
 
-import genAi2 from '../assets/CourseImages/genAi-4.jpg'
-import genAi1 from '../assets/CourseImages/genAi1.png'
-import genAi3 from '../assets/CourseImages/genAi3.webp'
+import genAi2 from '../assets/CourseImages/genai4.jpg'
+import genAi1 from '../assets/CourseImages/genai1.png'
+import genAi3 from '../assets/CourseImages/genai3.webp'
 import courseraLogo from '../assets/Logos/courseraLogo.png'
 import deepLearningLogo from '../assets/Logos/deepLearningLogo.png'
 import IMBLogo from '../assets/Logos/IMBLogo.svg'
