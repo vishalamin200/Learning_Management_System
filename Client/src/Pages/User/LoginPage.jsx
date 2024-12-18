@@ -27,7 +27,7 @@ const LoginPage = ({ isActive }) => {
 
     const handleGoogleLogin = (e) => {
         e.preventDefault()
-        window.open('https://localhost:4050/auth/google/callback', '_self')
+        window.open('https://codeacademy.root.sx:4050/auth/google/callback', '_self')
     }
 
 
@@ -64,7 +64,6 @@ const LoginPage = ({ isActive }) => {
     }
 
     return (
-
         <HomeLayout>
             <div className={` inset-0 flex items-center justify-center  bg-[#dbe2ed] pt-16 text-xl md:pb-20 md:pt-0`} >
                 <div className="flex h-fit w-screen justify-around md:h-screen md:w-3/4 md:items-end lg:w-1/2">
