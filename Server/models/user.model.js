@@ -147,9 +147,14 @@ userSchema.pre("save", async function (next) {
 userSchema.methods = {
     async comparePassword(textPassword) {
         try {
-            let result = await bcrypt.compare(textPassword, this.password)
-            return result
-        } catch (error) {
+            if(this.password){
+                let result = await bcrypt.compare(textPassword, this.password)
+                return result
+            }else{ 
+                console.log("Google Auth Account")
+                return false
+            }
+        }catch (error) {
             console.error("Error In Comparing Paswords: ", error.message)
         }
     },
