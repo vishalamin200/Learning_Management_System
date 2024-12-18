@@ -19,13 +19,13 @@ AxiosInstance.interceptors.response.use(
             setTimeout(() => {
                 localStorage.clear();
                 window.location.href = '/login';
-            }, 30000);
+            }, 2500);
         }
         if (error?.response?.Error === 'invalid signature') {
             setTimeout(() => {
                 localStorage.clear();
                 window.location.href = '/login';
-            }, 3000);
+            }, 2500);
         }
         return Promise.reject(error);
     }

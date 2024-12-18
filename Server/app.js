@@ -24,6 +24,8 @@ connectMongo()
 
 
 //Middlewares
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+
 const corsOptions = {
     origin: (origin, callback) => {
         if (allowedOrigins.includes(origin) || !origin) {
@@ -35,15 +37,6 @@ const corsOptions = {
 
     methods: ['POST', 'GET', 'PUT', 'DELETE', 'PATCH'],
     credentials: true
-}
-
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-    } else {
-        callback(new Error('Not allowed by CORS'));
-    }
 }
 
 app.use(cors(corsOptions))
