@@ -19,9 +19,8 @@ AxiosInstance.interceptors.response.use(
             setTimeout(() => {
                 localStorage.clear();
                 window.location.href = '/login';
-            }, 3000);
+            }, 30000);
         }
-
         if (error?.response?.Error === 'invalid signature') {
             setTimeout(() => {
                 localStorage.clear();
