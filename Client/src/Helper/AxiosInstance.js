@@ -7,7 +7,7 @@ const AxiosInstance = axios.create({
     // baseURL: `https://localhost:4050/user`,
 
     withCredentials: true,
-    timeout: 12000,
+    timeout: 60000,
 })
 
 
