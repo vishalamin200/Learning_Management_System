@@ -1,19 +1,23 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { AiOutlineMail } from "react-icons/ai";
-import { CiLock } from "react-icons/ci";
-import { FcGoogle } from "react-icons/fc";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react"
+import toast from "react-hot-toast"
+import { useDispatch } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
 
-import HomeLayout from "../../Layouts/HomeLayout";
-import { login } from "../../Redux/AuthSlice";
+import loginPageVideo from "../../assets/Videos/login-page-video.mp4"
+import { login } from "../../Redux/AuthSlice"
 
-const LoginPage = ({ isActive }) => {
+
+const LoginPage = () => {
+
+    const [userInfo, setUserInfo] = useState({ email: "", password: "" })
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const [userInfo, setUserInfo] = useState({ email: "", password: "" })
+    const handleGoogleLogin = (e) => {
+        e.preventDefault()
+        window.open('https://codeacademy.root.sx:4050/auth/google/callback', '_self')
+    }
 
     const handleInputChange = (e) => {
         e.preventDefault()
@@ -23,11 +27,6 @@ const LoginPage = ({ isActive }) => {
             ...userInfo,
             [name]: value
         })
-    }
-
-    const handleGoogleLogin = (e) => {
-        e.preventDefault()
-        window.open('https://codeacademy.root.sx:4050/auth/google/callback', '_self')
     }
 
 
@@ -64,75 +63,64 @@ const LoginPage = ({ isActive }) => {
     }
 
     return (
+        <div id='login-page' className='flex h-screen w-full'>
 
-        <HomeLayout>
-            <div className={` inset-0 flex items-center justify-center  bg-[#dbe2ed] pt-16 text-xl md:pb-20 md:pt-0`} >
-                <div className="flex h-fit w-screen justify-around md:h-screen md:w-3/4 md:items-end lg:w-1/2">
-
-                    <div className=' flex h-[85vh] w-full flex-col items-center justify-evenly border-2 bg-white shadow-2xl  transition-all  duration-500 ease-in-out md:mb-5 md:h-[85vh] md:w-8/12 md:scale-95 md:justify-around md:rounded-2xl'>
-
-                        <div className=' text-3xl font-bold md:py-3 md:pt-3'><h1>Login</h1>
-                        </div>
-
-                        <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
-                            <div className="my-2 w-full">
-                                <p className="py-1 text-lg">Email</p>
-                                <label htmlFor="Email" className='flex flex-col'>
-                                    <div className="flex  items-center gap-4">
-                                        <AiOutlineMail className="text-slate-500" />
-
-                                        <input
-                                            onChange={handleInputChange}
-                                            type="email"
-                                            name="email"
-                                            value={userInfo.email}
-                                            id="Email"
-                                            placeholder='Enter Your Email'
-                                            className='w-10/12 border-none bg-transparent  text-xl outline-none' />
-                                    </div>
-                                    <hr className="my-1" />
-                                </label>
-                            </div>
-
-                            <div className="my-2 w-full">
-                                <p className="py-1 text-lg">Password</p>
-                                <label htmlFor="password" className='flex flex-col'>
-                                    <div className="flex  items-center gap-4 ">
-                                        <CiLock />
-
-                                        <input
-                                            onChange={handleInputChange}
-                                            type="password"
-                                            name="password"
-                                            value={userInfo.password}
-                                            id="password"
-                                            placeholder='Enter Your Password'
-                                            className='w-10/12 border-none bg-transparent  text-xl outline-none' />
-                                    </div>
-                                    <hr className="my-1" />
-                                </label>
-                            </div>
-                            <div>
-                                <p className="absolute right-0 my-3 text-lg"><Link to='/forgotPassword'> Forgot Password?</Link> </p>
-                            </div>
-                            <div className="mt-16 w-full">
-                                <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Login</p></button>
-                            </div>
-                        </form>
-                        <div className="mb-6 flex w-3/4 flex-col items-center  justify-around">
-                            <p className="mb-2 text-lg ">Or</p>
-
-                            <button onClick={handleGoogleLogin} className="border-1 btn  flex  w-full items-center border bg-white shadow-lg hover:bg-inherit"><FcGoogle size={32} /> <p>Login with <span className="font-bold">google</span></p></button>
-                        </div>
-                        <div className="flex items-center justify-center gap-2">
-                            <p className="text-lg">Don&apos;t have an account?</p>
-                            <p className="text-lg text-blue-600"><Link to={'/signup'}>Signup</Link></p>
-                        </div>
-                    </div>
-                </div>
+            <div id='sidebar-video' className=" hidden h-full w-3/12 bg-[#FFFFFF]  lg:block">
+                <video src={loginPageVideo} muted playsInline autoPlay loop
+                    controls={false} className='pointer-events-none h-full w-full object-cover '></video>
             </div>
-        </HomeLayout>
 
+            <div className="mx-10 mt-16 flex w-full flex-col gap-y-8 md:mx-auto md:mt-8 md:w-1/2 md:self-center lg:ml-56 lg:w-[26rem] ">
+
+                <h1 className="text-[24px] font-bold">Sign in to CodeAcademy</h1>
+
+                <button onClick={handleGoogleLogin} id='google-auth-button' className="flex h-14  w-full items-center justify-center gap-x-3 rounded-l-full rounded-r-full border border-gray-400 transition-transform duration-300 ease-in-out active:scale-95">
+                    <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo" className="float-left w-5" />
+                    <span className=" font-bold">Sign in with Google</span>
+                </button>
+
+                <div id="line-break" className='flex w-full items-center justify-center gap-x-3'>
+                    <hr className='w-1/5 md:w-1/4' />
+                    <span>or sign in with email</span>
+                    <hr className='w-1/5 md:w-1/4' />
+                </div>
+
+                <form onSubmit={handleSubmit} className='flex w-full flex-col gap-y-4'>
+
+                    <div id="email" className="flex flex-col gap-y-1 hover:shadow-pink-300 ">
+                        <p className="font-bold">Email</p>
+                        <input
+                            type='text'
+                            name='email'
+                            value={userInfo?.email}
+                            onChange={handleInputChange}
+                            className='h-14 w-full rounded-lg border border-gray-400 pl-4 text-black transition-all  duration-300 hover:shadow-md focus:outline-none'
+                        />
+                    </div>
+
+                    <div id="password" className="flex flex-col gap-y-1 hover:shadow-pink-300 ">
+                        <div className='flex justify-between'>
+                            <p className="font-bold">Password</p>
+                            <Link className='cursor-pointer text-sm text-blue-700 underline' to='/forgotPassword'> Forgot Password?</Link>
+                        </div>
+                        <input
+                            type='password'
+                            name='password'
+                            value={userInfo?.password}
+                            onChange={handleInputChange}
+                            className='h-14 w-full rounded-lg border  border-gray-400 pl-4 text-xl transition-all  duration-300 hover:shadow-md focus:outline-none'
+                        />
+                    </div>
+
+                    <button type='submit' id='submit-button' className="mt-4 flex h-14 w-full items-center justify-center gap-x-3 rounded-l-full rounded-r-full border  bg-[#191919] text-white transition-transform duration-300 ease-in-out active:scale-95">
+                        <span className="text-sm font-bold">Sign in</span>
+                    </button>
+                </form>
+
+                <p className='text-md text-center'>Don&apos;t have an account? <Link className="text-blue-700 underline" to={'/signup'}>signup</Link></p>
+
+            </div>
+        </div>
     )
 }
 

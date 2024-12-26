@@ -13,10 +13,10 @@ const AuthLoginSuccess = () => {
     useEffect(() => {
         const fetchUserDetails = async () => {
             const thunkResponse = await dispatch(getProfile())
-             if (thunkResponse?.payload?.Success) {
+            if (thunkResponse?.payload?.Success) {
                 toast.success("LoggedIn Successfully")
                 navigate('/')
-            }else{
+            } else {
                 toast.error('Error In logged In')
                 navigate('/login')
             }

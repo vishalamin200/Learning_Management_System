@@ -21,7 +21,7 @@ const HeroSection = () => {
 
                     {isLoggedIn ? <button onClick={() => navigate('/myCourses')} className="hover:text-bold flex h-12 w-40 items-center justify-center gap-x-1 rounded-md rounded-l-full rounded-r-full border-2 border-[#FEA93F] bg-inherit p-3 font-bold text-[#FEA93F] transition-all duration-500 ease-in-out hover:border-none hover:bg-inherit hover:text-black">Start Learning <FaArrowRight /></button>
 
-                        : <button onClick={() => navigate('/login')} className="hover:text-bold flex h-12 w-40 items-center justify-center gap-x-1 rounded-md rounded-l-full rounded-r-full border-2 border-[#FEA93F] bg-inherit p-3 font-bold text-[#FEA93F] transition-all duration-500 ease-in-out hover:border-none hover:bg-inherit hover:text-black">Login <FaArrowRight /></button>
+                        : <button onClick={() => navigate('/login')} className="hover:text-bold flex h-12 w-40 items-center justify-center gap-x-1 rounded-md rounded-l-full rounded-r-full border-2 border-[#FEA93F] bg-inherit p-3 font-bold text-[#FEA93F] transition-all duration-500 ease-in-out hover:border-none hover:bg-inherit hover:text-black">Sign in <FaArrowRight /></button>
 
                     }
                 </div>

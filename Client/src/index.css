@@ -6,9 +6,12 @@ body{
   padding:0px;
   margin:0px;
   
-  --tw-bg-opacity: 1;
-  background-color: rgb(241 245 249 / var(--tw-bg-opacity))
+  font-family: "Schibsted Grotesk", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
+
+
 
 
 
