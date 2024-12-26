@@ -108,7 +108,7 @@ const CreateCourse = () => {
 
         const thunkResponse = await (dispatch(createCourse(formData)))
         if (thunkResponse?.payload?.Data) {
- 
+
             const courseId = thunkResponse?.payload?.Data?._id
 
             if (courseId) {
@@ -124,7 +124,7 @@ const CreateCourse = () => {
 
     return (
         <HomeLayout>
-            <div id='course-creation-page' className='mt-18 pb-24 pt-24 bg-[#edeff0]'>
+            <div id='course-creation-page' className='mt-18 bg-[#edeff0] pb-24 pt-24'>
 
                 <div id="header" className="mb-12 flex items-center justify-center ">
                     <ul className="steps">
@@ -142,7 +142,7 @@ const CreateCourse = () => {
 
                         <label htmlFor="courseTitle">
                             <p className="mb-1 text-xl font-bold">Title</p>
-                            <input onChange={handleInputChange} type="text" name="topic" value={courseDetail.topic} id="courseTitle" className="h-10 w-full rounded-lg px-5 text-lg" placeholder='e.g. The Ultimate Fullstack Web Development Bootcamp' />
+                            <input onChange={handleInputChange} type="text" name="topic" value={courseDetail.topic} id="courseTitle" className="h-10 w-full rounded-lg border border-gray-400 bg-white px-5 text-lg" placeholder='e.g. The Ultimate Fullstack Web Development Bootcamp' />
                         </label>
 
                         <div className="flex w-full flex-wrap justify-between gap-x-3 gap-y-5 md:flex-nowrap">
@@ -150,8 +150,8 @@ const CreateCourse = () => {
                             <label htmlFor="category" >
 
                                 <p className="mb-1 text-xl font-bold">Category</p>
-                                
-                                <select onChange={handleInputChange} name="category" value={courseDetail?.category} id="category" className="h-10 w-56 rounded-lg text-center text-lg">
+
+                                <select onChange={handleInputChange} name="category" value={courseDetail?.category} id="category" className="h-10 w-56 rounded-lg border border-gray-400 bg-white text-center text-lg">
                                     <option value="" hidden>Select Category</option >
                                     {courseList.map((course) => <option key={course} value={course}>
                                         {course}
@@ -161,7 +161,7 @@ const CreateCourse = () => {
                             </label>
                             <label htmlFor="level">
                                 <p className="mb-1 text-xl font-bold">Level</p>
-                                <select onChange={handleInputChange} name="level" value={courseDetail?.level} id="level" className="h-10 w-56 rounded-lg text-center text-lg">
+                                <select onChange={handleInputChange} name="level" value={courseDetail?.level} id="level" className="h-10 w-56 rounded-lg border border-gray-400 bg-white text-center text-lg">
                                     <option value="" hidden>Select Level</option>
                                     <option value="Beginner">Beginner</option>
                                     <option value="Intermediate">Intermediate</option>
@@ -171,7 +171,7 @@ const CreateCourse = () => {
 
                             <label htmlFor="language">
                                 <p className="mb-1 text-xl font-bold">Language</p>
-                                <select onChange={handleInputChange} name="language" value={courseDetail?.language} id="language" className="h-10 w-56 rounded-lg text-center text-lg">
+                                <select onChange={handleInputChange} name="language" value={courseDetail?.language} id="language" className="h-10 w-56 rounded-lg border border-gray-400 bg-white text-center text-lg">
                                     <option value="" hidden>Select Language</option>
                                     <option value="English">English</option>
                                     <option value="Hindi">Hindi</option>
@@ -191,14 +191,14 @@ const CreateCourse = () => {
                         </div>
                         <label htmlFor="description">
                             <p className="mb-1 text-xl font-bold">Description</p>
-                            <textarea onChange={handleInputChange} name="description" value={courseDetail?.description} id="description" className="h-[26rem] w-full rounded-lg px-6 pt-5 text-[16px]" />
+                            <textarea onChange={handleInputChange} name="description" value={courseDetail?.description} id="description" className="h-[26rem] w-full rounded-lg border border-gray-400 bg-white px-6 pt-5 text-[16px]" />
                         </label>
 
                     </div>
                     <div id="Thumnail-upload-container" className="mt-8 flex flex-col gap-y-10 px-7 md:px-12 lg:mt-0 lg:w-[50%]">
                         <div className='thumbnail'>
                             <p className="mb-1 text-2xl font-bold">Thumbnail</p>
-                            <label htmlFor="thumbnail" className='inline-block h-[10rem] w-[20rem] cursor-pointer border-2 border-dashed border-black md:h-[18rem] md:w-[36rem]'>
+                            <label htmlFor="thumbnail" className='inline-block h-[10rem] w-[20rem] cursor-pointer border-2 border-dashed border-black bg-white md:h-[18rem] md:w-[36rem]'>
                                 {previewThumbnail && <img src={previewThumbnail} alt='thumbnail' className='object-fit inline-block h-full w-full' />}
                             </label>
                             <input
@@ -217,18 +217,18 @@ const CreateCourse = () => {
                         <div className="flex justify-between gap-x-10">
                             <label htmlFor="price">
                                 <p className="mb-1 text-xl font-bold">Price (Rs.)</p>
-                                <input onChange={handleInputChange} type="text" name="price" value={courseDetail?.price} id="price" className='h-10 w-40 rounded-lg text-center text-lg md:w-fit' defaultValue={0} />
+                                <input onChange={handleInputChange} type="text" name="price" value={courseDetail?.price} id="price" className='h-10 w-40 rounded-lg border border-gray-600 text-center text-lg md:w-fit' defaultValue={0} />
                             </label>
 
                             <label htmlFor="discount">
                                 <p className="mb-1 text-xl font-bold">Discount (%)</p>
-                                <input onChange={handleInputChange} type="text" name="discount" value={courseDetail?.discount} id="discount" className='h-10 w-40 rounded-lg text-center text-lg md:w-fit' defaultValue={0} />
+                                <input onChange={handleInputChange} type="text" name="discount" value={courseDetail?.discount} id="discount" className='h-10 w-40 rounded-lg border border-gray-400 text-center text-lg md:w-fit' defaultValue={0} />
                             </label>
                         </div>
 
                         <label htmlFor="createdBy">
                             <p className="mb-2 text-xl font-bold">Course Creator</p>
-                            <input onChange={handleInputChange} type="text" name="createdBy" id="createdBy" className='h-10 cursor-not-allowed rounded-lg text-center text-lg' value={courseDetail.createdBy} />
+                            <input readOnly onChange={handleInputChange} type="text" name="createdBy" id="createdBy" className='h-10 cursor-not-allowed rounded-lg text-center text-lg' value={courseDetail.createdBy} />
                         </label>
                         <div className="flex justify-between gap-x-10">
 

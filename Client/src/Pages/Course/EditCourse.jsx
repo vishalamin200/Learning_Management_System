@@ -180,7 +180,7 @@ const EditCourse = () => {
 
                             <label htmlFor="category" >
                                 <p className="mb-1 text-xl font-bold">Category</p>
-                                <select onChange={handleInputChange} name="category" value={courseDetail.category} id="category" className="h-10 w-56 rounded-lg border border-gray-400 text-center text-lg">
+                                <select onChange={handleInputChange} name="category" value={courseDetail.category} id="category" className="h-10 w-56 rounded-lg border border-gray-400  bg-white text-center text-lg">
                                     <option value="" hidden>Select Category</option >
                                     {courseList.map((course) => <option key={course} value={course}>
                                         {course}
@@ -190,7 +190,7 @@ const EditCourse = () => {
                             </label>
                             <label htmlFor="level">
                                 <p className="mb-1 text-xl font-bold">Level</p>
-                                <select onChange={handleInputChange} name="level" value={courseDetail.level} id="level" className="h-10 w-56 rounded-lg border border-gray-400 text-center text-lg">
+                                <select onChange={handleInputChange} name="level" value={courseDetail.level} id="level" className="h-10 w-56 rounded-lg border border-gray-400 bg-white text-center text-lg">
                                     <option value="" hidden>Select Level</option>
                                     <option value="Beginner">Beginner</option>
                                     <option value="Intermediate">Intermediate</option>
@@ -200,7 +200,7 @@ const EditCourse = () => {
 
                             <label htmlFor="language">
                                 <p className="mb-1 text-xl font-bold">Language</p>
-                                <select onChange={handleInputChange} name="language" value={courseDetail?.language} id="language" className="h-10 w-56 rounded-lg border border-gray-400 text-center text-lg">
+                                <select onChange={handleInputChange} name="language" value={courseDetail?.language} id="language" className="h-10 w-56 rounded-lg border border-gray-400 bg-white text-center text-lg">
                                     <option value="" hidden>Select Language</option>
                                     <option value="English">English</option>
                                     <option value="Hindi">Hindi</option>
