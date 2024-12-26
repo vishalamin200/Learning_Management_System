@@ -23,7 +23,7 @@ const CourseTemplate = ({ course }) => {
     }
 
     return (
-        <div onClick={handleCourseClick} id="courseTemplate" className=" relative m-5 h-[21rem] w-80 cursor-pointer rounded-xl border-none bg-[#FFFFFF] p-2 text-black transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl md:w-72">
+        <div onClick={handleCourseClick} id="courseTemplate" className=" relative m-5 h-[21rem] w-80 cursor-pointer rounded-xl border-none bg-[#FFFFFF] p-2 text-black shadow-lg transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl md:w-72">
             <div id="courseImage" className="inset-2 h-40 w-full md:h-36  ">
 
                 <img src={courseImage} alt="courseImage" className="h-full w-full rounded-xl object-cover" />
