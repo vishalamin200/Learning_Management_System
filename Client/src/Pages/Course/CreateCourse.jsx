@@ -124,7 +124,7 @@ const CreateCourse = () => {
 
     return (
         <HomeLayout>
-            <div id='course-creation-page' className='mt-18 pb-24 pt-24'>
+            <div id='course-creation-page' className='mt-18 pb-24 pt-24 bg-[#edeff0]'>
 
                 <div id="header" className="mb-12 flex items-center justify-center ">
                     <ul className="steps">

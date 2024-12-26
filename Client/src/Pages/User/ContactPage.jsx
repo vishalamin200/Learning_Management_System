@@ -11,7 +11,7 @@ const ContactPage = () => {
     return (
 
         <HomeLayout>
-            <div className={`flex w-[100%] flex-col items-center justify-center  bg-[#bcc7d6]  pt-16 text-white md:flex md:h-screen md:flex-row md:pt-20 `} >
+            <div className={`flex w-[100%] flex-col items-center justify-center  pt-16 bg-[#edeff0] text-black shadow-md md:flex md:h-screen md:flex-row md:pt-20 `} >
 
                 {/* bg-[#181A1B] */}
 
@@ -49,7 +49,7 @@ const ContactPage = () => {
                 </div>
 
                 {/* bg-[#323F90]  */}
-                <div className=" relative flex h-96 w-full  flex-col items-center justify-center bg-[#10162F] p-10 md:mt-0  md:h-[80%] md:w-[30vw]">
+                <div className=" relative flex h-96 w-full flex-col  items-center justify-center bg-[#10162F] p-10 text-white md:mt-0  md:h-[80%] md:w-[30vw]">
                     <p className="absolute left-10 top-10 text-3xl font-bold text-white ">Contact Information</p>
                     <p className="text-xl">support@gmail.com</p>
 

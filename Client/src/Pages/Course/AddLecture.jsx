@@ -99,9 +99,9 @@ const AddLecture = () => {
 
     return (
         <HomeLayout>
-            <div id='course-creation-page' className='mt-18 pb-24 pt-24'>
+            <div id='course-creation-page' className='mt-18 bg-[#edeff0] pb-24 pt-24  text-black'>
 
-                <div id="header" className="mb-10 flex items-center justify-center ">
+                <div id="header" className="mb-10  flex items-center justify-center ">
                     <ul className="steps">
                         <li className="step step-primary w-32 md:w-56 ">Create Course</li>
                         <li className="step step-primary w-32 md:w-56">Add Lectures</li>
@@ -116,13 +116,13 @@ const AddLecture = () => {
                         <h2 className="text-center text-2xl font-bold">Lecture Information</h2>
                         <label htmlFor="lectureTitle">
                             <p className="mb-1 text-xl font-bold">Topic</p>
-                            <input onChange={handleInputChange} type="text" name="title" value={lectureInfo.title} id="lectureTitle" className="h-10 w-full rounded-lg px-5 text-lg" placeholder='e.g. Introduction to Fullstack Web Development' />
+                            <input onChange={handleInputChange} type="text" name="title" value={lectureInfo.title} id="lectureTitle" className="h-10 w-full rounded-lg border border-gray-400 px-5 text-lg" placeholder='e.g. Introduction to Fullstack Web Development' />
                         </label>
 
 
                         <label htmlFor="description">
                             <p className="mb-1 text-xl font-bold">Description</p>
-                            <textarea onChange={handleInputChange} name="description" value={lectureInfo.description} id="description" className="h-72 w-full resize-none rounded-lg px-6 pt-5 text-[16px]" />
+                            <textarea onChange={handleInputChange} name="description" value={lectureInfo.description} id="description" className="h-72 w-full resize-none rounded-lg border border-gray-400 px-6 pt-5 text-[16px]" />
                         </label>
 
                         <div className="mt-10 flex justify-between md:justify-around">
@@ -134,7 +134,7 @@ const AddLecture = () => {
                     <div id="video-upload-container" className="flex flex-col gap-y-2 px-7 md:w-[50%] md:px-12">
                         <div className='video mt-10 md:mt-0'>
                             <p className="mb-1 text-2xl font-bold">Video</p>
-                            <label onContextMenu={(e) => e.preventDefault()} htmlFor="video" className='z-20 inline-block h-[197px] w-[350px] cursor-pointer border-2 border-dashed border-black  md:h-[363px] md:w-[643px]'>
+                            <label onContextMenu={(e) => e.preventDefault()} htmlFor="video" className='z-20 inline-block h-[197px] w-[350px] cursor-pointer border-2 border-dashed border-black bg-white  md:h-[363px] md:w-[643px]'>
 
                                 {(previewVideo || lectureInfo.youtubeLink.length != 0) ? <ReactPlayer width={'100%'} height={'100%'} url={lectureInfo.youtubeLink.length !== 0 ? lectureInfo.youtubeLink : previewVideo} controls /> : null}
                             </label>
@@ -155,7 +155,7 @@ const AddLecture = () => {
                         <label htmlFor="youtubeLink">
                             <div className="flex items-center gap-x-6"><p className="mb-1 text-xl font-bold">Youtube Link </p></div>
                             <input onChange={handleInputChange} type="url" name="youtubeLink"
-                                value={lectureInfo.youtubeLink} id="youtubeLink" className='h-10 w-full rounded-lg px-3 text-lg' placeholder="e.g. https://www.youtube.com/watch?v=LXb3EKWsInQ" />
+                                value={lectureInfo.youtubeLink} id="youtubeLink" className='h-10 w-full rounded-lg border border-gray-400 px-3 text-lg' placeholder="e.g. https://www.youtube.com/watch?v=LXb3EKWsInQ" />
                         </label>
                     </div>
                 </form>

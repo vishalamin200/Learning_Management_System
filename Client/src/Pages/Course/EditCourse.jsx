@@ -30,10 +30,10 @@ const EditCourse = () => {
     const editorRef = useRef(null);
     const category = toTitleCase(course?.category)
 
-    const {data} = useSelector((state)=>state.Auth)
+    const { data } = useSelector((state) => state.Auth)
 
 
-    const [courseDetail, setCourseDetail] = useState({ topic: course?.topic, thumbnail: course?.thumbnail, description: course?.description, category: category, price: course?.price, discount: course?.discount, level: course?.level, language: course?.language, createdBy: course?.createdBy , creatorEmail:data?.email })
+    const [courseDetail, setCourseDetail] = useState({ topic: course?.topic, thumbnail: course?.thumbnail, description: course?.description, category: category, price: course?.price, discount: course?.discount, level: course?.level, language: course?.language, createdBy: course?.createdBy, creatorEmail: data?.email })
 
     const [previewThumbnail, setPreviewThumbnail] = useState(course?.thumbnail?.secure_url)
 
@@ -138,11 +138,11 @@ const EditCourse = () => {
 
         const thunkResponse = await (dispatch(editCourse({ formData, courseId })))
         if (thunkResponse?.payload?.Data) {
- 
+
             const course = thunkResponse?.payload?.Data?.updatedCourse
 
             if (course) {
-                 navigate(`/courseDetail`, { state: { course } });
+                navigate(`/courseDetail`, { state: { course } });
             }
         } else {
             return
@@ -155,7 +155,7 @@ const EditCourse = () => {
             const thunkResponse = await dispatch(deleteCourse(selectedCourseId))
 
             if (thunkResponse?.payload?.Data) {
-                 setTimeout(() => {
+                setTimeout(() => {
                     navigate('/myCourses')
                 }, 2000)
             }
@@ -166,7 +166,7 @@ const EditCourse = () => {
 
     return (
         <HomeLayout>
-            <div id='course-creation-page' className='pb-24  pt-24 md:mt-8'>
+            <div id='course-creation-page' className='bg-[#edeff0]  pb-24 pt-24 text-black md:mt-8'>
 
                 <form onSubmit={handleFormSubmit} className="flex  flex-wrap lg:flex-nowrap" >
                     <div id="newCourseInformation" className="mx-7 flex min-w-[50%] flex-col gap-y-8 md:mx-10">
@@ -174,13 +174,13 @@ const EditCourse = () => {
                         <h2 className="text-center text-2xl font-bold">Course Information</h2>
                         <label htmlFor="courseTitle">
                             <p className="mb-1 text-xl font-bold">Title</p>
-                            <input onChange={handleInputChange} type="text" name="topic" value={courseDetail.topic} id="courseTitle" className="h-10 w-full rounded-lg px-5 text-lg" placeholder='e.g. The Ultimate Fullstack Web Development Bootcamp' />
+                            <input onChange={handleInputChange} type="text" name="topic" value={courseDetail.topic} id="courseTitle" className="h-10 w-full rounded-lg border border-gray-400 px-5 text-lg" placeholder='e.g. The Ultimate Fullstack Web Development Bootcamp' />
                         </label>
                         <div className="flex w-full flex-wrap justify-between gap-x-3 gap-y-5">
 
                             <label htmlFor="category" >
                                 <p className="mb-1 text-xl font-bold">Category</p>
-                                <select onChange={handleInputChange} name="category" value={courseDetail.category} id="category" className="h-10 w-56 rounded-lg text-center text-lg">
+                                <select onChange={handleInputChange} name="category" value={courseDetail.category} id="category" className="h-10 w-56 rounded-lg border border-gray-400 text-center text-lg">
                                     <option value="" hidden>Select Category</option >
                                     {courseList.map((course) => <option key={course} value={course}>
                                         {course}
@@ -190,7 +190,7 @@ const EditCourse = () => {
                             </label>
                             <label htmlFor="level">
                                 <p className="mb-1 text-xl font-bold">Level</p>
-                                <select onChange={handleInputChange} name="level" value={courseDetail.level} id="level" className="h-10 w-56 rounded-lg text-center text-lg">
+                                <select onChange={handleInputChange} name="level" value={courseDetail.level} id="level" className="h-10 w-56 rounded-lg border border-gray-400 text-center text-lg">
                                     <option value="" hidden>Select Level</option>
                                     <option value="Beginner">Beginner</option>
                                     <option value="Intermediate">Intermediate</option>
@@ -200,7 +200,7 @@ const EditCourse = () => {
 
                             <label htmlFor="language">
                                 <p className="mb-1 text-xl font-bold">Language</p>
-                                <select onChange={handleInputChange} name="language" value={courseDetail?.language} id="language" className="h-10 w-56 rounded-lg text-center text-lg">
+                                <select onChange={handleInputChange} name="language" value={courseDetail?.language} id="language" className="h-10 w-56 rounded-lg border border-gray-400 text-center text-lg">
                                     <option value="" hidden>Select Language</option>
                                     <option value="English">English</option>
                                     <option value="Hindi">Hindi</option>
@@ -220,7 +220,7 @@ const EditCourse = () => {
                         </div>
                         <label htmlFor="description">
                             <p className="mb-1 text-xl font-bold">Description</p>
-                            <div className='min-h-60'>
+                            <div className='min-h-60 '>
                                 <Editor
                                     onChange={handleEditorChange}
                                     apiKey='yzox6ftijuiizet1be0qhundlf2qr3u0go75ectk6yzv891r'
@@ -248,7 +248,7 @@ const EditCourse = () => {
                     <div id="Thumnail-upload-container" className="flex flex-col gap-y-10 px-7 pt-8 md:w-[50%] md:px-12">
                         <div className='thumbnail'>
                             <p className="mb-1 text-2xl font-bold">Thumbnail</p>
-                            <label htmlFor="thumbnail" className='inline-block  h-[10rem] w-[20rem] cursor-pointer border-2 border-dashed border-black md:h-[18rem] md:w-[36rem]'>
+                            <label htmlFor="thumbnail" className='inline-block   h-[10rem] w-[20rem] cursor-pointer border-2 border-dashed border-black md:h-[18rem] md:w-[36rem]'>
                                 {previewThumbnail && <img src={previewThumbnail} alt='thumbnail' className='object-fit inline-block h-full w-full' />}
                             </label>
                             <input
@@ -267,18 +267,18 @@ const EditCourse = () => {
                         <div className="flex flex-wrap justify-between  gap-x-10 gap-y-10">
                             <label htmlFor="price">
                                 <p className="mb-1 text-xl font-bold">Price (Rs.)</p>
-                                <input onChange={handleInputChange} type="text" name="price" value={courseDetail?.price} id="price" className='h-10 rounded-lg text-center text-lg' defaultValue={0} />
+                                <input onChange={handleInputChange} type="text" name="price" value={courseDetail?.price} id="price" className='h-10 rounded-lg border border-gray-400 text-center text-lg' defaultValue={0} />
                             </label>
 
                             <label htmlFor="discount">
                                 <p className="mb-1 text-xl font-bold">Discount (%)</p>
-                                <input onChange={handleInputChange} type="text" name="discount" value={courseDetail?.discount} id="discount" className='h-10 rounded-lg text-center text-lg' defaultValue={0} />
+                                <input onChange={handleInputChange} type="text" name="discount" value={courseDetail?.discount} id="discount" className='h-10 rounded-lg border border-gray-400 text-center text-lg' defaultValue={0} />
                             </label>
                         </div>
 
                         <label htmlFor="createdBy">
                             <p className="mb-8 text-xl font-bold">Course Creator</p>
-                            <input onChange={handleInputChange} type="text" name="createdBy" id="createdBy" className='h-10 cursor-not-allowed rounded-lg text-center text-lg' value={courseDetail.createdBy} />
+                            <input readOnly onChange={handleInputChange} type="text" name="createdBy" id="createdBy" className='h-10 cursor-not-allowed rounded-lg border border-gray-400 text-center text-lg' value={courseDetail.createdBy} />
                         </label>
                         <div className="flex justify-between gap-x-10">
 

@@ -19,7 +19,7 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
     let courseRating = course.rating
     const userRating = course.userRating
 
-    
+
 
     const price = (discount) ? Math.trunc(originalPrice - (discount * originalPrice) / 100) : originalPrice
 
@@ -60,15 +60,15 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
 
     const navigate = useNavigate()
     const handleCourseClick = () => {
-        if(role === 'ADMIN' || role === 'INSTRUCTOR' ){
+        if (role === 'ADMIN' || role === 'INSTRUCTOR') {
             navigate('/courseDetail', { state: { course, role } })
-        }else{
+        } else {
             navigate('/viewLectures', { state: { course, role } })
-        } 
+        }
     }
 
     return (
-        <div id="courseTemplate" className=" relative m-5  h-[21rem] w-80 cursor-pointer rounded-xl border-none bg-[#FFFFFF] p-2 text-black transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl md:w-72">
+        <div id="courseTemplate" className=" relative m-5  h-[21rem] w-80 cursor-pointer rounded-xl border border-gray-200  bg-[#FFFFFF] p-2 text-black shadow-md transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl md:w-72">
             <div onClick={handleCourseClick} id="courseImage" className="inset-2 h-40 w-full md:h-36  ">
                 <img src={courseImage} alt="courseImage" className="h-full w-full rounded-xl object-cover" />
             </div>
@@ -78,7 +78,7 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
                 <div id="offeredBy" className="mb-2 mt-2 flex items-center gap-x-2 text-sm text-slate-700">{createdBy}</div>
                 <p onClick={handleCourseClick} id="courseName" className="mb-3 line-clamp-2 text-[18px] font-bold">{topic}</p>
 
-                {(role === 'ADMIN' || role === 'INSTRUCTOR' ) && <div onClick={handleCourseClick} className="flex items-center gap-x-1"><p>{courseRating}</p><CourseRating averageRating={courseRating} /> <p className="text-sm">({numberOfRating})</p></div>}
+                {(role === 'ADMIN' || role === 'INSTRUCTOR') && <div onClick={handleCourseClick} className="flex items-center gap-x-1"><p>{courseRating}</p><CourseRating averageRating={courseRating} /> <p className="text-sm">({numberOfRating})</p></div>}
 
                 {role === 'USER' && <div id="progrss-and-rating" className=" mt-3 flex w-full  flex-col justify-center gap-y-1">
                     <progress className="progress progress-primary w-full" value={completed} max={100} />
@@ -95,7 +95,7 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
 
                 </div>}
 
-                {(role === 'ADMIN' || role === 'INSTRUCTOR' ) && <div id="price" className="mt-2  flex items-center gap-x-2 text-base">
+                {(role === 'ADMIN' || role === 'INSTRUCTOR') && <div id="price" className="mt-2  flex items-center gap-x-2 text-base">
                     <p id="type" className=" flex items-center  text-[#4790f6]">
                         {price == 0 || price == undefined ? "Free" : `₹${price}`}
 

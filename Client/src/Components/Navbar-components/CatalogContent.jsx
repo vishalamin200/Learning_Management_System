@@ -10,7 +10,7 @@ const CatalogContent = ({ isActive }) => {
 
     return (
 
-        <div id="catalogContext" className={`absolute left-40 top-[9vh] z-40 flex w-full rounded-md border-2 border-black bg-white text-black md:w-[65vw] ${isActive ? "translate-y-0" : "-translate-y-[200%]"} transition-all duration-500 ease-in-out`}>
+        <div id="catalogContext" className={`absolute left-40 top-[9vh] bg-white z-40 flex w-full rounded-md border-2 border-black  text-black md:w-[65vw] ${isActive ? "translate-y-0" : "-translate-y-[200%]"} transition-all duration-500 ease-in-out`}>
 
             <div className="items-around flex w-[40%] flex-col justify-around bg-[#10162F] p-5 px-8 text-white md:w-[35%] lg:w-[28%] ">
                 <h2 className="text-xl font-bold">Popular Course Topics</h2>

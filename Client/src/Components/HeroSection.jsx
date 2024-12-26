@@ -10,7 +10,7 @@ const HeroSection = () => {
     const isLoggedIn = useSelector((state) => state?.Auth?.isLoggedIn)
 
     return (
-        <div className="relative flex  flex-wrap pb-16 pt-24  lg:mt-[74px] lg:h-[30rem] " style={{ backgroundImage: `url(${HeroBg})` }}>
+        <div className="relative flex  flex-wrap bg-[#EAF3FF] pb-16 pt-24  lg:mt-[74px] lg:h-[30rem] " style={{ backgroundImage: `url(${HeroBg})` }}>
 
             <div className=' flex h-full flex-col  items-center justify-center gap-y-3 px-8 md:items-baseline lg:w-3/5  lg:px-28'>
                 <h2 className='text-[4rem]  font-bold  leading-tight text-[#0A083B]'>A broad selection of courses</h2>

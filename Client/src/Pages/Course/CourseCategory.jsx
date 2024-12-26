@@ -12,7 +12,7 @@ import { fetchCourseByCategory, setCourses } from '../../Redux/CourseSlice'
 const CourseCategory = () => {
 
     const { category } = useParams()
-    const formattedName = category.replace(/-/, " ").replace(/\b\w/g, char => char.toUpperCase());
+    const formattedName = category?.replace(/-/, " ").replace(/\b\w/g, char => char.toUpperCase());
 
     const dispatch = useDispatch()
     const { courses } = useSelector(state => state?.Course)
@@ -56,10 +56,10 @@ const CourseCategory = () => {
                 </div>
                 <div id="courses" className="carousel carousel-start flex w-full  flex-nowrap">
                     {
-                        courses.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate course={course} /></div>)
+                        courses?.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate course={course} /></div>)
                     }
                     {
-                        (courses.length == 0) && <div className='relative my-16 flex  h-[100%] w-full flex-col items-center justify-center md:mb-20 md:mt-20'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
+                        (courses?.length == 0) && <div className='relative my-16 flex  h-[100%] w-full flex-col items-center justify-center md:mb-20 md:mt-20'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
                             <p className='text-base'>No Course Available For This Section</p>
                         </div>
                     }

@@ -29,17 +29,22 @@ const AvatarContent = ({ isActive }) => {
         }
     }
 
+    const onLinkClick = ()=>{
+        dispatch(toggleNavbar(null))
+    }
+
     return (
         <div className={`absolute right-0 top-[9vh] z-40 flex w-60 flex-col items-center justify-center space-y-5 rounded-md  border-2 border-black bg-white py-5 text-lg text-black ${isActive ? "translate-y-0" : "-translate-y-[200%]"} transition-all duration-500 ease-in-out`}>
 
             {(role === 'ADMIN') && <Link to={'/admin/dashboard'} className="flex w-full  items-center gap-4 pl-10 "><MdOutlineDashboard /><p>Dashboard</p></Link>}
   
-            <Link to={'/myCourses'} className="flex w-full  items-center gap-4 pl-10 "><LuBookMinus /><p>My Courses</p></Link>
+            <Link onClick={onLinkClick} to={'/myCourses'} className="flex w-full  items-center gap-4 pl-10 "><LuBookMinus /><p>My Courses</p></Link>
   
-            <Link to={'/editProfile'} className="flex w-full  items-center gap-4 pl-10 "><FaRegUser /><p>Profile</p></Link>
-            <Link to='/changePassword' className="flex w-full  items-center gap-4 pl-10 "><RiLockPasswordLine /><p>Change Password</p></Link>
+            <Link onClick={onLinkClick} to={'/editProfile'} className="flex w-full  items-center gap-4 pl-10 "><FaRegUser /><p>Profile</p></Link>
 
-            <Link to='/my-courses/purchase-history' className="flex w-full  items-center gap-4 pl-10 "><MdOutlinePayments />
+            <Link onClick={onLinkClick} to='/changePassword' className="flex w-full  items-center gap-4 pl-10 "><RiLockPasswordLine /><p>Change Password</p></Link>
+
+            <Link onClick={onLinkClick} to='/my-courses/purchase-history' className="flex w-full  items-center gap-4 pl-10 "><MdOutlinePayments />
                 <p>Purchase History</p></Link>
             <Link onClick={handleLogout} className="flex w-full  items-center gap-4 pl-10"><MdOutlineLogout /><p>Logout</p></Link>
         </div>
