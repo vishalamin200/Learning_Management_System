@@ -16,7 +16,7 @@ const LoginPage = () => {
 
     const handleGoogleLogin = (e) => {
         e.preventDefault()
-        window.open('https://codeacademy.root.sx:4050/auth/google/callback', '_self')
+        window.open('https://codeacademy.root.sx/auth/google/callback', '_self')
     }
 
     const handleInputChange = (e) => {
