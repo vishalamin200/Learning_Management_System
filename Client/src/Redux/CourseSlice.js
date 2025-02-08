@@ -3,9 +3,9 @@ import toast from "react-hot-toast"
 
 import AxiosInstance from "../Helper/AxiosInstance"
 const initialState = {
-    allCourses : [], 
+    allCourses :null, 
     coursePage :1,
-    courses :[],
+    courses : null,
     activeButton:null,
 }
 

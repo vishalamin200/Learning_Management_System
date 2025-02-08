@@ -10,9 +10,7 @@ import { fetchStudentsAndInstructors } from '../../Redux/StatisticsSlice.js'
 Charjs.register(ArcElement, BarElement, CategoryScale, Legend, LinearScale, Title, Tooltip)
 
 const Dashboard = () => {
-  // const totalNoOfStudents
-  // const subscribedStudents
-  // const categoryWiseNumberOfEnrolledStudents
+
   const dispatch = useDispatch()
   const { students, yearlyTotal, totalAmountsByMonth } = useSelector((state) => state.Statistics)
 

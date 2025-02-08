@@ -23,7 +23,6 @@ const AuthLoginSuccess = () => {
         }
         fetchUserDetails()
     }, [])
-
 }
 
 export default AuthLoginSuccess

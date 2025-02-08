@@ -1,11 +1,11 @@
 import DOMPurify from 'dompurify'
+import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import BreadCrumbs from '../../Components/Course-components/BreadCrumbs'
 import CourseIntroduction from '../../Components/Course-components/CourseIntroduction'
 import HomeLayout from '../../Layouts/HomeLayout'
-import toast from 'react-hot-toast'
 
 
 
@@ -50,14 +50,14 @@ const CourseDetailPage = () => {
 
     const handleCoursePayment = (e) => {
         e.preventDefault()
-        if(role === 'ADMIN'){
+        if (role === 'ADMIN') {
             toast.error("Admin Can't Purchase A Course")
-            return 
+            return
         }
 
-        if(role === 'INSTRUCTOR'){
+        if (role === 'INSTRUCTOR') {
             toast.error("Instructor Can't Purchase A Course")
-            return 
+            return
         }
         navigate('/course/checkout', { state: { role, data, course } })
 

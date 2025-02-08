@@ -92,16 +92,16 @@ const AllCoursesPage = () => {
 
                 <div id="courses" className="flex flex-wrap justify-center md:justify-between">
                     {
-                        courses.length >0 ? courses?.map((course) => <CourseTemplate key={course?._id} course={course} />) : ""
+                        courses?.length >0 ? courses?.map((course) => <CourseTemplate key={course?._id} course={course} />) : ""
                     }
                     {
-                        (courses.length == 0) && <div className='relative my-24 flex h-[100%] w-full flex-col items-center justify-center md:mb-28 md:mt-16'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
+                        (courses?.length == 0) && <div className='relative my-24 flex h-[100%] w-full flex-col items-center justify-center md:mb-28 md:mt-16'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
                             <p className='text-base'>No Course Available For This Section</p>
                         </div>
                     }
                 </div>
 
-                {(courses.length > 0) && <div className='mb-8 mr-8 mt-5 flex items-center justify-end gap-x-5 '>
+                {(courses?.length > 0) && <div className='mb-8 mr-8 mt-5 flex items-center justify-end gap-x-5 '>
                     <BackButton handleBack={handleBackButton} />
                     <p className='text-xl'>{coursePage}</p>
                     <NextButton handleNext={handleNextButton} />

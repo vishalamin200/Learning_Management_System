@@ -85,7 +85,7 @@ const Students = () => {
     return (
         <DashboardLayout>
             <div id="student-details" className="min-h-screen w-full pl-72 pt-20 ">
-                 <div className="ml-8 flex justify-between py-5">
+                <div className="ml-8 flex justify-between py-5">
                     <h1 className="flex items-center  text-2xl font-bold">Students Details</h1>
 
                     <div className="mr-24">

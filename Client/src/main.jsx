@@ -15,4 +15,4 @@ createRoot(document.getElementById('root')).render(
         <Toaster />
       </BrowserRouter>
     </Provider>
- )
+)
