@@ -95,7 +95,7 @@ const AllCoursesPage = () => {
                         courses?.length >0 ? courses?.map((course) => <CourseTemplate key={course?._id} course={course} />) : ""
                     }
                     {
-                        (courses?.length == 0) && <div className='relative my-24 flex h-[100%] w-full flex-col items-center justify-center md:mb-28 md:mt-16'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
+                        (courses == null || courses?.length == 0) && <div className='relative my-24 flex h-[100%] w-full flex-col items-center justify-center md:mb-28 md:mt-16'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
                             <p className='text-base'>No Course Available For This Section</p>
                         </div>
                     }
