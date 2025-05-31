@@ -1,5 +1,7 @@
 
 
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 
 import AccessDeniedPage from './Pages/AccessDeniedPage'
@@ -28,9 +30,26 @@ import LoginPage from './Pages/User/LoginPage'
 import NewEditProfilePage from './Pages/User/NewEditProfilePage'
 import ResetPassword from './Pages/User/ResetPassword'
 import SignupPage from './Pages/User/SignupPage'
+import { getProfile } from './Redux/AuthSlice'
 
 
 function App() {
+
+  const dispatch = useDispatch()
+  const {isLoggedIn} = useSelector((state)=>state.Auth)
+
+
+  useEffect(() => {
+    const checkLogin = async() => {
+        await dispatch(getProfile())
+    }
+
+    if(!isLoggedIn){
+      checkLogin()
+    }
+  }, [])
+
+
   return (
     <>
       <Routes>

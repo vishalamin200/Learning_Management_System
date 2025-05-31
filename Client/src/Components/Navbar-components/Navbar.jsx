@@ -26,7 +26,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <div id="navbar" className="absolute top-0 z-50  hidden h-[10vh] w-[100%] bg-white  flex-shrink items-center justify-around  shadow-lg lg:flex" >
+      <div id="navbar" className="absolute top-0 z-50  hidden h-[10vh] w-[100%] flex-shrink  items-center justify-around bg-white  shadow-lg lg:flex" >
         <div>
           <img onClick={() => navigate('/')} src={codeAcademyLogo} alt="CodeAcedemy-logo" className='h-6 w-36 cursor-pointer' />
         </div>

@@ -12,7 +12,7 @@ import HomeLayout from '../../Layouts/HomeLayout'
 const CourseDetailPage = () => {
     const location = useLocation()
     const course = location?.state?.course
-    const { role, data } = useSelector((state) => state.Auth)
+    const { role, data, isLoggedIn } = useSelector((state) => state.Auth)
 
 
     const courseTitle = course?.topic
@@ -50,6 +50,12 @@ const CourseDetailPage = () => {
 
     const handleCoursePayment = (e) => {
         e.preventDefault()
+
+        if(!isLoggedIn){
+            toast.error("Please Login To Enroll")
+            return
+        }
+
         if (role === 'ADMIN') {
             toast.error("Admin Can't Purchase A Course")
             return
@@ -59,6 +65,7 @@ const CourseDetailPage = () => {
             toast.error("Instructor Can't Purchase A Course")
             return
         }
+
         navigate('/course/checkout', { state: { role, data, course } })
 
     }

@@ -6,7 +6,7 @@ import axiosInstance from '../Helper/AxiosInstance.js';
 
 
 const initialState = {
-    isLoggedIn: localStorage.getItem('isLoggedIn') || false,
+    isLoggedIn: false,
     role: localStorage.getItem('role') || "",
     data: localStorage.getItem('data') !== 'undefined' ? JSON.parse(localStorage.getItem('data')) : {}
 }
@@ -53,7 +53,7 @@ export const login = createAsyncThunk('/auth/login/', async (formData, thunkApi)
     }
 })
 
-export const getProfile = createAsyncThunk('/auth/getProfile',async (_,thunkApi)=>{
+export const getProfile = createAsyncThunk('/auth/getProfile', async (_, thunkApi) => {
     try {
         const axiosPromise = await axiosInstance.get('/auth/getProfile')
         return axiosPromise.data
@@ -64,7 +64,7 @@ export const getProfile = createAsyncThunk('/auth/getProfile',async (_,thunkApi)
 })
 
 
-export const logout = createAsyncThunk('/auth/logout/', async (_,thunkApi) => {
+export const logout = createAsyncThunk('/auth/logout/', async (_, thunkApi) => {
 
     try {
         const res = axiosInstance.get('/auth/logout')
@@ -212,10 +212,9 @@ const AuthSlice = createSlice({
                         state.data = action?.payload?.Data,
                         state.role = action?.payload?.Data?.role
                 }
-
             })
 
-            .addCase(getProfile.fulfilled,(state,action)=>{
+            .addCase(getProfile.fulfilled, (state, action) => {
                 if (action?.payload?.Data) {
                     localStorage.setItem('data', JSON.stringify(action?.payload?.Data))
                     localStorage.setItem('isLoggedIn', true),
@@ -227,9 +226,9 @@ const AuthSlice = createSlice({
                 }
             })
 
-            .addCase(getProfile.rejected,(state,action)=>{
-                if(action?.payload?.Error === "TokenExpiredError")
-                localStorage.clear()
+            .addCase(getProfile.rejected, (state, action) => {
+                if (action?.payload?.Error === "TokenExpiredError")
+                    localStorage.clear()
                 state.isLoggedIn = false
             })
 

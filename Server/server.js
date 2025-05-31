@@ -22,8 +22,8 @@ export const razorpay = new Razorpay({
 
 // create a https server using https
 
-const privateKey = fs.readFileSync('C:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.key', 'utf-8')
-const certificate = fs.readFileSync('C:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.cert', 'utf-8')
+const privateKey = fs.readFileSync('D:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.key', 'utf-8')
+const certificate = fs.readFileSync('D:/Users/Vishal/OneDrive/Learning_Management_System/Server/server.cert', 'utf-8')
 
 
 const credentials = { key: privateKey, cert: certificate }

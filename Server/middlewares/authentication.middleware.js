@@ -8,7 +8,7 @@ const isLoggedIn = async (req, res, next) => {
             
         // If user doesn't have any token means user is unauthrised or not loggedin
         if (!token) {
-            return res.sendError(401, "User is Not loggedIn", "Token Might be Expired")
+            return res.sendError(400, "User is Not loggedIn", "Token Might be Expired")
         }
 
         // user have a valid token
@@ -33,7 +33,7 @@ const isLoggedIn = async (req, res, next) => {
 
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
-            return res.sendError(401, "Session Expired, Please Login Again", error.name)
+            return res.sendError(400, "Session Expired, Please Login Again", error.name)
         }else if(error.message === 'invalid signature'){
             return res.sendError(401,"Token Is Tempered, Please Login Again",error.name)
         }

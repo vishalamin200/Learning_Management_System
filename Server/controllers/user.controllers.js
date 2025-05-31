@@ -2,7 +2,6 @@ import cloudinary from 'cloudinary'
 import emailValidator from 'email-validator'
 import fs from 'fs'
 import userModel from '../models/user.model.js'
-import sendResetEmailByBrevo from '../utils/sendEmailByBrevo.util.js'
 import sendResetEmail from '../utils/sendEmail.util.js'
 
 
@@ -48,7 +47,7 @@ const register = async (req, res, next) => {
             password
         })
 
-         if (req.file) {
+        if (req.file) {
 
             // Upload the profile to Cloudinary File Storage Server
             const uploadProfilePicture = await cloudinary.v2.uploader.upload(req.file.path, {
@@ -76,7 +75,7 @@ const register = async (req, res, next) => {
 
                 //Delete file from local storage
                 fs.rmSync(req.file.path)
-             }
+            }
 
             const userInfo = newUser.toObject()
             const { password, ...userWithoutPassword } = userInfo
@@ -85,7 +84,7 @@ const register = async (req, res, next) => {
             res.success(200, "Account Created Successfully", { User: userWithoutPassword })
 
         } else {
- 
+
             //Remove the Password before sending User information to client
             const userInfo = newUser.toObject()
             const { password, ...userWithoutPassword } = userInfo
@@ -152,8 +151,10 @@ const getProfile = async (req, res, next) => {
             res.sendError(401, "Unautherised User")
         }
 
-        if (userDetails) {
-            res.success(200, "Get Profile Successfully", userDetails)
+        const { createdCourses, subscriptions, ...filteredUser } = userDetails.toObject()
+
+        if (filteredUser) {
+            res.success(200, "Get Profile Successfully", filteredUser)
         }
 
     } catch (error) {
@@ -412,8 +413,8 @@ const deleteAccount = async (req, res) => {
         if (!User) {
             return res.sendError(401, "User Doesn't Exist!")
         }
-        if(User.role === 'ADMIN'){
-            return res.sendError(400,"Admin Can't Delete Their Account")
+        if (User.role === 'ADMIN') {
+            return res.sendError(400, "Admin Can't Delete Their Account")
         }
 
 
@@ -446,33 +447,33 @@ const deleteAccount = async (req, res) => {
     }
 }
 
-const fetchStudentsAndInstructors = async (req,res)=>{
+const fetchStudentsAndInstructors = async (req, res) => {
     try {
         const userRole = req?.user?.role
 
-        if(userRole != 'ADMIN' &&  userRole != 'INSTRUCTOR'){
-            return res.sendError(400,'Unauthorized')
+        if (userRole != 'ADMIN' && userRole != 'INSTRUCTOR') {
+            return res.sendError(400, 'Unauthorized')
         }
 
-        const students = await userModel.find({role:'USER'})
-        const instructors = await userModel.find({role:'INSTRUCTOR'}).populate('createdCourses.courseId')
-        return res.success(200,'Students Fetch Successfully',{students,instructors})
+        const students = await userModel.find({ role: 'USER' })
+        const instructors = await userModel.find({ role: 'INSTRUCTOR' }).populate('createdCourses.courseId')
+        return res.success(200, 'Students Fetch Successfully', { students, instructors })
 
     } catch (error) {
-        return res.sendError(400,"Error In Fetching Students and Instructors",error.message)   
+        return res.sendError(400, "Error In Fetching Students and Instructors", error.message)
     }
 }
 
-const deleteUserOrInstructor = async (req,res)=>{
+const deleteUserOrInstructor = async (req, res) => {
     try {
         if (req?.user?.role !== 'ADMIN') {
             return res.sendError(401, "Unauthorized")
         }
 
-        const {userId} = req.body
+        const { userId } = req.body
 
-        if(!userId){
-            return res.sendError(400,"UserId Is Missing")
+        if (!userId) {
+            return res.sendError(400, "UserId Is Missing")
         }
 
         const user = await userModel.findById(userId)
@@ -508,5 +509,5 @@ const deleteUserOrInstructor = async (req,res)=>{
 }
 
 
-export { deleteAccount, editProfile, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword, fetchStudentsAndInstructors ,deleteUserOrInstructor}
+export { deleteAccount, deleteUserOrInstructor, editProfile, fetchStudentsAndInstructors, forgetPassword, getProfile, login, logout, register, resetPassword, updatePassword }
 
