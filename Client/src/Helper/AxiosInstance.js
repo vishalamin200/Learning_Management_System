@@ -3,8 +3,9 @@ import axios from "axios";
 
 const AxiosInstance = axios.create({
 
-    baseURL: `https://codeacademy.root.sx/user`,
+    // baseURL: `https://codeacademy.root.sx/user`,
     // baseURL: `https://localhost:4050/user`,
+    baseURL: `https://api.codeacademy.vishalamin.site/user`,
 
     withCredentials: true,
     timeout: 60000,

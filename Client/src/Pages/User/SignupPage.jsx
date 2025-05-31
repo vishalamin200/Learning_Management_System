@@ -17,7 +17,7 @@ const SignupPage = () => {
 
     const handleGoogleLogin = (e) => {
         e.preventDefault()
-        window.open('https://codeacademy.root.sx/auth/google/callback', '_self')
+        window.open('https://api.codeacademy.vishalamin.site/auth/google/callback', '_self')
     }
 
     const handleInputChange = (e) => {
