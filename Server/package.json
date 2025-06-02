@@ -21,6 +21,7 @@
     "email-validator": "^2.0.4",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "googleapis": "^149.0.0",
     "https": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.9.0",

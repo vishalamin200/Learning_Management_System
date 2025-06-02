@@ -69,6 +69,7 @@ const ViewLectures = () => {
 
     const handleDeleteLecture = async (e) => {
         e.preventDefault()
+        document.getElementById('delete-lecture').close()
 
         const courseId = course._id
         const lectureId = currentLecture?._id
@@ -96,7 +97,7 @@ const ViewLectures = () => {
                 <div id="profilePicture" className="flex items-center justify-center">
                 </div>
 
-                {(role === 'ADMIN' || role === 'INSTRUCTOR' ) &&
+                {(role === 'ADMIN' || role === 'INSTRUCTOR') &&
                     <div className=" mb-6 flex justify-end gap-x-5 md:mb-0 md:gap-x-7">
                         <button onClick={handleAddLecture} id="add-new-lecture" className="text-bold btn btn-square btn-primary w-28 rounded-lg text-white md:w-32">Add Lecture</button>
 
@@ -203,8 +204,10 @@ const ViewLectures = () => {
                     <div className="modal-action">
                         <div className="mt-5 flex w-full items-center justify-around md:mt-10">
 
-                            <button onClick={() => navigate(-1)} className=' btn-sqaure btn  mb-2  w-24 rounded-lg border-2   border-slate-700 bg-inherit text-xl text-slate-700 '>Cancel
-                            </button>
+                            <form method="dialog">
+                                <button className=' btn-sqaure btn  mb-2  w-24 rounded-lg border-2   border-slate-700 bg-inherit text-xl text-slate-700 '>Cancel
+                                </button>
+                            </form>
 
                             <button onClick={handleDeleteLecture} className=' btn-sqaure w-46  btn btn-md  mb-2 rounded-lg border-none border-black  bg-red-700 text-lg text-white hover:bg-red-800'> Delete Lecture </button>
                         </div>
