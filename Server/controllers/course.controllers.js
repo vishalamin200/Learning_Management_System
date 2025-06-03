@@ -398,6 +398,9 @@ const addLecture = async (req, res, next) => {
                     Course.noOfLectures = await Course.lectures.length
                     await Course.save()
 
+                    //remove video from the temporary upload folder
+                    fs.rmSync(req.file.path)
+
                     return res.success(200, "Lecture Added Successfully", { Course: Course })
                 }
 
@@ -489,7 +492,6 @@ const deleleLecture = async (req, res, next) => {
         return res.sendError(400, "Error In Deleting Lecture", error.message)
     }
 }
-
 
 const updateLecture = async (req, res, next) => {
     // We will take data as a form because User can request for the video to update

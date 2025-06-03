@@ -4,6 +4,7 @@ import AuthSlice from "./AuthSlice";
 import CourseSlice from "./CourseSlice";
 import DrawerSlice from "./DrawerSlice";
 import NavbarSlice from "./NavbarSlice";
+import PageSlice from './PageSlice';
 import PaymentSlice from "./PaymentSlice";
 import StatisticSlice from "./StatisticsSlice";
 
@@ -17,6 +18,7 @@ const store = configureStore({
         Drawer: DrawerSlice,
         Statistics: StatisticSlice,
         Navbar: NavbarSlice,
+        Pages: PageSlice
     }
 })
 

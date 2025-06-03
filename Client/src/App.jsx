@@ -8,6 +8,7 @@ import AccessDeniedPage from './Pages/AccessDeniedPage'
 import Dashboard from './Pages/Admin-and-Instructor/Dashboard'
 import Instructors from './Pages/Admin-and-Instructor/Instructors'
 import Students from './Pages/Admin-and-Instructor/Students'
+import ContactPage from './Pages/ContactPage'
 import AddLecture from './Pages/Course/AddLecture'
 import AllCoursesPage from './Pages/Course/AllCoursesPage'
 import CourseCategory from './Pages/Course/CourseCategory'
@@ -24,7 +25,6 @@ import PaymentPage from './Pages/Payment/PaymentPage'
 import PurchaseHistory from './Pages/Payment/PurchaseHistory'
 import AuthLoginSuccess from './Pages/User/AuthLoginSuccess'
 import ChangePassword from './Pages/User/ChangePassword'
-import ContactPage from './Pages/User/ContactPage'
 import ForgotPassword from './Pages/User/ForgotPassword'
 import LoginPage from './Pages/User/LoginPage'
 import NewEditProfilePage from './Pages/User/NewEditProfilePage'
@@ -36,15 +36,15 @@ import { getProfile } from './Redux/AuthSlice'
 function App() {
 
   const dispatch = useDispatch()
-  const {isLoggedIn} = useSelector((state)=>state.Auth)
+  const { isLoggedIn } = useSelector((state) => state.Auth)
 
 
   useEffect(() => {
-    const checkLogin = async() => {
-        await dispatch(getProfile())
+    const checkLogin = async () => {
+      await dispatch(getProfile())
     }
 
-    if(!isLoggedIn){
+    if (!isLoggedIn) {
       checkLogin()
     }
   }, [])
@@ -66,7 +66,6 @@ function App() {
         <Route path='/changePassword' element={<ChangePassword />} />
         <Route path='/editProfile' element={<NewEditProfilePage />} />
         <Route path='/data-deletion' element={<DataDeletionPage />} />
-
 
 
         <Route path='/course/all-courses' element={<AllCoursesPage />} />

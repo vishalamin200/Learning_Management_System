@@ -4,14 +4,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
-// Load environment variables from .env file
+
 dotenv.config();
 
 // Derive __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Function to read HTML file and replace placeholders
+
 function getHtmlContent(userName, resetLink) {
     const filePath = path.join(__dirname, 'passwordReset.html');
     let htmlContent = fs.readFileSync(filePath, 'utf8');
@@ -27,8 +27,8 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: process.env.SENDER_EMAIL, // Your Gmail address
-        pass: process.env.SENDER_EMAIL_PASSWORD, // Your Gmail password or App Password
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.SENDER_EMAIL_PASSWORD, 
     },
 });
 
