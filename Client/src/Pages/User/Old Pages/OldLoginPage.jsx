@@ -113,7 +113,7 @@ const LoginPage = () => {
                                 </label>
                             </div>
                             <div>
-                                <p className="absolute right-0 my-3 text-lg"><Link to='/forgotPassword'> Forgot Password?</Link> </p>
+                                <p className="absolute right-0 my-3 text-lg"><Link to='/auth/forgotPassword'> Forgot Password?</Link> </p>
                             </div>
                             <div className="mt-16 w-full">
                                 <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Login</p></button>
@@ -126,13 +126,12 @@ const LoginPage = () => {
                         </div>
                         <div className="flex items-center justify-center gap-2">
                             <p className="text-lg">Don&apos;t have an account?</p>
-                            <p className="text-lg text-blue-600"><Link to={'/signup'}>Signup</Link></p>
+                            <p className="text-lg text-blue-600"><Link to={'/auth/signup'}>Signup</Link></p>
                         </div>
                     </div>
                 </div>
             </div>
         </HomeLayout>
-
     )
 }
 

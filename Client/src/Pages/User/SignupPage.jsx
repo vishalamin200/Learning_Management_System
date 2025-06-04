@@ -70,7 +70,7 @@ const SignupPage = () => {
         const response = await dispatch(createAccount(formData))
 
         if (response?.payload?.Data?.User) {
-            navigate('/login')
+            navigate('/auth/login')
         }
 
         setUserDetails({ fullName: "", email: "", password: "", avatar: Default_Profile })
@@ -150,7 +150,7 @@ const SignupPage = () => {
                     </button>
                 </form>
 
-                <p className='text-md text-center'>Already have an account? <Link className="text-blue-700 underline" to={'/login'}>sign in</Link></p>
+                <p className='text-md text-center'>Already have an account? <Link className="text-blue-700 underline" to={'/auth/login'}>sign in</Link></p>
 
             </div>
         </div>

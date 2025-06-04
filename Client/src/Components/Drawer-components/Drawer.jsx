@@ -27,12 +27,12 @@ const Drawer = () => {
 
 
     const handleLogin = () => {
-        navigate('/login')
+        navigate('/auth/login')
         dispatch(setDrawer(false))
     }
 
     const handleSignup = () => {
-        navigate('/signup')
+        navigate('/auth/signup')
         dispatch(setDrawer(false))
     }
 

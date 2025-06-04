@@ -19,7 +19,7 @@ const EditLecture = () => {
 
     if (!courseId) {
         toast.error("Course Doesn't Exists, Please Create Course and Add Lectures")
-        navigate('/login')
+        navigate('/auth/login')
     }
 
     const youtubeLink = (lecture?.youtubeLink && lecture?.youtubeLink != "") ? lecture?.youtubeLink : null

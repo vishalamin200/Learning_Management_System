@@ -18,7 +18,7 @@ const AuthLoginSuccess = () => {
                 navigate('/')
             } else {
                 toast.error('Error In logged In')
-                navigate('/login')
+                navigate('/auth/login')
             }
         }
         fetchUserDetails()

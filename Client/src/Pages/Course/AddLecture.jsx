@@ -14,7 +14,7 @@ const AddLecture = () => {
     const courseId = location?.state?.courseId
     if (!courseId) {
         toast.error('Course Is Not Exists, Please Create Course and Add Lectures')
-        navigate('/login')
+        navigate('/auth/login')
     }
 
     const dispatch = useDispatch()

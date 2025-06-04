@@ -34,7 +34,7 @@ const ResetPassword = () => {
 
         if (promise?.payload?.Message) {
             setUserInfo({ newPassword: "" })
-            navigate('/login')
+            navigate('/auth/login')
         }
     }
 

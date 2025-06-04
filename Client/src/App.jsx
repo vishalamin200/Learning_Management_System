@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 
+import AuthLayout from './Layouts/AuthLayout'
 import AccessDeniedPage from './Pages/AccessDeniedPage'
 import Dashboard from './Pages/Admin-and-Instructor/Dashboard'
 import Instructors from './Pages/Admin-and-Instructor/Instructors'
@@ -55,14 +56,18 @@ function App() {
       <Routes>
 
         <Route path='/' element={<Home />} />
-        <Route path='/login' element={<LoginPage />} />
+
+        <Route path='/auth/' element={<AuthLayout />}>
+          <Route path='login' element={<LoginPage />} />
+          <Route path='forgotPassword' element={<ForgotPassword />} />
+          <Route path='resetPassword/:userId/:token' element={<ResetPassword />} />
+        </Route>
+
+        <Route path='/auth/signup' element={<SignupPage />} />
         <Route path='/auth-login/success' element={<AuthLoginSuccess />} />
-        <Route path='/signup' element={<SignupPage />} />
         <Route path='/contact' element={< ContactPage />} />
         <Route path='/*' element={<NotFoundPage />} />
         <Route path='/denied' element={<AccessDeniedPage />} />
-        <Route path='/forgotPassword' element={<ForgotPassword />} />
-        <Route path='/resetPassword/:userId/:token' element={<ResetPassword />} />
         <Route path='/changePassword' element={<ChangePassword />} />
         <Route path='/editProfile' element={<NewEditProfilePage />} />
         <Route path='/data-deletion' element={<DataDeletionPage />} />

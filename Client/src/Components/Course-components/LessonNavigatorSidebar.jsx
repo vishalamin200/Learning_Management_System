@@ -96,9 +96,9 @@ const LessonNavigator = () => {
             </div>
                 : <div className="ml-7 mt-12 flex flex-col gap-y-2">
                     <div >
-                        <button onClick={() => navigate('/login')} className=' btn-sqaure btn  mb-2  w-40 rounded-lg border-black bg-inherit text-black'>Login</button>
+                        <button onClick={() => navigate('/auth/login')} className=' btn-sqaure btn  mb-2  w-40 rounded-lg border-black bg-inherit text-black'>Login</button>
                     </div>
-                    <button onClick={() => navigate('/signup')} className=' btn-sqaure btn  btn-md mb-2  w-40 rounded-lg border-none border-black bg-orange-300 text-black hover:bg-orange-400 active:bg-orange-400'>Create An Account</button>
+                    <button onClick={() => navigate('/auth/signup')} className=' btn-sqaure btn  btn-md mb-2  w-40 rounded-lg border-none border-black bg-orange-300 text-black hover:bg-orange-400 active:bg-orange-400'>Create An Account</button>
                 </div>
             }
 

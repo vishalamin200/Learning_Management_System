@@ -93,7 +93,7 @@ const SignupPage = ({ isActive }) => {
         const response = await dispatch(createAccount(formData))
 
         if (response?.payload?.Data?.User) {
-            Navigate('/login')
+            Navigate('/auth/login')
         }
 
         setUserDetails({ fullName: "", email: "", password: "", avatar: Default_Profile })
@@ -202,7 +202,7 @@ const SignupPage = ({ isActive }) => {
 
                         <div className="mt-1 flex items-center justify-center gap-2">
                             <p className="text-lg">Already have an account?</p>
-                            <p className="text-lg text-blue-600"><Link to={'/login'}>Login</Link></p>
+                            <p className="text-lg text-blue-600"><Link to={'/auth/login'}>Login</Link></p>
                         </div>
                     </div>
                 </div>
