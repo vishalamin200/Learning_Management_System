@@ -102,9 +102,9 @@ const Navbar = () => {
             </div>
           </div>
           : <div className='flex items-center justify-center gap-3'>
-            <button onClick={() => navigate('/login')} name="login" className="btn btn-sm w-20 border-black bg-transparent font-bold text-[#5032F3]">Log in</button>
+            <button onClick={() => navigate('/auth/login')} name="login" className="btn btn-sm w-20 border-black bg-transparent font-bold text-[#5032F3]">Log in</button>
 
-            <button onClick={() => navigate('/signup')} name="signup" className="btn btn-sm w-20  bg-[#5032F3] text-white hover:text-black">Sign Up</button>
+            <button onClick={() => navigate('/auth/signup')} name="signup" className="btn btn-sm w-20  bg-[#5032F3] text-white hover:text-black">Sign Up</button>
           </div>}
       </div >
 
