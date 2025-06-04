@@ -9,7 +9,7 @@ router.get('/google', passport.authenticate("google", { scope: ['email', 'profil
 
 router.get('/google/callback', passport.authenticate('google', {
     session: false,
-    failureRedirect: `${process.env.CLIENT_URL}/login`
+    failureRedirect: `${process.env.CLIENT_URL}/auth/login`
 }), async (req, res) => {
     if (req.user) {
         // We will set the cookie for the user so that he/she can stay login

@@ -35,7 +35,7 @@ function getHtmlContent(userName, resetLink) {
 
 // Function to send the password reset email using Brevo
 const sendResetEmailByBrevo = (userId, userEmail, userName, token) => {
-    const resetPasswordLink = `${process.env.CLIENT_URL}/resetPassword/${userId}/${token}`;
+    const resetPasswordLink = `${process.env.CLIENT_URL}/auth/resetPassword/${userId}/${token}`;
     const htmlContent = getHtmlContent(userName, resetPasswordLink);
 
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // Correct capitalization of the class name
