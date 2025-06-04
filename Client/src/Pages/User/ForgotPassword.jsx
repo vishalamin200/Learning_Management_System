@@ -1,82 +1,86 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { AiOutlineMail } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useState } from "react"
+import toast from "react-hot-toast"
+import { useDispatch } from "react-redux"
 
-import HomeLayout from "../../Layouts/HomeLayout";
-import { forgotPassword } from "../../Redux/AuthSlice";
+import loginPageVideo from "../../assets/Videos/login-page-video.mp4"
+import { forgotPassword } from "../../Redux/AuthSlice"
+
 
 const ForgotPassword = () => {
 
-    const [userInfo, setUserInfo] = useState({ email: "" })
+    const [forgotPasswordEmail, setForgotPasswordEmail] = useState("")
+
     const dispatch = useDispatch()
-
-    const handleInputChange = (e) => {
-        e.preventDefault()
-
-        setUserInfo({ email: e.target.value })
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const { email } = e.target
+
+        if (!forgotPasswordEmail?.trim()) {
+            toast.error("Email Is Missing")
+            return
+        }
 
         const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 
-        if (!email.value.match(emailRegex)) {
+        if (!emailRegex.test(forgotPasswordEmail)) {
             toast.error("Enter Valid Email Address")
             return
         }
 
-        const promise = await dispatch(forgotPassword(userInfo))
-        if (promise?.payload?.Message) {
-            setUserInfo({ email: "" })
+        // send data to server
+        const promise = await dispatch(forgotPassword({ email: forgotPasswordEmail }))
+
+        if (promise?.payload?.Data) {
+            setForgotPasswordEmail("")
         }
     }
 
+    return (
+        <div className='flex h-screen w-full'>
 
-    return (<HomeLayout>
-        <div className="flex items-center justify-center bg-[#EAF3FF] pt-12 text-xl  md:pt-0">
-            <div className="flex w-screen items-center justify-around md:h-screen md:w-3/4 lg:w-1/2">
+            <div className=" hidden h-full w-3/12 bg-[#FFFFFF]  lg:block">
+                <video src={loginPageVideo} muted playsInline autoPlay loop
+                    controls={false} className='pointer-events-none h-full w-full object-cover '>
+                </video>
+            </div>
 
-                <div className=' flex h-[90vh] w-full flex-col items-center border-2 bg-white pt-40 shadow-2xl md:h-[50vh]  md:w-8/12 md:justify-around md:rounded-2xl md:pt-0'>
+            <div className="mx-10 mt-20  flex w-full flex-col gap-y-8 md:mx-auto md:mt-6 md:w-1/2 md:self-center lg:ml-56 lg:w-[26rem] ">
 
-
-                    <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center '>
-
-                        <div className=' pb-16 pt-2 text-3xl font-bold'><h1>Forgot Password</h1>
-                        </div>
-
-                        <div className="mb-2 w-full">
-                            <p className="py-1 text-lg">Email</p>
-                            <label htmlFor="forgotEmail" className='flex flex-col'>
-                                <div className="flex  items-center gap-4">
-                                    <AiOutlineMail className="text-slate-500" />
-
-                                    <input
-                                        onChange={handleInputChange}
-                                        type="email"
-                                        name="email"
-                                        value={userInfo.email}
-                                        id="forgotEmail"
-                                        placeholder='Enter Your Email'
-                                        className='w-10/12 border-none bg-inherit  text-xl outline-none' />
-                                </div>
-                                <hr className="my-1" />
-                            </label>
-                        </div>
+                <h1 className="text-[26px] font-bold">Forgot Password?</h1>
 
 
-                        <div className="mt-8 w-full">
-                            <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Get Reset Password Email</p></button>
-                        </div>
-                    </form>
+                <div className='flex w-full flex-col gap-y-4 text-sm'>
+                    <p >Enter the email address you used when you joined and we’ll send you instructions to reset your password.
+                    </p>
+                    <p >
+                        We will share you a link on your email, by clicking it you can reset your password securely.
+                    </p>
+
                 </div>
+
+                <form onSubmit={handleSubmit} className='flex w-full flex-col gap-y-4'>
+
+                    <div className="flex flex-col gap-y-1 hover:shadow-pink-300 ">
+                        <p className="font-bold">Email Address</p>
+                        <input
+                            type='text'
+                            name='email'
+                            value={forgotPasswordEmail}
+                            onChange={(e) =>setForgotPasswordEmail(e.target.value)}
+                            className='h-14 w-full rounded-lg border border-gray-400 pl-4 text-black transition-all  duration-300 hover:shadow-md focus:outline-none'
+                        />
+                    </div>
+
+                    <button type='submit' className="mt-4 flex h-12 w-full items-center justify-center gap-x-3 rounded-l-full rounded-r-full border bg-[#191919] text-white  transition-transform duration-300 ease-in-out active:scale-95 lg:h-11 lg:w-56">
+                        <span className="text-sm font-bold">Send Reset Intructions</span>
+                    </button>
+
+                </form>
+
             </div>
         </div>
-    </HomeLayout>)
-
+    )
 }
 
 export default ForgotPassword

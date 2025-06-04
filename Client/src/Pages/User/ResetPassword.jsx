@@ -1,84 +1,82 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { CiLock } from "react-icons/ci";
-import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react"
+import toast from "react-hot-toast"
+import { BiHide, BiShow } from "react-icons/bi"
+import { useDispatch } from "react-redux"
+import { useNavigate, useParams } from "react-router-dom"
 
-import HomeLayout from "../../Layouts/HomeLayout";
-import { resetPassword } from "../../Redux/AuthSlice";
+import loginPageVideo from "../../assets/Videos/login-page-video.mp4"
+import { resetPassword } from "../../Redux/AuthSlice"
+
 
 const ResetPassword = () => {
 
     const { userId, token } = useParams()
-    const [userInfo, setUserInfo] = useState({ newPassword: "", userId, token })
+
+    const [newPassword, setNewPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-    const handleInputChange = (e) => {
-        e.preventDefault()
-
-        setUserInfo({ ...userInfo, newPassword: e.target.value })
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const { newPassword } = e.target
-
-        if (newPassword.value.length < 6) {
+        if (newPassword.trim()?.length < 6) {
             toast.error("Password Must Be Atleast 6 Character Long")
             return
         }
 
-        const promise = await dispatch(resetPassword(userInfo))
+        const promise = await dispatch(resetPassword({ newPassword, userId, token }))
 
         if (promise?.payload?.Message) {
-            setUserInfo({ newPassword: "" })
+            setNewPassword("")
             navigate('/login')
         }
     }
+    return (
+        <div className='flex h-screen w-full'>
+
+            <div className=" hidden h-full w-3/12 bg-[#FFFFFF]  lg:block">
+                <video src={loginPageVideo} muted playsInline autoPlay loop
+                    controls={false} className='pointer-events-none h-full w-full object-cover '>
+                </video>
+            </div>
+
+            <div className="mx-10 my-auto  flex w-full flex-col gap-y-12  md:mx-auto md:w-1/2 md:self-center lg:ml-56 lg:w-[26rem] ">
+
+                <h1 className="text-[24px] font-bold">Reset Your Password</h1>
 
 
-    return (<HomeLayout>
-        <div className="flex items-center justify-center bg-[#bcc7d6]  text-xl">
-            <div className="flex h-screen w-screen items-center justify-around md:w-3/4 lg:w-1/2">
+                <form onSubmit={handleSubmit} className='flex w-full flex-col gap-y-4'>
 
-                <div className=' flex h-[86vh] w-full flex-col items-center rounded-2xl border-2 bg-white pt-40 shadow-2xl md:h-[50vh]  md:w-8/12  md:justify-around md:pt-0'>
+                    <div className="flex flex-col gap-y-1 hover:shadow-pink-300 ">
+                        <p className="font-bold">New Password</p>
 
+                        <div className="relative flex h-14">
+                            <input
+                                type={showPassword ? "text" : 'password'}
+                                name='newPassword'
+                                value={newPassword}
+                                placeholder="5+ characters"
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className='h-full w-full rounded-lg border border-gray-400 pl-4 pr-14 text-black transition-all  duration-300 hover:shadow-md focus:outline-none'
+                            />
+                            <div onClick={() => setShowPassword(!showPassword)} className="absolute right-4 flex h-full cursor-pointer items-center">
+                                {showPassword ? <BiShow size={22} /> : <BiHide size={22} />}
+                            </div>
 
-
-                    <form noValidate onSubmit={handleSubmit} className='relative flex w-3/4 flex-col items-center justify-center'>
-                        <div className='flex items-center justify-center pb-4 pt-3 text-3xl font-bold md:pb-0'><h1>Reset Password</h1>
                         </div>
-                        <div className="my-2 w-full">
-                            <p className="py-1 text-lg">New Password</p>
-                            <label htmlFor="newPassword" className='flex flex-col'>
-                                <div className="flex  items-center gap-4 ">
-                                    <CiLock />
 
-                                    <input
-                                        onChange={handleInputChange}
-                                        type="password"
-                                        name="newPassword"
-                                        value={userInfo.newPassword}
-                                        id="newPassword"
-                                        placeholder='Enter New Password'
-                                        className='w-10/12 border-none bg-transparent  text-xl outline-none' />
-                                </div>
-                                <hr className="my-1" />
-                            </label>
-                        </div>
+                    </div>
 
+                    <button type='submit' className=" mt-4 flex h-12 w-full items-center justify-center gap-x-3 rounded-l-full rounded-r-full border bg-[#191919]  text-white transition-transform duration-300 ease-in-out active:scale-95 lg:h-11 lg:w-56">
+                        <span className="select-none text-sm font-bold">Reset Password</span>
+                    </button>
+                </form>
 
-                        <div className="mt-8 w-full">
-                            <button type="submit" className="btn  flex   w-full cursor-pointer items-center justify-center  bg-[#563fd7] text-xl text-white hover:bg-[#543ae8]"><p>Reset Password</p></button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
-    </HomeLayout>)
-
+    )
 }
 
 export default ResetPassword

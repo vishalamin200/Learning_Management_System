@@ -11,8 +11,7 @@ const initialState = {
         subject: "",
         message: "",
         captchaToken: ""
-    }
-
+    },
 }
 
 export const sendUserMessage = createAsyncThunk('userMessage', async (formData, thunkApi) => {
@@ -52,9 +51,8 @@ const PageSlice = createSlice({
                 phone: "",
                 subject: "",
                 message: "",
-                captchaToken: ""
             }
-        }
+        },
     },
 
 })

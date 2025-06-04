@@ -8,7 +8,7 @@ import axiosInstance from '../Helper/AxiosInstance.js';
 const initialState = {
     isLoggedIn: false,
     role: localStorage.getItem('role') || "",
-    data: localStorage.getItem('data') !== 'undefined' ? JSON.parse(localStorage.getItem('data')) : {}
+    data: localStorage.getItem('data') !== 'undefined' ? JSON.parse(localStorage.getItem('data')) : {},
 }
 
 
@@ -197,6 +197,10 @@ const AuthSlice = createSlice({
             state.data = {},
                 state.isLoggedIn = false,
                 state.role = ""
+        },
+
+        setForgotPasswordEmail: (state,action)=>{
+            state.forgotPasswordEmail = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -252,6 +256,6 @@ const AuthSlice = createSlice({
     }
 })
 
-export const { logoutUser } = AuthSlice.actions
+export const { logoutUser, setForgotPasswordEmail } = AuthSlice.actions
 // export const {} = AuthSlice.actions
 export default AuthSlice.reducer
