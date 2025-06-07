@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import EmptyState from '../../assets/Logos/emptystate.svg'
 import { BackButton, NextButton } from '../../Components/Course-components/Buttons'
+import MyCourseSkeletonTemplate from '../../Components/Course-components/MyCourseSkeletonTemplate.jsx'
 import MyCourseTemplate from '../../Components/Course-components/MyCourseTemplate'
 import HomeLayout from '../../Layouts/HomeLayout'
 import { fetchAllCourses, fetchCreatedCourses, fetchSubscribedCourses, updateCourseRating } from '../../Redux/CourseSlice.js'
@@ -17,6 +18,7 @@ const MyCourses = () => {
     const [allCourses, setAllCourses] = useState([])
     const [coursePage, setCoursePage] = useState(1)
     const [courses, setCourses] = useState([])
+    const [loading, setLoading] = useState(true)
 
 
     const { role, data } = useSelector((state) => state.Auth)
@@ -24,16 +26,20 @@ const MyCourses = () => {
 
     useEffect(() => {
         const fetchCourses = async () => {
-            const thunkResponse = role === 'ADMIN' ? await dispatch(fetchAllCourses()) : role === 'INSTRUCTOR'  ? await dispatch(fetchCreatedCourses())  : await dispatch(fetchSubscribedCourses())
+            setLoading(true)
+
+            const thunkResponse = role === 'ADMIN' ? await dispatch(fetchAllCourses()) : role === 'INSTRUCTOR' ? await dispatch(fetchCreatedCourses()) : await dispatch(fetchSubscribedCourses())
 
             const courses = thunkResponse?.payload?.Data
-            
+
 
             if (courses != undefined && courses.length > 0) {
                 setAllCourses(courses.map((course) => ({ ...course, userRating: course.allRatings.find((rating) => rating?.userId?.toString() == userId)?.value || 0 })))
             } else {
-                setAllCourses(() => [])
+                setAllCourses([])
             }
+
+            setLoading(false)
         }
         fetchCourses()
     }, [])
@@ -74,20 +80,22 @@ const MyCourses = () => {
 
                     <p className='my-6 underline'>My Courses</p>
 
-                    {(role === 'ADMIN' || role === 'INSTRUCTOR' ) && <button onClick={() => navigate('/createCourse')} className="btn btn-primary btn-md mt-5 text-white hover:bg-blue-700">Create New Course</button>}
+                    {(role === 'ADMIN' || role === 'INSTRUCTOR') && <button onClick={() => navigate('/createCourse')} className="btn btn-primary btn-md mt-5 text-white hover:bg-blue-700">Create New Course</button>}
 
                 </div>
                 <div id="courses" className="flex   flex-wrap justify-center md:scale-100 md:justify-start">
 
                     {
-                        courses.map((course) => <MyCourseTemplate key={course?.topic} course={course} role={role} handleUserRating={handleUserRating} />)
-                    }
-                    {
-                        (courses.length == 0) && <div className='relative flex h-[100%] w-full flex-col items-center justify-center md:mb-60'>
+                        loading ? Array(4).fill(0).map((_, index) => <MyCourseSkeletonTemplate key={index} role={role} />)
 
-                            <img src={EmptyState} alt="Empty Page" className='mt-44 w-[72%] md:mt-24' />
-                            <p className='text-base'>You have not subscribed any course</p>
-                        </div>
+
+                            : (courses && courses.length > 0) ? courses.map((course) => <MyCourseTemplate key={course?.topic} course={course} role={role} handleUserRating={handleUserRating} />)
+
+                                : <div className='relative flex h-[100%] w-full flex-col items-center justify-center md:mb-60'>
+
+                                    <img src={EmptyState} alt="Empty Page" className='mt-44 w-[72%] md:mt-24' />
+                                    <p className='text-base'>You have not subscribed any course</p>
+                                </div>
                     }
                 </div>
 

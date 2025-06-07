@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import EmptyState from '../../assets/Logos/emptystate.svg'
 import { BackButton, NextButton } from '../../Components/Course-components/Buttons'
 import CoursesCarousel from '../../Components/Course-components/CoursesCarousel'
 import CourseTemplate from "../../Components/Course-components/CourseTemplate"
+import SkeletonCourseTemplate from '../../Components/Course-components/SkeletonCourseTemplate'
 import HomeLayout from '../../Layouts/HomeLayout'
 import { fetchAllCourses, setActiveButton, setAllCourses, setCoursePage, setCourses, setMostPopularCourses, setNewCourses, setTopRatedCourses } from '../../Redux/CourseSlice'
 
@@ -14,16 +15,22 @@ const AllCoursesPage = () => {
     const dispatch = useDispatch()
     const { allCourses, coursePage, courses, activeButton } = useSelector((state) => state.Course)
 
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         const fetchCourses = async () => {
+            setLoading(true)
+
             const thunkResponse = await dispatch(fetchAllCourses())
             const courses = thunkResponse?.payload?.Data
 
             if (courses != undefined && courses.length > 0) {
                 dispatch(setAllCourses(courses))
             } else {
-                dispatch(setCourses(() => []))
+                dispatch(setAllCourses([]))
             }
+
+            setLoading(false)
         }
         fetchCourses()
     }, [])
@@ -92,13 +99,15 @@ const AllCoursesPage = () => {
 
                 <div id="courses" className="flex flex-wrap justify-center md:justify-between">
                     {
-                        courses?.length > 0 ? courses?.map((course) => <CourseTemplate key={course?._id} course={course} />) : ""
-                    }
-                    {
+                        loading ? Array(8).fill(0).map((_, index) => <SkeletonCourseTemplate key={index} />) : 
+
+                        (courses?.length > 0) ? courses?.map((course) => <CourseTemplate key={course?._id} course={course} />) : 
+                    
+                    
                         (courses == null || courses?.length == 0) && <div className='relative my-24 flex h-[100%] w-full flex-col items-center justify-center md:mb-28 md:mt-16'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
                             <p className='text-base'>No Course Available For This Section</p>
                         </div>
-                    }
+                     }
                 </div>
 
                 {(courses?.length > 0) && <div className='mb-8 mr-8 mt-5 flex items-center justify-end gap-x-5 '>

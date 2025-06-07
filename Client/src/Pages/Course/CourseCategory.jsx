@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import EmptyState from '../../assets/Logos/emptystate.svg'
 import CoursesCarousel from '../../Components/Course-components/CoursesCarousel'
 import CourseTemplate from "../../Components/Course-components/CourseTemplate"
+import SkeletonCourseTemplate from '../../Components/Course-components/SkeletonCourseTemplate'
 import HomeLayout from '../../Layouts/HomeLayout'
 import { fetchCourseByCategory, setCourses } from '../../Redux/CourseSlice'
 
@@ -20,6 +21,7 @@ const CourseCategory = () => {
 
     const [showLeft, setShowLift] = useState(false)
     const [showRight, setShowRight] = useState(true);
+    const [loading, setLoading] = useState(true)
 
     const courseCarouselRef = useRef()
 
@@ -63,12 +65,14 @@ const CourseCategory = () => {
             carousel.removeEventListener("scroll", checkBottonVisibility)
         }
 
-    }, [])
+    }, [loading])
 
 
     useEffect(() => {
         const fetchCourses = async () => {
             if (category) {
+                setLoading(true)
+
                 const thunkResponse = await dispatch(fetchCourseByCategory({ category }))
                 const courses = thunkResponse?.payload?.Data?.Course
                 if (courses != undefined) {
@@ -78,6 +82,8 @@ const CourseCategory = () => {
                 } else {
                     dispatch(setCourses([]))
                 }
+
+                setLoading(false)
             }
         };
 
@@ -112,15 +118,15 @@ const CourseCategory = () => {
 
 
                     <div id="courses" ref={courseCarouselRef} className="carousel carousel-start relative flex  w-full flex-nowrap">
-
                         {
-                            courses?.length > 0 ? courses?.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate course={course} /></div>) : ""
-                        }
+                            loading ? Array(4).fill(0).map((_, index) => <SkeletonCourseTemplate key={index} />)
 
-                        {
-                            (courses == null || courses?.length == 0) && <div className='relative my-16 flex  h-[100%] w-full flex-col items-center justify-center md:mb-20 md:mt-20'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
-                                <p className='text-base'>No Course Available For This Section</p>
-                            </div>
+                                : courses?.length > 0 ? courses?.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate course={course} /></div>)
+
+                                    : (courses == null || courses?.length == 0) && <div className='relative my-16 flex  h-[100%] w-full flex-col items-center justify-center md:mb-20 md:mt-20'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
+                                        <p className='text-base'>No Course Available For This Section</p>
+                                    </div>
+
                         }
                     </div>
 
