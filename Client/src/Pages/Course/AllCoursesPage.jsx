@@ -30,7 +30,7 @@ const AllCoursesPage = () => {
 
     useEffect(() => {
         allCourses ? dispatch(setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8))) : null
-    }, [allCourses, coursePage,dispatch])
+    }, [allCourses, coursePage, dispatch])
 
     const handleNextButton = () => {
         if (Math.ceil(allCourses?.length / 8) > coursePage) {
@@ -64,7 +64,7 @@ const AllCoursesPage = () => {
 
     return (
         <HomeLayout>
-            <div id="coursePage" className="mx-3 flex flex-col pt-16 md:mx-24  lg:pt-5">
+            <div id="coursePage" className="mx-3 flex flex-col pt-16 md:mx-24  lg:pt-5 ">
 
                 <div className="ml-5">
                     <h1 className='pb-8 pt-8 text-4xl font-bold md:pb-2 md:pt-20 '>All the skills you need in one place</h1>
@@ -92,7 +92,7 @@ const AllCoursesPage = () => {
 
                 <div id="courses" className="flex flex-wrap justify-center md:justify-between">
                     {
-                        courses?.length >0 ? courses?.map((course) => <CourseTemplate key={course?._id} course={course} />) : ""
+                        courses?.length > 0 ? courses?.map((course) => <CourseTemplate key={course?._id} course={course} />) : ""
                     }
                     {
                         (courses == null || courses?.length == 0) && <div className='relative my-24 flex h-[100%] w-full flex-col items-center justify-center md:mb-28 md:mt-16'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />

@@ -36,7 +36,7 @@ const ForgotPassword = () => {
     }
 
     return (
-        <div className="mx-10 my-auto flex w-full flex-col gap-y-8 md:mx-auto  md:w-1/2 md:self-center lg:ml-56 lg:w-[26rem] ">
+        <div className="mx-10 mt-32 flex w-full  flex-col gap-y-8 overflow-hidden md:mx-auto   md:mt-0 md:w-1/2 md:self-center lg:ml-56 lg:w-[26rem]">
 
             <h1 className="text-[26px] font-bold">Forgot Password?</h1>
 

@@ -58,7 +58,7 @@ const ContactPage = () => {
 
     return (
         <HomeLayout>
-            <div className={`flex w-[100%] flex-col items-center justify-center  bg-[#edeff0] pt-16 text-black shadow-md md:flex md:h-screen md:flex-row md:pt-20 `} >
+            <div className={`flex w-[100%] flex-col items-center justify-center  bg-[#EFF0F1] pt-16 text-black shadow-md md:flex md:h-screen md:flex-row md:pt-20 `} >
 
                 {/* bg-[#181A1B] */}
                 {console.log(userMessage)}

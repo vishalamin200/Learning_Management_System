@@ -77,7 +77,7 @@ const SignupPage = () => {
     }
 
     return (
-        <div id='signup-page' className='flex h-screen w-full'>
+        <div id='signup-page' className='flex min-h-fit w-full overflow-hidden md:h-screen'>
 
             <div id='sidebar-video' className=" hidden h-full w-3/12 bg-[#FFFFFF]  lg:block">
                 <video src={SignupPageVideo} muted playsInline autoPlay loop

@@ -64,13 +64,13 @@ const Navbar = () => {
             </div>
 
             <div>
-              <button onClick={() => navigate('/contact')} className='z-60 btn btn-sm flex flex-nowrap items-center border-none bg-inherit text-black shadow-none outline-none hover:border-none hover:bg-inherit hover:text-[#5032F3]' name='contact'>
+              <button onClick={() => (navigate('/contact') , dispatch(toggleNavbar(""))) } className='z-60 btn btn-sm flex flex-nowrap items-center border-none bg-inherit text-black shadow-none outline-none hover:border-none hover:bg-inherit hover:text-[#5032F3]' name='contact'>
                 Contact Us
               </button>
             </div>
 
             <div>
-              <button onClick={() => navigate('/career')} className='z-60 btn btn-sm flex flex-nowrap items-center border-none bg-inherit text-black shadow-none outline-none hover:border-none hover:bg-inherit hover:text-[#5032F3]' name='career'>
+              <button onClick={() => ( navigate('/career'), dispatch(toggleNavbar("")))} className='z-60 btn btn-sm flex flex-nowrap items-center border-none bg-inherit text-black shadow-none outline-none hover:border-none hover:bg-inherit hover:text-[#5032F3]' name='career'>
                 Career Center
               </button>
             </div>
@@ -114,6 +114,12 @@ const Navbar = () => {
         {community ? <CommunityContent isActive={true} /> : <CommunityContent isActive={false} />}
         {resources ? <ResourcesContent isActive={true} /> : <ResourcesContent isActive={false} />}
         {avatar ? <AvatarContent isActive={true} /> : <AvatarContent isActive={false} />}
+
+        {
+          (catalog || community || resources) && <div onClick={() => dispatch(toggleNavbar(""))} className="absolute inset-0 z-20 ">
+          </div>
+        }
+
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
@@ -16,6 +17,53 @@ const CourseCategory = () => {
 
     const dispatch = useDispatch()
     const { courses } = useSelector(state => state?.Course)
+
+    const [showLeft, setShowLift] = useState(false)
+    const [showRight, setShowRight] = useState(true);
+
+    const courseCarouselRef = useRef()
+
+    const checkBottonVisibility = () => {
+        if (!courseCarouselRef) return;
+
+        const { scrollLeft, scrollWidth, clientWidth } = courseCarouselRef.current
+
+
+        setShowLift(scrollLeft > 25)
+        setShowRight(scrollLeft + clientWidth < scrollWidth - 5)
+    }
+
+    const handleLeftScroll = () => {
+
+        const carousel = courseCarouselRef.current
+        if (!carousel) return
+
+        carousel.scrollBy({ left: -800, bahaviour: 'smooth' })
+    }
+
+    const handleRightScroll = () => {
+
+        const carousel = courseCarouselRef.current
+        if (!carousel) return
+
+        carousel.scrollBy({ left: 800, bahaviour: 'smooth' })
+    }
+
+    useEffect(() => {
+        if (!courseCarouselRef) return
+        checkBottonVisibility()
+
+        const carousel = courseCarouselRef.current
+
+        if (!carousel) return
+
+        carousel.addEventListener("scroll", checkBottonVisibility)
+
+        return () => {
+            carousel.removeEventListener("scroll", checkBottonVisibility)
+        }
+
+    }, [])
 
 
     useEffect(() => {
@@ -54,17 +102,35 @@ const CourseCategory = () => {
                     </div>
                     <hr className="w-full font-bold" />
                 </div>
-                <div id="courses" className="carousel carousel-start flex w-full  flex-nowrap">
+                <div className='relative w-full'>
+
                     {
-                        courses?.length> 0 ? courses?.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate course={course} /></div>):""
+                        (courses?.length > 0 && showLeft) && <button onClick={handleLeftScroll} className='absolute -left-6 top-[10rem] z-20  hidden h-12 w-12 items-center justify-center rounded-full border border-gray-300  bg-white hover:bg-[#D1D7DC] md:flex'>
+                            <FaAngleLeft size={24} />
+                        </button>
                     }
+
+
+                    <div id="courses" ref={courseCarouselRef} className="carousel carousel-start relative flex  w-full flex-nowrap">
+
+                        {
+                            courses?.length > 0 ? courses?.map((course) => <div key={course?._id} className='carousel-item'><CourseTemplate course={course} /></div>) : ""
+                        }
+
+                        {
+                            (courses == null || courses?.length == 0) && <div className='relative my-16 flex  h-[100%] w-full flex-col items-center justify-center md:mb-20 md:mt-20'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
+                                <p className='text-base'>No Course Available For This Section</p>
+                            </div>
+                        }
+                    </div>
+
+
                     {
-                        (courses == null || courses?.length == 0) && <div className='relative my-16 flex  h-[100%] w-full flex-col items-center justify-center md:mb-20 md:mt-20'><img src={EmptyState} alt="Empty Page" className='w-[72%]' />
-                            <p className='text-base'>No Course Available For This Section</p>
-                        </div>
+                        (courses?.length > 0 && showRight) && <button onClick={handleRightScroll} className='absolute -right-6 top-[10rem] z-20 hidden h-12 w-12 items-center justify-center rounded-full border border-gray-300  bg-white hover:bg-[#D1D7DC] md:flex'>
+                            <FaAngleRight size={24} className='hover:color-white' />
+                        </button>
                     }
                 </div>
-
             </div>
         </HomeLayout>
     )

@@ -33,7 +33,7 @@ const ResetPassword = () => {
         }
     }
     return (
-        <div className="mx-10 my-auto  flex w-full flex-col gap-y-12  md:mx-auto md:w-1/2 md:self-center lg:ml-56 lg:w-[26rem] ">
+        <div className="mx-10 mt-56 flex w-full  flex-col gap-y-8 md:mx-auto md:mt-0   md:w-1/2 md:self-center lg:ml-56 lg:w-[26rem]">
 
             <h1 className="text-[24px] font-bold">Reset Your Password</h1>
 
