@@ -3,19 +3,25 @@ import toast from "react-hot-toast";
 
 import AxiosInstance from "../Helper/AxiosInstance";
 
+const presentDate = new Date(Date.now())
+const presentYear = presentDate.getFullYear()
+const presentMonth = presentDate.toLocaleString('en-IN', { month: 'short', timeZone: 'Asia/Kolkata' })
+
 const initialState = {
     students: [],
     instructors: [],
-    yearlyTotal:0,
-    totalAmountsByMonth:{},
-    paymentsByMonth:{},
-    
-    userStatus : 'enrolled',
-    selectedUserId : null,
-    selectedSubscriptions : {},
-    selectedCourses:{},
+    yearlyTotal: {},
+    totalAmountsByMonth: {},
+    paymentsByMonth: {},
+    selectedMonth: presentMonth,
+    selectedYear: presentYear,
+
+    userStatus: 'enrolled',
+    selectedUserId: null,
+    selectedSubscriptions: {},
+    selectedCourses: {},
     viewProfile: null,
-    deleteUser:null
+    deleteUser: null
 }
 
 export const fetchStudentsAndInstructors = createAsyncThunk('user/fetchStudentsAndInstructors', async (_, thunkApi) => {
@@ -32,22 +38,23 @@ export const fetchStudentsAndInstructors = createAsyncThunk('user/fetchStudentsA
 
 export const fetchAllPayments = createAsyncThunk('payment/fetchAllPayments', async (data, thunkApi) => {
     try {
-        const response = await AxiosInstance.post('payment/fetchAllPayments',data)
-        return response.data
+        const response = AxiosInstance.post('payment/fetchAllPayments', data)
+
+        return (await response).data
     } catch (error) {
         toast.error(error?.response?.data?.Message)
         return thunkApi.rejectWithValue(error.message)
     }
 })
 
-export const deleteUserOrInstructor = createAsyncThunk('/dashboard/deleteUserOrInstructor',async (data,thunkApi)=>{
+export const deleteUserOrInstructor = createAsyncThunk('/dashboard/deleteUserOrInstructor', async (data, thunkApi) => {
 
     try {
-        const response = AxiosInstance.post('auth/deleteUserOrInstructor',data)
-        toast.promise(response,{
-            loading:'Deleting User Account...',
-            success:(res)=>res?.data?.Message,
-            error:(err)=>err?.response?.data?.Message
+        const response = AxiosInstance.post('auth/deleteUserOrInstructor', data)
+        toast.promise(response, {
+            loading: 'Deleting User Account...',
+            success: (res) => res?.data?.Message,
+            error: (err) => err?.response?.data?.Message
         })
 
         return (await response).data
@@ -61,34 +68,42 @@ const StatisticSlice = createSlice({
     name: 'Statistics',
     initialState,
     reducers: {
-        setUserStatus : (state,action)=>{
+        setUserStatus: (state, action) => {
             state.userStatus = action.payload
         },
 
-        setSelectedUserId: (state,action)=>{
+        setSelectedUserId: (state, action) => {
             state.selectedUserId = action.payload
         },
 
-        setSelectedSubscriptions: (state,action)=>{
-            const {userId,selectedSubscription} = action.payload
+        setSelectedSubscriptions: (state, action) => {
+            const { userId, selectedSubscription } = action.payload
             state.selectedSubscriptions[userId] = selectedSubscription
         },
 
-        setSelectedCourses: (state,action)=>{
-            const {userId,selectedCourse} = action.payload
+        setSelectedCourses: (state, action) => {
+            const { userId, selectedCourse } = action.payload
             state.selectedCourses[userId] = selectedCourse
         },
 
-        setViewProfile: (state,action)=>{
+        setViewProfile: (state, action) => {
             state.viewProfile = action.payload
         },
 
-        setDeleteUser: (state,action)=>{
+        setDeleteUser: (state, action) => {
             state.deleteUser = action.payload
         },
-        toggleViewProfile: (state,action)=>{
-            state.viewProfile ? state.viewProfile = null : state.viewProfile = action.payload 
+        toggleViewProfile: (state, action) => {
+            state.viewProfile ? state.viewProfile = null : state.viewProfile = action.payload
         },
+
+        setSelectedYear:(state,action)=>{
+            state.selectedYear = action.payload
+        },
+
+        setSelectedMonth:(state,action)=>{
+            state.selectedMonth = action.payload
+        }
 
     },
     extraReducers: (builder) => {
@@ -96,19 +111,21 @@ const StatisticSlice = createSlice({
             .addCase(fetchStudentsAndInstructors.fulfilled, (state, action) => {
                 const students = action?.payload?.Data?.students
                 const instructors = action?.payload?.Data?.instructors
-                    
+
                 state.students = students
                 state.instructors = instructors
             })
             .addCase(fetchAllPayments.fulfilled, (state, action) => {
-                const {paymentsByMonth,totalAmountsByMonth,yearlyTotal} = action.payload.Data
-                state.paymentsByMonth = paymentsByMonth
-                state.totalAmountsByMonth = totalAmountsByMonth
-                state.yearlyTotal = yearlyTotal
+                const { paymentsByMonth, totalAmountsByMonth, yearlyTotal } = action.payload.Data
+                const year = action.meta.arg.year
+
+                state.paymentsByMonth[year] = paymentsByMonth
+                state.totalAmountsByMonth[year] = totalAmountsByMonth
+                state.yearlyTotal[year] = yearlyTotal
             })
     }
-})   
+})
 
-export const {setUserStatus,setSelectedUserId, setSelectedSubscriptions, setSelectedCourses,setViewProfile, setDeleteUser,toggleViewProfile} = StatisticSlice.actions
+export const { setUserStatus, setSelectedUserId, setSelectedSubscriptions, setSelectedCourses, setViewProfile, setDeleteUser, toggleViewProfile, setSelectedMonth, setSelectedYear } = StatisticSlice.actions
 
 export default StatisticSlice.reducer

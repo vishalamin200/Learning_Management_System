@@ -8,7 +8,7 @@ import CoursesCarousel from '../../Components/Course-components/CoursesCarousel'
 import CourseTemplate from "../../Components/Course-components/CourseTemplate"
 import SkeletonCourseTemplate from '../../Components/Course-components/SkeletonCourseTemplate'
 import HomeLayout from '../../Layouts/HomeLayout'
-import { fetchCourseByCategory, setCourses } from '../../Redux/CourseSlice'
+import { fetchCourseByCategory } from '../../Redux/CourseSlice'
 
 
 const CourseCategory = () => {
@@ -17,13 +17,14 @@ const CourseCategory = () => {
     const formattedName = category?.replace(/-/, " ").replace(/\b\w/g, char => char.toUpperCase());
 
     const dispatch = useDispatch()
-    const { courses } = useSelector(state => state?.Course)
+    const { coursesByCategory } = useSelector(state => state?.Course)
 
     const [showLeft, setShowLift] = useState(false)
     const [showRight, setShowRight] = useState(true);
     const [loading, setLoading] = useState(true)
 
     const courseCarouselRef = useRef()
+    const courses = coursesByCategory[category]
 
     const checkBottonVisibility = () => {
         if (!courseCarouselRef) return;
@@ -73,21 +74,18 @@ const CourseCategory = () => {
             if (category) {
                 setLoading(true)
 
-                const thunkResponse = await dispatch(fetchCourseByCategory({ category }))
-                const courses = thunkResponse?.payload?.Data?.Course
-                if (courses != undefined) {
-                    if (courses.length > 0) {
-                        dispatch(setCourses(courses));
-                    }
-                } else {
-                    dispatch(setCourses([]))
-                }
-
+                await dispatch(fetchCourseByCategory({ category }))
+            
                 setLoading(false)
             }
         };
 
-        fetchCourses();
+        if(!coursesByCategory[category] || coursesByCategory[category]?.length == 0){
+            fetchCourses();
+        }else{
+            setLoading(false)
+        }
+
     }, [category]); // Ensure category is a dependency
 
 

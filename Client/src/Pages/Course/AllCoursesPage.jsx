@@ -32,7 +32,13 @@ const AllCoursesPage = () => {
 
             setLoading(false)
         }
-        fetchCourses()
+
+        if(!allCourses || allCourses.length == 0){
+            fetchCourses()
+        }else{
+            setLoading(false)
+        }
+        
     }, [])
 
     useEffect(() => {

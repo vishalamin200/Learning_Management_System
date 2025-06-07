@@ -3,10 +3,12 @@ import toast from "react-hot-toast"
 
 import AxiosInstance from "../Helper/AxiosInstance"
 const initialState = {
-    allCourses :null, 
-    coursePage :1,
-    courses : null,
-    activeButton:null,
+    allCourses: [],
+    coursePage: 1,
+    courses: [],
+    coursesByCategory: {},
+    activeButton: "",
+    myCourses:[],
 }
 
 export const fetchCourseByCategory = createAsyncThunk('courses/getCourseByCategory/', async (formData, thunkApi) => {
@@ -187,21 +189,21 @@ const CourseSlice = createSlice({
     name: "Course",
     initialState,
     reducers: {
-        setAllCourses:(state,action)=>{
+        setAllCourses: (state, action) => {
             state.allCourses = action.payload
         },
-        setCoursePage:(state,action)=>{
+        setCoursePage: (state, action) => {
             state.coursePage = action.payload
         },
 
-        setCourses:(state,action)=>{
+        setCourses: (state, action) => {
             state.courses = action.payload
         },
-        setActiveButton:(state,action)=>{
+        setActiveButton: (state, action) => {
             state.activeButton = action.payload
         },
 
-        setTopRatedCourses : (state)=>{
+        setTopRatedCourses: (state) => {
             const topRatedCourses = state.allCourses.sort((a, b) => {
                 if (b.rating === a.rating) {
                     return b.noOfRatings - a.noOfRatings; // If ratings are equal, prioritize by number of ratings
@@ -210,30 +212,42 @@ const CourseSlice = createSlice({
             });
             state.courses = topRatedCourses
         },
-        setMostPopularCourses:(state)=>{
+        setMostPopularCourses: (state) => {
 
             const getTotalRatings = (course) => {
                 return course?.allRatings.reduce((sum, rating) => sum += rating.value, 0)
             }
-    
+
             const mostPopularCourses = state.allCourses.sort((first, second) => {
                 const firstTotalRatings = getTotalRatings(first)
                 const secondTotalRatings = getTotalRatings(second)
                 return secondTotalRatings - firstTotalRatings
             })
-    
+
             state.allCourses = mostPopularCourses
         },
-        setNewCourses : (state)=>{
+        setNewCourses: (state) => {
 
             const newCourses = state.allCourses.sort((first, second) => {
                 return new Date(second.createdAt) - new Date(first.createdAt)
             })
-    
+
             state.allCourses = newCourses
+        },
+        setMyCourses: (state,action)=>{
+            state.myCourses = action.payload
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchCourseByCategory.fulfilled, (state, action) => {
+                const courses = action.payload?.Data?.Course
+                const category = action.meta.arg.category
+
+                state.coursesByCategory[category] = courses
+            })
     }
 })
 
-export const {setAllCourses,setCoursePage,setCourses,setActiveButton,setTopRatedCourses,setMostPopularCourses,setNewCourses} = CourseSlice.actions
+export const { setAllCourses, setCoursePage, setCourses, setActiveButton, setTopRatedCourses, setMostPopularCourses, setNewCourses, setMyCourses } = CourseSlice.actions
 export default CourseSlice.reducer

@@ -1,26 +1,20 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import toast from "react-hot-toast"
 import { LiaRupeeSignSolid } from "react-icons/lia"
 import { useDispatch, useSelector } from "react-redux"
 
 import EmptyState from '../../assets/Logos/emptystate.svg'
-import { fetchAllPayments } from "../../Redux/StatisticsSlice"
+import { fetchAllPayments, setSelectedMonth, setSelectedYear } from "../../Redux/StatisticsSlice"
 
 const Payments = () => {
-    const { paymentsByMonth } = useSelector(state => state.Statistics)
+    const { paymentsByMonth, selectedMonth, selectedYear } = useSelector(state => state.Statistics)
     const dispatch = useDispatch()
     const count = 50
     const skip = 0
 
-    const presentDate = new Date(Date.now())
-    const presentYear = presentDate.getFullYear()
-    const presentMonth = presentDate.toLocaleString('in', { month: 'short', timeZone: 'Asia/Kolkata' })
 
+    const paymentsDetails = paymentsByMonth[selectedYear] ? paymentsByMonth[selectedYear][selectedMonth]?.items : null
 
-    const [selectedMonth, setSelectedMonth] = useState(presentMonth)
-    const [selectedYear, setSelectedYear] = useState(presentYear)
-
-    const paymentsDetails = paymentsByMonth ? paymentsByMonth[selectedMonth]?.items : null
 
 
     const formateDate = (timestamp) => {
@@ -34,16 +28,21 @@ const Payments = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            try {
+                const toastId = toast.loading("Fetching Payment Details...")
+                selectedYear ? await dispatch(fetchAllPayments({ count, skip, year: selectedYear })) : null
 
-            const toastId = toast.loading('Fetching Payment Data...')
-
-            selectedYear ? await dispatch(fetchAllPayments({ count, skip, year: selectedYear })) : null
-
-            toast.dismiss(toastId)
-            toast.success('Fetched Payment Successfully')
+                toast.dismiss(toastId)
+                toast.success("Payments Fetch Successfully")
+            } catch (error) {
+                toast.success("Error In Fetching Payment Details :", error.message)
+            }
 
         }
-        fetchData()
+        if (!paymentsByMonth[selectedYear] || paymentsByMonth[selectedYear]?.length == 0) {
+            fetchData()
+        }
+
     }, [selectedYear])
 
     return (
@@ -52,13 +51,13 @@ const Payments = () => {
                 <div className="flex items-center justify-between pr-10">
                     <p className="mb-8 text-2xl font-bold underline md:my-8">Payments History</p>
                     <div className="space-x-6">
-                        <select onChange={(e) => setSelectedMonth(e.target.value)} className="border border-black bg-inherit" value={selectedMonth} name="month" id="month">
+                        <select onChange={(e) => dispatch(setSelectedMonth(e.target.value))} className="border border-black bg-inherit" value={selectedMonth} name="month" id="month">
                             <option value="Jan">January</option>
                             <option value="Feb">February</option>
                             <option value="Mar">March</option>
                             <option value="Apr">April</option>
                             <option value="May">May</option>
-                            <option value="June">June</option>
+                            <option value="Jun">June</option>
                             <option value="Jul">July</option>
                             <option value="Aug">August</option>
                             <option value="Sep">September</option>
@@ -66,7 +65,7 @@ const Payments = () => {
                             <option value="Nov">November</option>
                             <option value="Dec">December</option>
                         </select>
-                        <select onChange={(e) => setSelectedYear(e.target.value)} name="year" id="year">
+                        <select onChange={(e) => dispatch(setSelectedYear(e.target.value))} value={selectedYear} name="year" id="year">
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
                         </select>

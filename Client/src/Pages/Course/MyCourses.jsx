@@ -8,14 +8,15 @@ import { BackButton, NextButton } from '../../Components/Course-components/Butto
 import MyCourseSkeletonTemplate from '../../Components/Course-components/MyCourseSkeletonTemplate.jsx'
 import MyCourseTemplate from '../../Components/Course-components/MyCourseTemplate'
 import HomeLayout from '../../Layouts/HomeLayout'
-import { fetchAllCourses, fetchCreatedCourses, fetchSubscribedCourses, updateCourseRating } from '../../Redux/CourseSlice.js'
+import { fetchAllCourses, fetchCreatedCourses, fetchSubscribedCourses, setMyCourses, updateCourseRating } from '../../Redux/CourseSlice.js'
 
 const MyCourses = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const [allCourses, setAllCourses] = useState([])
+    const { myCourses } = useSelector((state) => state.Course)
+
     const [coursePage, setCoursePage] = useState(1)
     const [courses, setCourses] = useState([])
     const [loading, setLoading] = useState(true)
@@ -34,19 +35,21 @@ const MyCourses = () => {
 
 
             if (courses != undefined && courses.length > 0) {
-                setAllCourses(courses.map((course) => ({ ...course, userRating: course.allRatings.find((rating) => rating?.userId?.toString() == userId)?.value || 0 })))
+                dispatch(setMyCourses(courses.map((course) => ({ ...course, userRating: course.allRatings.find((rating) => rating?.userId?.toString() == userId)?.value || 0 }))))
             } else {
-                setAllCourses([])
+                dispatch(setMyCourses([]))
             }
 
             setLoading(false)
         }
+
         fetchCourses()
+
     }, [])
 
     useEffect(() => {
-        allCourses ? setCourses(allCourses.slice((coursePage - 1) * 8, coursePage * 8)) : null
-    }, [coursePage, allCourses])
+        myCourses ? setCourses(myCourses.slice((coursePage - 1) * 8, coursePage * 8)) : null
+    }, [coursePage, myCourses])
 
 
     const handleUserRating = (courseId, newUserRating) => {
@@ -62,7 +65,7 @@ const MyCourses = () => {
     }
 
     const handleNextButton = () => {
-        if (Math.ceil(allCourses?.length / 8) > coursePage) {
+        if (Math.ceil(myCourses?.length / 8) > coursePage) {
             setCoursePage(coursePage + 1)
         }
     }

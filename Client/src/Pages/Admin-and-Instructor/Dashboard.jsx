@@ -12,7 +12,7 @@ Charjs.register(ArcElement, BarElement, CategoryScale, Legend, LinearScale, Titl
 const Dashboard = () => {
 
   const dispatch = useDispatch()
-  const { students, yearlyTotal, totalAmountsByMonth } = useSelector((state) => state.Statistics)
+  const { students, yearlyTotal, totalAmountsByMonth ,  selectedYear} = useSelector((state) => state.Statistics)
 
   const registeredUsers = students?.length
   const enrolledUsers = students.filter((student) => student.subscriptions.length > 0 && student?.subscriptions.some((sub) => sub.subscription_status === 'active')).length
@@ -32,7 +32,7 @@ const Dashboard = () => {
     fontColor: 'black',
     datasets: [{
       label: 'Revenue',
-      data: totalAmountsByMonth,
+      data: totalAmountsByMonth[selectedYear],
       backgroundColor: ["rgb(255,99,132)"],
       borderColor: ["white"],
       borderWidth: 2
@@ -94,7 +94,7 @@ const Dashboard = () => {
               </div>
 
               <div className='flex gap-x-3 py-6 pl-10 text-center text-lg '>
-                <p className='flex items-center gap-x-1 font-bold'>Total Revenue:</p><p className=' font'>Rs.{yearlyTotal / 100}</p>
+                <p className='flex items-center gap-x-1 font-bold'>Total Revenue:</p><p className=' font'>Rs.{yearlyTotal[selectedYear] / 100}</p>
               </div>
 
             </div>
