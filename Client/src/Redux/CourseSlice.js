@@ -26,7 +26,7 @@ export const fetchCourseByCategory = createAsyncThunk('courses/getCourseByCatego
 export const fetchAllCourses = createAsyncThunk('courses/getchAllCourses/', async (formData, thunkApi) => {
 
     try {
-        const res = await AxiosInstance.get('/course/', formData)
+        const res = await AxiosInstance.get('/course', formData)
         return res.data
 
     } catch (error) {
@@ -50,7 +50,7 @@ export const fetchSubscribedCourses = createAsyncThunk('courses/fetchSubscribedC
 export const fetchCreatedCourses = createAsyncThunk('courses/fetchCreatedCourses/', async (_, thunkApi) => {
 
     try {
-        const res = await AxiosInstance.get('/course/createdCourses/')
+        const res = await AxiosInstance.get('/course/createdCourses')
         return res.data
 
     } catch (error) {
@@ -62,7 +62,7 @@ export const fetchCreatedCourses = createAsyncThunk('courses/fetchCreatedCourses
 export const createCourse = createAsyncThunk('createCourse/', async (formData, thunkApi) => {
 
     try {
-        const res = AxiosInstance.post('/course/', formData)
+        const res = AxiosInstance.post('/course', formData)
 
         toast.promise(res, {
             loading: "Creating Your Course...",
@@ -114,7 +114,7 @@ export const deleteCourse = createAsyncThunk('deleteCourse/', async (courseId, t
 export const addLecture = createAsyncThunk('course/addLecture/', async ({ formData, courseId }, thunkApi) => {
 
     try {
-        const res = AxiosInstance.post(`/course/${courseId}/`, formData)
+        const res = AxiosInstance.post(`/course/${courseId}`, formData)
         toast.promise(res, {
             loading: "Creating New Lecture...",
             success: (response) => response?.data?.Message,
@@ -130,7 +130,7 @@ export const addLecture = createAsyncThunk('course/addLecture/', async ({ formDa
 export const editLecture = createAsyncThunk('course/editLecture/', async ({ formData, courseId, lectureId }, thunkApi) => {
 
     try {
-        const res = AxiosInstance.put(`/course/${courseId}/${lectureId}`, formData)
+        const res = AxiosInstance.put(`/course/lecture/${courseId}/${lectureId}`, formData)
         toast.promise(res, {
             loading: "Updating Your Lecture...",
             success: (response) => response?.data?.Message,
@@ -147,7 +147,7 @@ export const editLecture = createAsyncThunk('course/editLecture/', async ({ form
 export const deleteLecture = createAsyncThunk('course/deleteLecture/', async ({ courseId, lectureId }, thunkApi) => {
 
     try {
-        const res = AxiosInstance.delete(`/course/${courseId}/${lectureId}`)
+        const res = AxiosInstance.delete(`/course/lecture/${courseId}/${lectureId}`)
         toast.promise(res, {
             loading: "Deleting Your Lecture...",
             success: (response) => response?.data?.Message,
@@ -163,7 +163,7 @@ export const deleteLecture = createAsyncThunk('course/deleteLecture/', async ({ 
 export const updateCourseRating = createAsyncThunk('course/updateCourseRating/', async (data, thunkApi) => {
 
     try {
-        const res = AxiosInstance.post(`/course/updateRating/`, data)
+        const res = AxiosInstance.post(`/course/updateRating`, data)
         return (await res).data
 
     } catch (error) {
@@ -172,10 +172,10 @@ export const updateCourseRating = createAsyncThunk('course/updateCourseRating/',
     }
 })
 
-export const fetchInstructorCourses = createAsyncThunk('course/fetchInstructorCourses/', async (data, thunkApi) => {
+export const fetchInstructorCourses = createAsyncThunk('course/fetchInstructorCourses', async (data, thunkApi) => {
 
     try {
-        const res = AxiosInstance.post(`/course/instructorCourses/`, data)
+        const res = AxiosInstance.post(`/course/instructorCourses`, data)
         return (await res).data
 
     } catch (error) {

@@ -127,7 +127,7 @@ export const resetPassword = createAsyncThunk('/auth/resetPassword/', async (for
 
 export const changePassword = createAsyncThunk('/auth/changePassword/', async (formData, thunkApi) => {
     try {
-        const res = axiosInstance.post('/auth/updatePassword/', formData)
+        const res = axiosInstance.post('/auth/updatePassword', formData)
 
         toast.promise(res, {
             loading: "Changing Your Password...",

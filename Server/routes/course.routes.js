@@ -53,7 +53,7 @@ router.route('/:id')
     )
 
 
-router.route('/:courseId/:lectureId')
+router.route('lecture/:courseId/:lectureId')
     .delete(
         isLoggedIn,
         authorizedRoles('INSTRUCTOR', 'ADMIN'),
