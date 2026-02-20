@@ -5,8 +5,8 @@ const AxiosInstance = axios.create({
 
     // baseURL: `https://codeacademy.root.sx/user`,
     // baseURL: `http://localhost:3000/user`,
-    baseURL: `https://lms-next-backend.vercel.app/user`,
-    // baseURL: `https://api.codeacademy.vishalamin.site/user`,
+    // baseURL: `https://lms-next-backend.vercel.app/user`,
+    baseURL: `https://api.codeacademy.vishalamin.site/user`,
 
     withCredentials: true,
     timeout: 60000,
