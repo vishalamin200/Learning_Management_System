@@ -16,9 +16,10 @@ const SignupPage = () => {
     const navigate = useNavigate()
 
     const handleGoogleLogin = (e) => {
-        e.preventDefault()
-        window.open('https://api.codeacademy.vishalamin.site/auth/google/callback', '_self')
-    }
+        e.preventDefault();
+        window.location.href =
+            "https://api.codeacademy.vishalamin.site/api/auth/google";
+    };
 
     const handleInputChange = (e) => {
         e.preventDefault()
