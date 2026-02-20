@@ -61,7 +61,7 @@ const MyCourseTemplate = ({ course, role, handleUserRating }) => {
     const navigate = useNavigate()
     const handleCourseClick = () => {
         if (role === 'ADMIN' || role === 'INSTRUCTOR') {
-            navigate('/courseDetail', { state: { course, role } })
+            navigate(`/courseDetail/${course._id}`)
         } else {
             navigate('/viewLectures', { state: { course, role } })
         }

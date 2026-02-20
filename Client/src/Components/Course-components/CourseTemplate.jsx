@@ -19,7 +19,7 @@ const CourseTemplate = ({ course }) => {
     const navigate = useNavigate()
 
     const handleCourseClick = () => {
-        navigate('/courseDetail', { state: { course } })
+        navigate(`/courseDetail/${course._id}`)
     }
 
     return (
@@ -49,7 +49,6 @@ const CourseTemplate = ({ course }) => {
 
 CourseTemplate.propTypes = {
     course: PropTypes.object
-
 }
 
 

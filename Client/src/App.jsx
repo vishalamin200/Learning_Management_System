@@ -78,7 +78,7 @@ function App() {
         <Route path='/myCourses' element={<MyCourses />} />
         <Route path='/createCourse' element={<CreateCourse />} />
         <Route path='/addLecture' element={<AddLecture />} />
-        <Route path='/courseDetail' element={<CourseDetailPage />} />
+        <Route path='/courseDetail/:id' element={<CourseDetailPage/>} />
         <Route path='/my-courses/edit-course' element={<EditCourse />} />
         <Route path='/my-courses/purchase-history' element={<PurchaseHistory />} />
         <Route path='/viewLectures' element={<ViewLectures />} />

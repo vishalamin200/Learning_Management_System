@@ -1,19 +1,45 @@
-import DOMPurify from 'dompurify'
-import toast from 'react-hot-toast'
-import { useSelector } from 'react-redux'
-import { useLocation, useNavigate } from 'react-router-dom'
+import DOMPurify from 'dompurify';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import BreadCrumbs from '../../Components/Course-components/BreadCrumbs'
-import CourseIntroduction from '../../Components/Course-components/CourseIntroduction'
-import HomeLayout from '../../Layouts/HomeLayout'
-
-
+import BreadCrumbs from '../../Components/Course-components/BreadCrumbs';
+import CourseIntroduction from '../../Components/Course-components/CourseIntroduction';
+import AxiosInstance from '../../Helper/AxiosInstance';
+import HomeLayout from '../../Layouts/HomeLayout';
+import CourseDetailsSkeleton from "./CourseDetailSkeleton"
 
 const CourseDetailPage = () => {
-    const location = useLocation()
-    const course = location?.state?.course
-    const { role, data, isLoggedIn } = useSelector((state) => state.Auth)
+    // const location = useLocation()
+    // const course = location?.state?.course
 
+    const { id } = useParams();
+    const { role, data, isLoggedIn } = useSelector((state) => state.Auth)
+    const { allCourses } = useSelector((state) => state.Course)
+
+    const alreadyExistingCourse = allCourses?.find(course => String(course._id) === String(id))
+    const [course,setCourse] = useState(alreadyExistingCourse)
+    const [loading, setLoading] = useState(false)
+
+
+    useEffect(()=>{
+
+        const fetchCourseDetails = async ()=>{
+
+            const {data} = await AxiosInstance.get(`/course/detail/${id}`)
+            const courseDetails = data.Data
+            setCourse(courseDetails) 
+            setLoading(false)
+        }
+
+        if ( !course?._id) {
+            setLoading(true)
+            // course details is not available so fetch the details
+            fetchCourseDetails()
+        }
+
+    },[course?._id,id])
 
     const courseTitle = course?.topic
     const courseImage = course?.thumbnail?.secure_url
@@ -68,6 +94,10 @@ const CourseDetailPage = () => {
 
         navigate('/course/checkout', { state: { role, data, course } })
 
+    }
+
+    if(loading){
+        return <CourseDetailsSkeleton/>
     }
 
     return (

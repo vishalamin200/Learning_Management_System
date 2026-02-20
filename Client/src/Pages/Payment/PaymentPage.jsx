@@ -29,7 +29,7 @@ const PaymentPage = () => {
 
         if (!courseId) {
             toast.error("Error In Getting Course Details")
-            navigate('/courseDetail', { state: { course } })
+            navigate(`/courseDetail/${course._id}`)
             return
         }
 
@@ -57,7 +57,7 @@ const PaymentPage = () => {
                 }
             } else {
                 toast.error('Error In initiating the payment')
-                navigate('/courseDetail', { state: { course } })
+                navigate(`/courseDetail/${course._id}`)
                 return
             }
         }
@@ -71,7 +71,7 @@ const PaymentPage = () => {
     const coursePayment = () => {
         if (!keyId || !orderId) {
             toast.error("Something Went Wrong, Please Try Again")
-            navigate('/courseDetail', { state: { course } })
+            navigate(`/courseDetail/${course._id}`)
             return
         }
         const options = {
@@ -104,7 +104,7 @@ const PaymentPage = () => {
                         navigate('/viewLectures', { state: { course, role } })
                     }, 1000);
                 } else {
-                    navigate('/courseDetail', { state: { course } })
+                    navigate(`/courseDetail/${course._id}`)
                 }
             },
 
@@ -113,7 +113,7 @@ const PaymentPage = () => {
                     toast('Payment Is Cancelled')
 
                     setTimeout(() => {
-                        navigate('/courseDetail', { state: { course } })
+                        navigate(`/courseDetail/${course._id}`)
                     }, 300);
                 }
             }
