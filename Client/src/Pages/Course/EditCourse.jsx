@@ -142,7 +142,7 @@ const EditCourse = () => {
             const course = thunkResponse?.payload?.Data?.updatedCourse
 
             if (course) {
-                navigate(`/courseDetail`, { state: { course } });
+                navigate(`/course/detail/${course?._id}`);
             }
         } else {
             return
