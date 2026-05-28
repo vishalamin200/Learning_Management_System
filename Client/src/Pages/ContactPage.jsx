@@ -119,7 +119,7 @@ const ContactPage = () => {
 
                                     <ReCAPTCHA
                                         className="origin-top-left scale-[0.92]"
-                                        sitekey="6Ld6MFQrAAAAAPkEacK9qRrak0qQZNEBela-KtS0"
+                                        sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
                                         onChange={(token) => dispatch(setCaptchaToken(token))}
                                     />
 
@@ -138,7 +138,7 @@ const ContactPage = () => {
                 {/* bg-[#323F90]  */}
                 <div className=" relative flex h-96 w-full flex-col  items-center justify-center bg-[#10162F] p-10 text-white md:mt-0  md:h-[80%] md:w-[30vw]">
                     <p className="absolute left-10 top-10 text-3xl font-bold text-white ">Contact Information</p>
-                    <p className="text-xl">contact@vishalamin.site</p>
+                    <p className="text-xl">contact@vishalamin.in</p>
 
                     <div className=" absolute bottom-10 left-10 flex gap-5">
                         <a href="https://youtube.com/@codeacademy-m6v?si=mUqiJs_aNi3P-aSm" target="_blank">
