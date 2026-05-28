@@ -2,12 +2,7 @@ import axios from "axios";
 
 
 const AxiosInstance = axios.create({
-
-    // baseURL: `https://codeacademy.root.sx/user`,
-    // baseURL: `http://localhost:3000/user`,
-    // baseURL: `https://lms-next-backend.vercel.app/user`,
-    baseURL: `https://api.codeacademy.vishalamin.site/user`,
-
+    baseURL: `${import.meta.env.VITE_SERVER_URL}/user`,
     withCredentials: true,
     timeout: 60000,
 })

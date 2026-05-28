@@ -18,7 +18,7 @@ const SignupPage = () => {
     const handleGoogleLogin = (e) => {
         e.preventDefault();
         window.location.href =
-            "https://api.codeacademy.vishalamin.site/api/auth/google";
+            `${import.meta.env.VITE_SERVER_URL}/api/auth/google`;
     };
 
     const handleInputChange = (e) => {
